@@ -1,5 +1,11 @@
+import { AppBarWithLogo } from '../../components/AppBar';
+
 const Home = () => {
-  return <div>Home</div>;
+  return (
+    <>
+      <AppBarWithLogo />
+    </>
+  );
 };
 
 export default Home;
