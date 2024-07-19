@@ -1,7 +1,14 @@
 import styled from '@emotion/styled';
-import { SearchOutlined, ShoppingCartOutlined, ShareOutlined, DoneOutlined, ArrowBackIosOutlined } from '@mui/icons-material';
+import {
+  SearchOutlined,
+  ShoppingCartOutlined,
+  ShareOutlined,
+  DoneOutlined,
+  ArrowBackIosOutlined,
+} from '@mui/icons-material';
 import { Typography } from '@mui/material';
 import logo from '../assets/images/logo.svg';
+import { useNavigate } from 'react-router-dom';
 
 // Emotion을 이용해 스타일을 적용한 컴포넌트 정의
 const StyledHeader = styled.div`
@@ -26,26 +33,41 @@ const Container = styled.div`
 `;
 
 export function AppBarWithLogo() {
+  let navigate = useNavigate();
+
   return (
     <StyledHeader>
-      <img src={logo} />
+      <img src={logo} onClick={() => navigate('/')} />
       <Container>
-        <p onClick={() => {}}>
+        <p onClick={() => navigate('/search')}>
           <SearchOutlined />
         </p>
-        <p onClick={() => {}}>
+        <p onClick={() => navigate('/cart')}>
           <ShoppingCartOutlined />
         </p>
       </Container>
     </StyledHeader>
   );
 }
-export function AppBarWithTitle({ title, righticon }) {
+export function AppBarWithTitle({ title, rightIcon, set }) {
+  let navigate = useNavigate();
   return (
     <StyledHeader>
-      <ArrowBackIosOutlined />
+      <p onClick={() => navigate(-1)}>
+        <ArrowBackIosOutlined />
+      </p>
       <Typography>{title}</Typography>
-      {righticon === 'share' ? <ShareOutlined /> : righticon === 'done' ? <DoneOutlined /> : <></>}
+      {rightIcon === 'share' ? (
+        <p onClick={() => set(true)}>
+          <ShareOutlined />
+        </p>
+      ) : rightIcon === 'done' ? (
+        <p onClick={() => set(true)}>
+          <DoneOutlined />
+        </p>
+      ) : (
+        <></>
+      )}
     </StyledHeader>
   );
 }
