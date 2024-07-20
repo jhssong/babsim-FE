@@ -15,6 +15,8 @@ const Container = styled.div`
   height: 4.47938rem;
   justify-content: center;
   align-items: flex-start;
+  position: fixed;
+  bottom: 0;
 `;
 
 const Wrapper = styled.div`
