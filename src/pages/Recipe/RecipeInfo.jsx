@@ -8,7 +8,6 @@ import NutritionInfo from './RecipeInfo/NutritionInfo';
 import IngredientInfo from './RecipeInfo/IngredientInfo';
 import CookeryInfo from './RecipeInfo/CookeryInfo';
 import ReviewInfo from './RecipeInfo/ReviewInfo';
-import ForkBtn from '../../components/ForkBtn';
 import { CallSplitOutlined, LocalDiningOutlined } from '@mui/icons-material';
 import styled from '@emotion/styled';
 
