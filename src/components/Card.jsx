@@ -84,7 +84,7 @@ export const HCard = ({ recipe, index }) => {
         <RecipeInfo>
           <HashTags>
             {recipe.tags.map((tag, idx) => (
-              <Typography key={idx} variant="caption" color="subbackground">
+              <Typography key={idx} variant="caption" sx={{ color: 'subbackground.main' }}>
                 #{tag}
               </Typography>
             ))}
@@ -96,7 +96,7 @@ export const HCard = ({ recipe, index }) => {
               <Typography variant="body2">{formatCookingTime(recipe.cookingTime)}</Typography>
             </Time>
             <Rating>
-              <Star color="primary" />
+              <Star sx={{ color: 'primary.main' }} />
               <Typography variant="body2">{recipe.rate}</Typography>
             </Rating>
           </TimeAndRating>

@@ -5,6 +5,7 @@ const theme = createTheme({
   palette: {
     primary: {
       main: orange[800],
+      light: orange[200],
     },
     secondary: {
       main: orange[300],
@@ -13,7 +14,7 @@ const theme = createTheme({
       main: orange[100],
     },
     subbackground: {
-      main: grey[200],
+      main: grey[900],
     },
   },
 });
