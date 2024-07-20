@@ -1,7 +1,5 @@
 import styled from '@emotion/styled';
 
-import { Typography } from '@mui/material';
-
 const CardListContainer = styled.div`
   display: flex;
   padding: 0.5rem var(--none, 0rem);
