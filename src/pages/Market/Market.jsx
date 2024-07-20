@@ -9,7 +9,6 @@ import 'slick-carousel/slick/slick-theme.css';
 
 const Container = styled.div`
   display: flex;
-  padding: 1rem 0rem;
   flex-direction: column;
   align-items: flex-start;
   gap: 1rem;
@@ -21,16 +20,15 @@ const Container = styled.div`
 
 const Market = () => {
   const images = [
-    { url: '../../assets/banners/chip.webp', alt: '감자칩 요리 공모전' },
-    { url: '../../assets/banners/gyoza.webp', alt: '왕교자 요리 공보전' },
+    { url: '/assets/banners/chip.webp', alt: '감자칩 요리 공모전' },
+    { url: '/assets/banners/gyoza.webp', alt: '왕교자 요리 공보전' },
   ];
 
   return (
     <>
       <AppBarWithLogo />
       <Container>
-        {/* <Banner images={images} /> */}
-        <img src="/assets/images/chip.webp" />
+        <Banner images={images} />
       </Container>
 
       <NavBar page="market" />
@@ -39,18 +37,19 @@ const Market = () => {
 };
 
 const BannerContainer = styled.div`
-  width: 80%;
+  width: 100%;
   margin: 0 auto; /* 중앙 정렬 */
 `;
 
 const BannerImageWrapper = styled.img`
   width: 100%; /* 이미지가 컨테이너를 꽉 채우도록 */
+  height: 300px; /* 원하는 높이 설정 */
+  object-fit: cover; /* 이미지가 컨테이너를 채우도록 */
   display: block; /* 블록 레벨 요소로 표시 */
 `;
 
 const Banner = ({ images }) => {
   const settings = {
-    dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
@@ -63,9 +62,7 @@ const Banner = ({ images }) => {
     <BannerContainer>
       <Slider {...settings}>
         {images.map((image, index) => (
-          <BannerImageWrapper key={index}>
-            <img src={image.url} alt={image.alt} />
-          </BannerImageWrapper>
+          <BannerImageWrapper key={index} src={image.url} alt={image.alt} />
         ))}
       </Slider>
     </BannerContainer>
