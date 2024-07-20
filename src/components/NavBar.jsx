@@ -12,9 +12,11 @@ import { useNavigate } from 'react-router-dom';
 const Container = styled.div`
   display: flex;
   width: 100%;
-  height: 4.47938rem;
+  height: 4rem;
   justify-content: center;
   align-items: flex-start;
+  position: fixed;
+  bottom: 0;
 `;
 
 const Wrapper = styled.div`
