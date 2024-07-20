@@ -97,7 +97,9 @@ export const HCard = ({ recipe, index }) => {
             </Time>
             <Rating>
               <Star sx={{ color: 'primary.main' }} />
-              <Typography variant="body2">{recipe.rate}</Typography>
+              <Typography variant="body2" sx={{ color: 'subbackground.main' }}>
+                {recipe.rate}
+              </Typography>
             </Rating>
           </TimeAndRating>
         </RecipeInfo>
@@ -137,7 +139,7 @@ export const VCard = ({ type, product, index, style }) => {
         {type === 'recipe' ? (
           <HashTags>
             {product.tags.map((tag, idx) => (
-              <Typography key={idx} variant="caption" color="subbackground">
+              <Typography key={idx} variant="caption" sx={{ color: 'subbackground.main' }}>
                 #{tag}
               </Typography>
             ))}
@@ -149,7 +151,9 @@ export const VCard = ({ type, product, index, style }) => {
         {type !== 'recipe' ? <Typography variant="body2">{product.price}</Typography> : <></>}
         <Rating>
           <Star color="primary" fontSize="small" />
-          <Typography variant="body2">{product.rate}</Typography>
+          <Typography variant="body2" sx={{ color: 'subbackground.main' }}>
+            {product.rate}
+          </Typography>
         </Rating>
       </ProductInfo>
     </ProdcutContainer>
