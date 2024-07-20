@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AppBarWithTitle } from '../../components/AppBar';
-import { Button, Divider } from '@mui/material';
+import { Button, Divider, Typography } from '@mui/material';
 import RecipeInformation, { RecipeInfoImage } from './RecipeInfo/RecipeInformation';
 import AllergyInfo from './RecipeInfo/AllergyInfo';
 import NutritionInfo from './RecipeInfo/NutritionInfo';
@@ -9,7 +9,7 @@ import IngredientInfo from './RecipeInfo/IngredientInfo';
 import CookeryInfo from './RecipeInfo/CookeryInfo';
 import ReviewInfo from './RecipeInfo/ReviewInfo';
 import ForkBtn from '../../components/ForkBtn';
-import { LocalDiningOutlined } from '@mui/icons-material';
+import { CallSplitOutlined, LocalDiningOutlined } from '@mui/icons-material';
 import styled from '@emotion/styled';
 
 // dummy data
@@ -112,7 +112,24 @@ const RecipeInfo = () => {
       <ReviewInfo reviews={recipe.reviews} />
       <Divider />
       <BottomContainer>
-        <ForkBtn />
+        <Button
+          startIcon={
+            <CallSplitOutlined
+              sx={{
+                minWidth: 'auto',
+                minHeight: 'auto',
+                padding: 0,
+                width: '32px',
+                height: '32px',
+              }}
+            />
+          }
+          variant="contained"
+          color="primary">
+          <Typography variant="button" fontWeight="bold">
+            포크하기
+          </Typography>
+        </Button>
         <Button
           startIcon={
             <LocalDiningOutlined
@@ -127,7 +144,9 @@ const RecipeInfo = () => {
           }
           variant="contained"
           color="primary">
-          요리하기
+          <Typography variant="button" fontWeight="bold">
+            요리하기
+          </Typography>
         </Button>
       </BottomContainer>
     </>

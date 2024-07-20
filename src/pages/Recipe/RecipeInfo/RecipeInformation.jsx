@@ -2,7 +2,7 @@ import { ThemeProvider } from '@emotion/react';
 import { Rating, Typography, Skeleton } from '@mui/material';
 import theme from '../../../styles/theme';
 import styled from '@emotion/styled';
-import LikeButton from '../../../components/LikeButton';
+import LikeButton from './LikeButton';
 
 const RecipeImageContainer = styled.div`
   width: 100%;
