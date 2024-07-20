@@ -21,6 +21,9 @@ const StyledHeader = styled.div`
   width: 100%;
   height: 3rem;
 
+  position: fixed;
+  top: 0;
+
   border-bottom: 1px solid #eeeeee;
 `;
 
