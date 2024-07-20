@@ -1,12 +1,12 @@
 import { Button, Typography } from '@mui/material';
 import styled from '@emotion/styled';
 
-const Container = styled.div`
+const IngredientContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
   position: relative;
-  padding: 1.5rem; 
+  padding: 1.5rem;
   width: 100%;
 `;
 
@@ -27,20 +27,36 @@ const LinkButton = styled(Button)`
   right: 1rem; /* 오른쪽 여백 */
 `;
 
-const Ingredient = ({ name, amount, link }) => {
+export const Ingredient = ({ name, amount, link }) => {
   const onBtnClick = () => {
     window.open(link, '_blank');
   };
 
   return (
-    <Container>
+    <IngredientContainer>
       <NameText variant="body2">{name}</NameText>
       <AmountText variant="body2">{amount}개</AmountText>
       <LinkButton variant="contained" size="small" color="primary" onClick={onBtnClick}>
         구매
       </LinkButton>
+    </IngredientContainer>
+  );
+};
+
+const Container = styled.div`
+  width: 100%;
+  padding: 1rem;
+`;
+
+const IngredientInfo = ({ ingredients }) => {
+  return (
+    <Container>
+      <Typography variant="h5">재료</Typography>
+      {ingredients.map((ingredient, index) => (
+        <Ingredient key={index} name={ingredient.name} amount={ingredient.amount} />
+      ))}
     </Container>
   );
 };
 
-export default Ingredient;
+export default IngredientInfo;

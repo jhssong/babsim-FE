@@ -1,8 +1,25 @@
 import { ThemeProvider } from '@emotion/react';
 import { Rating, Typography, Skeleton } from '@mui/material';
-import theme from '../../styles/theme';
+import theme from '../../../styles/theme';
 import styled from '@emotion/styled';
-import LikeButton from './LikeButton';
+import LikeButton from '../../../components/LikeButton';
+
+const RecipeImageContainer = styled.div`
+  width: 100%;
+  height: 200px;
+`;
+
+export const RecipeInfoImage = ({ src, alt, isLoading }) => {
+  return (
+    <RecipeImageContainer>
+      {isLoading ? (
+        <Skeleton variant="rectangular" sx={{ width: '100%', height: '100%' }} />
+      ) : (
+        <img src={src} alt={alt} />
+      )}
+    </RecipeImageContainer>
+  );
+};
 
 const Container = styled.div`
   width: 100%;
