@@ -1,8 +1,11 @@
+// @ts-ignore
 import AppLogoPNG from '../../assets/images/logo512.png';
 import styled from '@emotion/styled';
 import GoogleLoginBtn from './GoogleLoginBtn';
+import KakaoLoginBtn from './KakaoLoginBtn';
 import { CircularProgress } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { googleLoginWithPopup, googleLogout } from '../../utils/firebase/login';
 
 const Wrapper = styled.div`
   display: flex;
@@ -25,16 +28,15 @@ const LoadingWrapper = styled.div`
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [loginData, setLoginData] = useState({});
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loginData, setLoginData] = useState(null);
 
-  function handleClickBtn() {
-    setIsLoading(true);
-  }
-
-  function handleLogin(data) {
-    setLoginData(data);
-    setIsLoading(false);
-  }
+  useEffect(() => {
+    if (loginData != null) {
+      console.log(loginData);
+      setIsLoggedIn(true);
+    }
+  }, [loginData]);
 
   return isLoading ? (
     <LoadingWrapper>
@@ -42,8 +44,10 @@ const Login = () => {
     </LoadingWrapper>
   ) : (
     <Wrapper>
+      {isLoggedIn ? 'hello world' : 'not logged in'}
       <img src={AppLogoPNG} width={256} height={256} />
-      <GoogleLoginBtn handleClick={handleClickBtn} handleLogin={handleLogin} />
+      <GoogleLoginBtn setIsLoading={setIsLoading} setLoginData={setLoginData} />
+      <KakaoLoginBtn />
     </Wrapper>
   );
 };

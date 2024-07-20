@@ -1,7 +1,6 @@
-import React from 'react';
-import { googleLoginPopup } from '../../utils/firebase/firebase';
+import { googleLoginWithPopup } from '../../utils/firebase/login';
 
-const GoogleLoginBtn = ({ handleClick, handleLogin }) => {
+const GoogleLoginBtn = ({ setIsLoading, setLoginData }) => {
   const styles = {
     button: {
       WebkitUserSelect: 'none',
@@ -100,15 +99,26 @@ const GoogleLoginBtn = ({ handleClick, handleLogin }) => {
   };
 
   const loginToGoogle = async () => {
-    handleClick();
-    const data = await googleLoginPopup();
-    handleLogin(data);
+    setIsLoading(true);
+    const res = await googleLoginWithPopup();
+    setLoginData(res);
+    setIsLoading(false);
   };
 
   return (
-    <button style={styles.button} className="gsi-material-button" onClick={loginToGoogle}>
-      <div style={styles.state} className="gsi-material-button-state"></div>
-      <div style={styles.contentWrapper} className="gsi-material-button-content-wrapper">
+    <button
+      // @ts-ignore
+      style={styles.button}
+      className="gsi-material-button"
+      onClick={loginToGoogle}>
+      <div
+        // @ts-ignore
+        style={styles.state}
+        className="gsi-material-button-state"></div>
+      <div
+        // @ts-ignore
+        style={styles.contentWrapper}
+        className="gsi-material-button-content-wrapper">
         <div style={styles.icon} className="gsi-material-button-icon">
           <svg
             version="1.1"

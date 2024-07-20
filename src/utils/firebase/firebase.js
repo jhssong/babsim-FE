@@ -1,5 +1,12 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import {
+  getAuth,
+  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
+  GoogleAuthProvider,
+  signOut,
+} from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBeuNC7ZXPQ-SZNA70D8wp3tvpPfTxBOss',
@@ -13,35 +20,4 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-const provider = new GoogleAuthProvider();
-
-const auth = getAuth();
-
-async function googleLoginPopup() {
-  await signInWithPopup(auth, provider)
-    .then((result) => {
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      //   const token = credential.accessToken;
-      const user = result.user;
-
-      const loginData = {
-        id: user.uid,
-        name: user.displayName,
-        email: user.email,
-        img: user.photoURL,
-      };
-      console.log(loginData);
-      return loginData;
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // const email = error.customData.email;
-      // const credential = GoogleAuthProvider.credentialFromError(error);
-      console.error('[Firebase/Auth] code: ' + errorCode + ' msg: ' + errorMessage);
-      return {};
-    });
-}
-
-export { googleLoginPopup };
+export const auth = getAuth(app);
