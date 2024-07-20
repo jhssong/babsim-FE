@@ -14,10 +14,7 @@ import styled from '@emotion/styled';
 // dummy data
 const recipe = {
   id: '12345',
-  imgURLs: [
-    'https://d2v80xjmx68n4w.cloudfront.net/gigs/fPoZ31584321311.jpg?w=652',
-    'https://d2v80xjmx68n4w.cloudfront.net/gigs/5s8Hq1584287799.jpg?w=652',
-  ],
+  imgURLs: [null, null],
   name: '짱구 도시락',
   description: '짱구가 어디갈 때 먹는 도시락',
   rate: 4,
@@ -78,9 +75,10 @@ const BottomContainer = styled.div`
   }
 `;
 
-const RecipeInfo = () => {
+const RecipeEdit = () => {
   const { recipeId } = useParams();
   const [isLoading, setIsLoading] = useState(false); // Backend API 구현 후 true로 변경
+  const [isDone, setDone] = useState(false);
   const [recipeInfo, setRecipeInfo] = useState([]);
 
   const getRecipeInfo = async () => {
@@ -91,67 +89,20 @@ const RecipeInfo = () => {
   useEffect(() => {
     getRecipeInfo();
   }, []);
+  useEffect(() => {
+    // POST 요청
+    // 이전 페이지로 돌아가서? 성공 메세지 출력
+  }, [isDone]);
 
   return (
     <>
-      <AppBarWithTitle title="" rightIcon="share" />
-      <RecipeInfoImage imgs={recipe.imgURLs} isLoading={isLoading} />
-      <RecipeInformation recipeInfo={recipe} isLoading={isLoading} />
-      <Divider />
-      <AllergyInfo allergys={recipe.allergys} />
-      <Divider />
-      <NutritionInfo />
-      <Divider />
-      <IngredientInfo ingredients={recipe.ingredients} />
-      <Divider />
-      <CookeryInfo
-        images={recipe.recipeImgs}
-        descs={recipe.recipeDescs}
-        timers={recipe.recipeTimers}
-      />
-      <Divider />
-      <ReviewInfo reviews={recipe.reviews} />
-      <Divider />
-      <BottomContainer>
-        <Button
-          startIcon={
-            <CallSplitOutlined
-              sx={{
-                minWidth: 'auto',
-                minHeight: 'auto',
-                padding: 0,
-                width: '32px',
-                height: '32px',
-              }}
-            />
-          }
-          variant="contained"
-          color="primary">
-          <Typography variant="button" fontWeight="bold">
-            포크하기
-          </Typography>
-        </Button>
-        <Button
-          startIcon={
-            <LocalDiningOutlined
-              sx={{
-                minWidth: 'auto',
-                minHeight: 'auto',
-                padding: 0,
-                width: '32px',
-                height: '32px',
-              }}
-            />
-          }
-          variant="contained"
-          color="primary">
-          <Typography variant="button" fontWeight="bold">
-            요리하기
-          </Typography>
-        </Button>
-      </BottomContainer>
+      {isLoading ? null : (
+        <>
+          <AppBarWithTitle title="" rightIcon="done" set={setDone} />
+        </>
+      )}
     </>
   );
 };
 
-export default RecipeInfo;
+export default RecipeEdit;

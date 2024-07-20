@@ -3,19 +3,46 @@ import { Rating, Typography, Skeleton } from '@mui/material';
 import theme from '../../../styles/theme';
 import styled from '@emotion/styled';
 import LikeButton from './LikeButton';
+import AwesomeSlider from 'react-awesome-slider';
+import 'react-awesome-slider/dist/styles.css';
+import 'react-awesome-slider/dist/custom-animations/cube-animation.css';
 
 const RecipeImageContainer = styled.div`
   width: 100%;
-  height: 200px;
+  height: 300px;
+  overflow: hidden;
+
+  .awssld__content {
+    height: 100%;
+  }
+  .awssld__container {
+    height: 100%;
+  }
+  .awssld__content > div {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  img {
+    height: 100%;
+    object-fit: cover;
+  }
 `;
 
-export const RecipeInfoImage = ({ src, alt, isLoading }) => {
+export const RecipeInfoImage = ({ imgs, isLoading }) => {
+  console.log(imgs);
   return (
     <RecipeImageContainer>
       {isLoading ? (
         <Skeleton variant="rectangular" sx={{ width: '100%', height: '100%' }} />
       ) : (
-        <img src={src} alt={alt} />
+        <AwesomeSlider cssModule={<RecipeImageContainer />}>
+          {imgs.map((img, idx) => (
+            <div key={idx} data-src={img} />
+          ))}
+        </AwesomeSlider>
       )}
     </RecipeImageContainer>
   );
