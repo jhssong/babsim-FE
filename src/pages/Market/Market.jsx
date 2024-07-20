@@ -2,8 +2,10 @@ import styled from '@emotion/styled';
 
 import { AppBarWithLogo } from '../../components/AppBar';
 import NavBar from '../../components/NavBar';
-import { useRecoilValue } from 'recoil';
-import { loginState } from '../../recoil/atoms';
+
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 const Container = styled.div`
   display: flex;
@@ -18,15 +20,55 @@ const Container = styled.div`
 `;
 
 const Market = () => {
-  const isLoggined = useRecoilValue(loginState).isLoggedIn;
+  const images = [
+    { url: '../../assets/banners/chip.webp', alt: '감자칩 요리 공모전' },
+    { url: '../../assets/banners/gyoza.webp', alt: '왕교자 요리 공보전' },
+  ];
 
   return (
     <>
       <AppBarWithLogo />
-      <Container></Container>
+      <Container>
+        {/* <Banner images={images} /> */}
+        <img src="/assets/images/chip.webp" />
+      </Container>
 
       <NavBar page="market" />
     </>
+  );
+};
+
+const BannerContainer = styled.div`
+  width: 80%;
+  margin: 0 auto; /* 중앙 정렬 */
+`;
+
+const BannerImageWrapper = styled.img`
+  width: 100%; /* 이미지가 컨테이너를 꽉 채우도록 */
+  display: block; /* 블록 레벨 요소로 표시 */
+`;
+
+const Banner = ({ images }) => {
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000, // 3초마다 자동 전환
+  };
+
+  return (
+    <BannerContainer>
+      <Slider {...settings}>
+        {images.map((image, index) => (
+          <BannerImageWrapper key={index}>
+            <img src={image.url} alt={image.alt} />
+          </BannerImageWrapper>
+        ))}
+      </Slider>
+    </BannerContainer>
   );
 };
 
