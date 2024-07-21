@@ -1,18 +1,7 @@
-import styled from '@emotion/styled';
-
-import { Typography } from '@mui/material';
 import { VCard } from '../../components/Card';
 import { GridCardList } from '../../components/CardList';
 import { useRecoilValue } from 'recoil';
 import { loginState } from '../../recoil/atoms';
-
-const RecommendedRecipeContainer = styled.div`
-  display: flex;
-  padding: 1rem;
-  flex-direction: column;
-  align-items: flex-start;
-  align-self: stretch;
-`;
 
 const RecommendedRecipe = () => {
   const user = useRecoilValue(loginState).user.name;
@@ -68,14 +57,11 @@ const RecommendedRecipe = () => {
     ],
   };
   return (
-    <RecommendedRecipeContainer>
-      <Typography variant="h5">{user}님을 위한 추천 레시피</Typography>
-      <GridCardList>
-        {recipesData.list.map((recipe, index) => (
-          <VCard key={recipe.id} product={recipe} index={index} type="recipe" />
-        ))}
-      </GridCardList>
-    </RecommendedRecipeContainer>
+    <GridCardList title={`${user}님을 위한 추천 레시피`}>
+      {recipesData.list.map((recipe, index) => (
+        <VCard key={recipe.id} product={recipe} index={index} type="recipe" />
+      ))}
+    </GridCardList>
   );
 };
 

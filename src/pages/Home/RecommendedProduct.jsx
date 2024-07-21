@@ -1,16 +1,5 @@
-import styled from '@emotion/styled';
-
-import { Typography } from '@mui/material';
 import { VCard } from '../../components/Card';
 import { RollCardList } from '../../components/CardList';
-
-const RecommendedProductContainer = styled.div`
-  display: flex;
-  padding-left: 1rem;
-  flex-direction: column;
-  align-items: flex-start;
-  align-self: stretch;
-`;
 
 const RecommendedProduct = () => {
   const productData = {
@@ -47,22 +36,19 @@ const RecommendedProduct = () => {
   };
 
   return (
-    <RecommendedProductContainer>
-      <Typography variant="h5">추천 상품</Typography>
-      <RollCardList>
-        {productData.list.map((product, index) => (
-          <VCard
-            key={product.id}
-            type="product"
-            product={product}
-            index={index}
-            style={{
-              marginRight: index === productData.list.length - 1 ? '1rem' : '0',
-            }}
-          />
-        ))}
-      </RollCardList>
-    </RecommendedProductContainer>
+    <RollCardList title="추천 상품">
+      {productData.list.map((product, index) => (
+        <VCard
+          key={product.id}
+          type="product"
+          product={product}
+          index={index}
+          style={{
+            marginRight: index === productData.list.length - 1 ? '1rem' : '0',
+          }}
+        />
+      ))}
+    </RollCardList>
   );
 };
 

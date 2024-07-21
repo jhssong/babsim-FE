@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
+import { Typography } from '@mui/material';
 
-const GridCardListContainer = styled.div`
+const GridCardWrapper = styled.div`
   display: flex;
   padding: 0.5rem var(--none, 0rem);
   justify-content: space-between;
@@ -11,11 +12,24 @@ const GridCardListContainer = styled.div`
   flex-wrap: wrap;
 `;
 
-export const GridCardList = ({ children }) => {
-  return <GridCardListContainer>{children}</GridCardListContainer>;
+const GridCardContainer = styled.div`
+  display: flex;
+  padding: 1rem;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+`;
+
+export const GridCardList = ({ children, title }) => {
+  return (
+    <GridCardContainer>
+      {title ? <Typography variant="h5">{title}</Typography> : <></>}
+      <GridCardWrapper>{children}</GridCardWrapper>
+    </GridCardContainer>
+  );
 };
 
-const RollCardListContainer = styled.div`
+const RollCardWrapper = styled.div`
   display: flex;
   overflow-x: auto;
   white-space: nowrap;
@@ -26,6 +40,19 @@ const RollCardListContainer = styled.div`
   align-self: stretch;
 `;
 
-export const RollCardList = ({ children }) => {
-  return <RollCardListContainer>{children}</RollCardListContainer>;
+const RollCardContainer = styled.div`
+  display: flex;
+  padding-left: 1rem;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+`;
+
+export const RollCardList = ({ children, title }) => {
+  return (
+    <RollCardContainer>
+      {title ? <Typography variant="h5">{title}</Typography> : <></>}
+      <RollCardWrapper>{children}</RollCardWrapper>
+    </RollCardContainer>
+  );
 };
