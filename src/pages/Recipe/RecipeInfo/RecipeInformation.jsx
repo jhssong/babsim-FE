@@ -1,53 +1,65 @@
-import { ThemeProvider } from '@emotion/react';
 import { Rating, Typography, Skeleton } from '@mui/material';
-import theme from '../../../styles/theme';
 import styled from '@emotion/styled';
 import LikeButton from './LikeButton';
-import AwesomeSlider from 'react-awesome-slider';
-import 'react-awesome-slider/dist/styles.css';
-import 'react-awesome-slider/dist/custom-animations/cube-animation.css';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
+// 슬라이드 스타일 정의
+const Slide = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ddd; // 임시 배경색
+`;
+
+// RecipeImageContainer 스타일 정의
 const RecipeImageContainer = styled.div`
   width: 100%;
-  height: 300px;
+  height: 20%;
   overflow: hidden;
 
-  .awssld__content {
+  .slick-slide {
     height: 100%;
-  }
-  .awssld__container {
-    height: 100%;
-  }
-  .awssld__content > div {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
 
   img {
-    height: 100%;
+    width: 100%;
+    height: 300px;
     object-fit: cover;
   }
 `;
 
+// RecipeInfoImage 컴포넌트
 export const RecipeInfoImage = ({ imgs, isLoading }) => {
-  console.log(imgs);
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
+
   return (
     <RecipeImageContainer>
       {isLoading ? (
         <Skeleton variant="rectangular" sx={{ width: '100%', height: '100%' }} />
       ) : (
-        <AwesomeSlider cssModule={<RecipeImageContainer />}>
+        <Slider {...settings}>
           {imgs.map((img, idx) => (
-            <div key={idx} data-src={img} />
+            <Slide key={idx}>
+              <img src={img} alt={`Recipe image ${idx + 1}`} />
+            </Slide>
           ))}
-        </AwesomeSlider>
+        </Slider>
       )}
     </RecipeImageContainer>
   );
 };
 
+// RecipeInformation 스타일 정의
 const Container = styled.div`
   width: 100%;
   padding: 1rem;
@@ -55,6 +67,7 @@ const Container = styled.div`
   h5 {
     margin-bottom: 0.25rem;
   }
+
   p {
     margin-bottom: 0.25rem;
   }
@@ -74,52 +87,52 @@ const RatingLine = styled.div`
   gap: 0.5rem;
 `;
 
+// RecipeInformation 컴포넌트
 const RecipeInformation = ({ recipeInfo, isLoading }) => {
   return (
-    <>
-      <Container>
-        <TitleLine>
-          {isLoading ? (
-            <Skeleton variant="text" width={200} height={30} />
-          ) : (
-            <Typography variant="h5">{recipeInfo.name}</Typography>
-          )}
-          <LikeButton />
-        </TitleLine>
+    <Container>
+      <TitleLine>
         {isLoading ? (
-          <Skeleton variant="text" width="100%" height={20} />
+          <Skeleton variant="text" width={200} height={30} />
         ) : (
-          <Typography variant="body1">{recipeInfo.description}</Typography>
+          <Typography variant="h5">{recipeInfo.name}</Typography>
         )}
-        <RatingLine>
-          {isLoading ? (
-            <>
-              <Skeleton variant="rectangular" width={50} height={20} />
-              <Skeleton variant="text" width={50} height={20} />
-              <Skeleton variant="text" width={100} height={20} />
-            </>
-          ) : (
-            <>
-              <Rating name="read-only" value={recipeInfo.rate} size="small" readOnly />
-              <Typography variant="caption">{recipeInfo.difficulty}</Typography>
-              <Typography variant="caption">요리 시간 {recipeInfo.cookingTime}분</Typography>
-            </>
-          )}
-        </RatingLine>
-
-        <ThemeProvider theme={theme}>
-          {isLoading ? (
-            <Skeleton variant="text" width="100%" height={20} />
-          ) : (
-            recipeInfo.tags.map((tag) => (
-              <Typography variant="caption" color="grey" key={tag} sx={{ paddingRight: '0.25rem' }}>
-                #{tag}
-              </Typography>
-            ))
-          )}
-        </ThemeProvider>
-      </Container>
-    </>
+        <LikeButton />
+      </TitleLine>
+      {isLoading ? (
+        <Skeleton variant="text" width="100%" height={20} />
+      ) : (
+        <Typography variant="body1">{recipeInfo.description}</Typography>
+      )}
+      <RatingLine>
+        {isLoading ? (
+          <>
+            <Skeleton variant="rectangular" width={50} height={20} />
+            <Skeleton variant="text" width={50} height={20} />
+            <Skeleton variant="text" width={100} height={20} />
+          </>
+        ) : (
+          <>
+            <Rating name="read-only" value={recipeInfo.rate} size="small" readOnly />
+            <Typography variant="caption">{recipeInfo.difficulty}</Typography>
+            <Typography variant="caption">요리 시간 {recipeInfo.cookingTime}분</Typography>
+          </>
+        )}
+      </RatingLine>
+      {isLoading ? (
+        <Skeleton variant="text" width="100%" height={20} />
+      ) : (
+        recipeInfo.tags.map((tag) => (
+          <Typography
+            variant="caption"
+            color="textSecondary"
+            key={tag}
+            sx={{ paddingRight: '0.25rem' }}>
+            #{tag}
+          </Typography>
+        ))
+      )}
+    </Container>
   );
 };
 

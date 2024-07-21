@@ -104,6 +104,9 @@ const RecipeInfo = () => {
       <Divider />
       <IngredientInfo ingredients={recipe.ingredients} />
       <Divider />
+      <Typography variant="h5" sx={{ padding: '1rem' }}>
+        레시피
+      </Typography>
       <CookeryInfo
         images={recipe.recipeImgs}
         descs={recipe.recipeDescs}
