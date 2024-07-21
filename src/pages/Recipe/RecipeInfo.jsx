@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { AppBarWithTitle } from '../../components/AppBar';
 import { Box, Button, Divider, Typography } from '@mui/material';
 import RecipeInformation, { RecipeInfoImage } from './RecipeInfo/RecipeInformation';
@@ -10,7 +10,7 @@ import CookeryInfo from './RecipeInfo/CookeryInfo';
 import ReviewInfo from './RecipeInfo/ReviewInfo';
 import { CallSplitOutlined, LocalDiningOutlined } from '@mui/icons-material';
 import styled from '@emotion/styled';
-import Reviews from './RecipeReviews';
+import RecipeReviews from './RecipeReviews';
 
 // dummy data
 const recipe = {
@@ -107,6 +107,7 @@ const RecipeInfo = () => {
 
   const { recipeId } = useParams();
   const [isLoading, setIsLoading] = useState(false); // Backend API 구현 후 true로 변경
+  const [isReviewMore, setIsReviewMore] = useState(false);
   const [recipeInfo, setRecipeInfo] = useState([]);
 
   const getRecipeInfo = async () => {
@@ -120,68 +121,74 @@ const RecipeInfo = () => {
 
   return (
     <>
-      <AppBarWithTitle title="" rightIcon="share" />
-      <RecipeInfoImage imgs={recipe.imgURLs} isLoading={isLoading} />
-      <RecipeInformation recipeInfo={recipe} isLoading={isLoading} />
-      <Divider />
-      <AllergyInfo allergys={recipe.allergys} />
-      <Divider />
-      <NutritionInfo />
-      <Divider />
-      <IngredientInfo ingredients={recipe.ingredients} />
-      <Divider />
-      <Typography variant="h5" sx={{ padding: '1rem' }}>
-        레시피
-      </Typography>
-      <CookeryInfo
-        images={recipe.recipeImgs}
-        descs={recipe.recipeDescs}
-        timers={recipe.recipeTimers}
-      />
-      <Divider />
-      <ReviewInfo reviews={recipe.reviews} />
-      <Box sx={{ display: 'flex', justifyContent: 'center', paddingBottom: '1rem' }}>
-        <Button onClick={() => navigate(`/recipe/${recipe.id}/reviews`)}>리뷰 더보기</Button>
-      </Box>
-      <Divider />
-      <BottomContainer>
-        <Button
-          startIcon={
-            <CallSplitOutlined
-              sx={{
-                minWidth: 'auto',
-                minHeight: 'auto',
-                padding: 0,
-                width: '32px',
-                height: '32px',
-              }}
-            />
-          }
-          variant="contained"
-          color="primary">
-          <Typography variant="button" fontWeight="bold">
-            포크하기
+      {isReviewMore ? (
+        <RecipeReviews onBackBtnClick={setIsReviewMore} />
+      ) : (
+        <>
+          <AppBarWithTitle title="" rightIcon="share" />
+          <RecipeInfoImage imgs={recipe.imgURLs} isLoading={isLoading} />
+          <RecipeInformation recipeInfo={recipe} isLoading={isLoading} />
+          <Divider />
+          <AllergyInfo allergys={recipe.allergys} />
+          <Divider />
+          <NutritionInfo />
+          <Divider />
+          <IngredientInfo ingredients={recipe.ingredients} />
+          <Divider />
+          <Typography variant="h5" sx={{ padding: '1rem' }}>
+            레시피
           </Typography>
-        </Button>
-        <Button
-          startIcon={
-            <LocalDiningOutlined
-              sx={{
-                minWidth: 'auto',
-                minHeight: 'auto',
-                padding: 0,
-                width: '32px',
-                height: '32px',
-              }}
-            />
-          }
-          variant="contained"
-          color="primary">
-          <Typography variant="button" fontWeight="bold">
-            요리하기
-          </Typography>
-        </Button>
-      </BottomContainer>
+          <CookeryInfo
+            images={recipe.recipeImgs}
+            descs={recipe.recipeDescs}
+            timers={recipe.recipeTimers}
+          />
+          <Divider />
+          <ReviewInfo reviews={recipe.reviews} />
+          <Box sx={{ display: 'flex', justifyContent: 'center', paddingBottom: '1rem' }}>
+            <Button onClick={() => setIsReviewMore(true)}>리뷰 더보기</Button>
+          </Box>
+          <Divider />
+          <BottomContainer>
+            <Button
+              startIcon={
+                <CallSplitOutlined
+                  sx={{
+                    minWidth: 'auto',
+                    minHeight: 'auto',
+                    padding: 0,
+                    width: '32px',
+                    height: '32px',
+                  }}
+                />
+              }
+              variant="contained"
+              color="primary">
+              <Typography variant="button" fontWeight="bold">
+                포크하기
+              </Typography>
+            </Button>
+            <Button
+              startIcon={
+                <LocalDiningOutlined
+                  sx={{
+                    minWidth: 'auto',
+                    minHeight: 'auto',
+                    padding: 0,
+                    width: '32px',
+                    height: '32px',
+                  }}
+                />
+              }
+              variant="contained"
+              color="primary">
+              <Typography variant="button" fontWeight="bold">
+                요리하기
+              </Typography>
+            </Button>
+          </BottomContainer>
+        </>
+      )}
     </>
   );
 };

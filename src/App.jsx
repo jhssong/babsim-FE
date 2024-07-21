@@ -44,8 +44,10 @@ function App() {
           <Route path="/product/:productId" element={<Product />} />
           <Route path="/recipe" element={<Recipe />} />
           <Route path="/recipe/:recipeId" element={<RecipeInfo />} />
-          <Route path="/recipe/edit/:recipeId" element={<RecipeEdit />} />
-          <Route path="/recipe/:recipeId/reviews" element={<RecipeReviews />} />
+          <Route
+            path="/recipe/edit/:recipeId"
+            element={<ProtectedRoute isLoggined={isLoggined} path={<RecipeEdit />} />}
+          />
           <Route
             path="/mypage"
             element={<ProtectedRoute isLoggined={isLoggined} path={<MyPage />} />}

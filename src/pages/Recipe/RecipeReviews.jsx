@@ -5,7 +5,7 @@ import { Review } from './RecipeInfo/ReviewInfo';
 import { useParams } from 'react-router-dom';
 import { Reviews } from '@mui/icons-material';
 
-const RecipeReviews = () => {
+const RecipeReviews = ({ onBackBtnClick }) => {
   const recipeId = useParams();
   const [reviews, setReviews] = useState([]);
 
@@ -32,7 +32,7 @@ const RecipeReviews = () => {
 
   return (
     <div>
-      <AppBarWithTitle />
+      <AppBarWithTitle onBackBtnClick={onBackBtnClick} />
       {reviews.length === 0 ? (
         <Box
           sx={{
