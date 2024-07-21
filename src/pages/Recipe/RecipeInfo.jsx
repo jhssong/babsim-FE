@@ -14,7 +14,10 @@ import styled from '@emotion/styled';
 // dummy data
 const recipe = {
   id: '12345',
-  imgURLs: [null, null],
+  imgURLs: [
+    'https://d2v80xjmx68n4w.cloudfront.net/gigs/fPoZ31584321311.jpg?w=652',
+    'https://d2v80xjmx68n4w.cloudfront.net/gigs/5s8Hq1584287799.jpg?w=652',
+  ],
   name: '짱구 도시락',
   description: '짱구가 어디갈 때 먹는 도시락',
   rate: 4,
@@ -77,13 +80,12 @@ const BottomContainer = styled.div`
 
 const RecipeInfo = () => {
   const { recipeId } = useParams();
-  const [isLoading, setIsLoading] = useState(true); // Backend API 구현 후 true로 변경
-  const [isDone, setDone] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Backend API 구현 후 true로 변경
   const [recipeInfo, setRecipeInfo] = useState([]);
 
   const getRecipeInfo = async () => {
     const json = await (await fetch(` http://localhost:5173/api/recipe/${recipeId}`)).json();
-    setRecipeInfo(json.data.movie);
+    setRecipeInfo(json);
     isLoading(false);
   };
   useEffect(() => {
@@ -92,8 +94,8 @@ const RecipeInfo = () => {
 
   return (
     <>
-      <AppBarWithTitle title="" rightIcon="done" set={setDone} />
-      <RecipeInfoImage src={recipeInfo.image} alt={recipeInfo.title} isLoading={isLoading} />
+      <AppBarWithTitle title="" rightIcon="share" />
+      <RecipeInfoImage imgs={recipe.imgURLs} isLoading={isLoading} />
       <RecipeInformation recipeInfo={recipe} isLoading={isLoading} />
       <Divider />
       <AllergyInfo allergys={recipe.allergys} />
@@ -102,6 +104,9 @@ const RecipeInfo = () => {
       <Divider />
       <IngredientInfo ingredients={recipe.ingredients} />
       <Divider />
+      <Typography variant="h5" sx={{ padding: '1rem' }}>
+        레시피
+      </Typography>
       <CookeryInfo
         images={recipe.recipeImgs}
         descs={recipe.recipeDescs}

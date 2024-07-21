@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import { TimerOutlined } from '@mui/icons-material';
 import { Skeleton, Typography } from '@mui/material';
-import { grey } from '@mui/material/colors';
 
 const StyledHeader = styled.div`
   display: flex;
@@ -60,7 +59,7 @@ const Cookery = ({ image, desc, timer, order }) => {
         {timer ? (
           <TextContainer id="timerText">
             <TimerOutlined />
-            <Typography variant="body5" color="secondary">
+            <Typography variant="body5" color="primary">
               {formatTime(timer)}
             </Typography>{' '}
           </TextContainer>
@@ -88,7 +87,7 @@ const CookeryInfo = ({ images, descs, timers }) => {
 
   return (
     <CookeryContainer>
-      <Typography variant="h5">레시피</Typography>
+
       {cookeries.map((cookery, index) => (
         <Cookery
           key={index}
