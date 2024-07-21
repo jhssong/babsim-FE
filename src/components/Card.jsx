@@ -64,7 +64,7 @@ const Rating = styled.div`
   align-items: center;
 `;
 
-export const HCard = ({ recipe, index }) => {
+export const HCard = ({ recipe, index, onClick }) => {
   const formatCookingTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
@@ -77,7 +77,7 @@ export const HCard = ({ recipe, index }) => {
   };
 
   return (
-    <RecipeContiner>
+    <RecipeContiner onClick={onClick}>
       <Typography variant="h6">{index + 1}</Typography>
       <Recipe>
         <RecipeImage src={recipe.img} alt={recipe.name} />
@@ -131,9 +131,9 @@ const ProductInfo = styled.div`
   align-self: stretch;
   width: 12.1875rem;
 `;
-export const VCard = ({ type, product, index, style }) => {
+export const VCard = ({ type, product, index, style, onClick }) => {
   return (
-    <ProdcutContainer style={style}>
+    <ProdcutContainer style={style} onClick={onClick}>
       <ProductImage src={product.img} alt={product.name} />
       <ProductInfo>
         {type === 'recipe' ? (
