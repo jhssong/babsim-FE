@@ -15,7 +15,7 @@ const Container = styled.div`
   height: 4rem;
   justify-content: center;
   align-items: flex-start;
-  position: fixed;
+
   bottom: 0;
 `;
 

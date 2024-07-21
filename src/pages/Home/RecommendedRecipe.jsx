@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 
 import { Typography } from '@mui/material';
 import { VCard } from '../../components/Card';
-import CardList from '../../components/CardList';
+import { GridCardList } from '../../components/CardList';
 import { useRecoilValue } from 'recoil';
 import { loginState } from '../../recoil/atoms';
 
@@ -70,11 +70,11 @@ const RecommendedRecipe = () => {
   return (
     <RecommendedRecipeContainer>
       <Typography variant="h5">{user}님을 위한 추천 레시피</Typography>
-      <CardList>
+      <GridCardList>
         {recipesData.list.map((recipe, index) => (
           <VCard key={recipe.id} product={recipe} index={index} type="recipe" />
         ))}
-      </CardList>
+      </GridCardList>
     </RecommendedRecipeContainer>
   );
 };
