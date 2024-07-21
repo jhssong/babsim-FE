@@ -6,7 +6,7 @@ import NavBar from '../../components/NavBar';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { RollCardList } from '../../components/CardList';
+import { GridCardList, RollCardList } from '../../components/CardList';
 import { VCard } from '../../components/Card';
 
 const Container = styled.div`
@@ -17,6 +17,7 @@ const Container = styled.div`
   flex: 1 0 0;
   align-self: stretch;
   overflow-y: auto;
+  overflow-x: hidden;
   height: calc(100vh - 7rem);
 `;
 
@@ -29,38 +30,71 @@ const Market = () => {
     list: [
       {
         id: 'NFT001',
-        img: 'https://example.com/nft001.jpg',
+        img: 'https://img.khan.co.kr/news/2023/05/12/news-p.v1.20230512.e5fffd99806f4dcabd8426d52788f51a_P1.png',
         recipeID: 'recipe001',
         name: 'Delicious Spaghetti NFT',
         price: '10.00 ETH',
       },
       {
         id: 'NFT002',
-        img: 'https://example.com/nft002.jpg',
+        img: 'https://img.khan.co.kr/news/2023/05/12/news-p.v1.20230512.e5fffd99806f4dcabd8426d52788f51a_P1.png',
         recipeID: 'recipe002',
         name: 'Tasty Burger NFT',
         price: '12.50 ETH',
       },
       {
         id: 'NFT003',
-        img: 'https://example.com/nft003.jpg',
+        img: 'https://img.khan.co.kr/news/2023/05/12/news-p.v1.20230512.e5fffd99806f4dcabd8426d52788f51a_P1.png',
         recipeID: 'recipe003',
         name: 'Yummy Sushi NFT',
         price: '15.00 ETH',
       },
       {
         id: 'NFT004',
-        img: 'https://example.com/nft004.jpg',
+        img: 'https://img.khan.co.kr/news/2023/05/12/news-p.v1.20230512.e5fffd99806f4dcabd8426d52788f51a_P1.png',
         recipeID: 'recipe004',
         name: 'Hearty Salad NFT',
         price: '8.75 ETH',
       },
       {
         id: 'NFT005',
-        img: 'https://example.com/nft005.jpg',
+        img: 'https://img.khan.co.kr/news/2023/05/12/news-p.v1.20230512.e5fffd99806f4dcabd8426d52788f51a_P1.png',
         recipeID: 'recipe005',
         name: 'Sweet Dessert NFT',
         price: '11.25 ETH',
+      },
+    ],
+  };
+
+  const productData = {
+    list: [
+      {
+        id: '1',
+        img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
+        name: '시부야 초록 라멘',
+        price: '4,300원',
+        rate: 3.5,
+      },
+      {
+        id: '2',
+        img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
+        name: '도쿄 소유 라멘',
+        price: '5,200원',
+        rate: 4.2,
+      },
+      {
+        id: '3',
+        img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
+        name: '오사카 돈코츠 라멘',
+        price: '5,800원',
+        rate: 4.7,
+      },
+      {
+        id: '4',
+        img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
+        name: '나고야 미소 라멘',
+        price: '4,800원',
+        rate: 4.0,
       },
     ],
   };
@@ -83,6 +117,11 @@ const Market = () => {
             />
           ))}
         </RollCardList>
+        <GridCardList title="핫한 상품">
+          {productData.list.map((product, index) => (
+            <VCard key={product.id} type="product" product={product} index={index} />
+          ))}
+        </GridCardList>
       </Container>
 
       <NavBar page="market" />
