@@ -5,15 +5,13 @@ const theme = createTheme({
   palette: {
     primary: {
       main: orange[800],
-    },
-    secondary: {
-      main: orange[300],
+      light: orange[400],
     },
     seperator: {
       main: orange[100],
     },
     subbackground: {
-      main: grey[200],
+      main: grey[400],
     },
   },
 });
