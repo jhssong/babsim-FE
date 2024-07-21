@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-const CardListContainer = styled.div`
+const GridCardListContainer = styled.div`
   display: flex;
   padding: 0.5rem var(--none, 0rem);
   justify-content: space-between;
@@ -11,8 +11,21 @@ const CardListContainer = styled.div`
   flex-wrap: wrap;
 `;
 
-const CardList = ({ children }) => {
-  return <CardListContainer>{children}</CardListContainer>;
+export const GridCardList = ({ children }) => {
+  return <GridCardListContainer>{children}</GridCardListContainer>;
 };
 
-export default CardList;
+const RollCardListContainer = styled.div`
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+
+  padding: 0.5rem var(--none, 0rem);
+  align-items: center;
+  gap: 1rem;
+  align-self: stretch;
+`;
+
+export const RollCardList = ({ children }) => {
+  return <RollCardListContainer>{children}</RollCardListContainer>;
+};

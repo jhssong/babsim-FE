@@ -2,23 +2,13 @@ import styled from '@emotion/styled';
 
 import { Typography } from '@mui/material';
 import { VCard } from '../../components/Card';
+import { RollCardList } from '../../components/CardList';
 
 const RecommendedProductContainer = styled.div`
   display: flex;
   padding-left: 1rem;
   flex-direction: column;
   align-items: flex-start;
-  align-self: stretch;
-`;
-
-const RecommendedProductContents = styled.div`
-  display: flex;
-  overflow-x: auto;
-  white-space: nowrap;
-
-  padding: 0.5rem var(--none, 0rem);
-  align-items: center;
-  gap: 1rem;
   align-self: stretch;
 `;
 
@@ -59,7 +49,7 @@ const RecommendedProduct = () => {
   return (
     <RecommendedProductContainer>
       <Typography variant="h5">추천 상품</Typography>
-      <RecommendedProductContents>
+      <RollCardList>
         {productData.list.map((product, index) => (
           <VCard
             key={product.id}
@@ -71,7 +61,7 @@ const RecommendedProduct = () => {
             }}
           />
         ))}
-      </RecommendedProductContents>
+      </RollCardList>
     </RecommendedProductContainer>
   );
 };
