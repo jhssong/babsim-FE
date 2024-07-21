@@ -149,12 +149,16 @@ export const VCard = ({ type, product, index, style }) => {
         )}
         <Typography variant="body1">{product.name}</Typography>
         {type !== 'recipe' ? <Typography variant="body2">{product.price}</Typography> : <></>}
-        <Rating>
-          <Star color="primary" fontSize="small" />
-          <Typography variant="body2" sx={{ color: 'subbackground.main' }}>
-            {product.rate}
-          </Typography>
-        </Rating>
+        {type !== 'nft' ? (
+          <Rating>
+            <Star color="primary" fontSize="small" />
+            <Typography variant="body2" sx={{ color: 'subbackground.main' }}>
+              {product.rate}
+            </Typography>
+          </Rating>
+        ) : (
+          <></>
+        )}
       </ProductInfo>
     </ProdcutContainer>
   );
