@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import { useState } from 'react';
 import { useSwipeable } from 'react-swipeable';
 import { HCard } from '../../components/Card';
+import { useNavigate } from 'react-router-dom';
 
 const WeeklyRecipeContainer = styled.div`
   display: flex;
@@ -36,7 +37,7 @@ const WeeklyRecipe = () => {
   const recipesData = {
     list: [
       {
-        id: 'recipe1',
+        id: '0',
         img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
         name: 'Spaghetti Carbonara',
         tags: ['Italian', 'Pasta', 'Creamy'],
@@ -45,7 +46,7 @@ const WeeklyRecipe = () => {
         allergies: ['dairy', 'egg'],
       },
       {
-        id: 'recipe2',
+        id: '0',
         img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
         name: 'Chicken Curry',
         tags: ['Indian', 'Spicy', 'Chicken'],
@@ -54,7 +55,7 @@ const WeeklyRecipe = () => {
         allergies: ['nut'],
       },
       {
-        id: 'recipe3',
+        id: '0',
         img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
         name: '조재용의 특제 시부야 초록라멘 국물이 아주 끝내줘요 아주 그냥 ',
         tags: ['Vegan', 'Healthy', 'Bowl', 'Bowl', 'Bowl', 'Bowl', 'Bowl', 'Bowl'],
@@ -63,7 +64,16 @@ const WeeklyRecipe = () => {
         allergies: ['soy', 'sesame'],
       },
       {
-        id: 'recipe4',
+        id: '0',
+        img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
+        name: 'Beef Tacos',
+        tags: ['Mexican', 'Beef', 'Spicy'],
+        cookingTime: 1200,
+        rate: 4.3,
+        allergies: ['gluten'],
+      },
+      {
+        id: '0',
         img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
         name: 'Beef Tacos',
         tags: ['Mexican', 'Beef', 'Spicy'],
@@ -78,6 +88,7 @@ const WeeklyRecipe = () => {
   const formattedDate = format(today, 'yyyy.MM.dd');
 
   const [pageIndex, setPageIndex] = useState(0); //페이지를 나타내는 변수
+  let navigate = useNavigate();
 
   const handlers = useSwipeable({
     onSwipedLeft: () => setPageIndex((prevIndex) => Math.min(prevIndex + 1, 4)), // 최대 페이지 인덱스는 4 (0부터 시작해서 5페이지)
@@ -100,7 +111,12 @@ const WeeklyRecipe = () => {
 
         <WeeklyRecipeContents {...handlers}>
           {recipesToShow.map((recipe, index) => (
-            <HCard key={recipe.id} recipe={recipe} index={pageIndex * 3 + index} />
+            <HCard
+              key={recipe.id}
+              recipe={recipe}
+              index={pageIndex * 3 + index}
+              onClick={() => navigate(`/recipe/${recipe.id}`)}
+            />
           ))}
         </WeeklyRecipeContents>
       </WeeklyRecipeContainer>

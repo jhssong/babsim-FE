@@ -77,9 +77,9 @@ export const HCard = ({ recipe, index, onClick }) => {
   };
 
   return (
-    <RecipeContiner onClick={onClick}>
+    <RecipeContiner>
       <Typography variant="h6">{index + 1}</Typography>
-      <Recipe>
+      <Recipe onClick={onClick}>
         <RecipeImage src={recipe.img} alt={recipe.name} />
         <RecipeInfo>
           <HashTags>
