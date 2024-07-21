@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { AppBarWithTitle } from '../../components/AppBar';
-import { Button, Divider, Typography } from '@mui/material';
+import { Box, Button, Divider, Typography } from '@mui/material';
 import RecipeInformation, { RecipeInfoImage } from './RecipeInfo/RecipeInformation';
 import AllergyInfo from './RecipeInfo/AllergyInfo';
 import NutritionInfo from './RecipeInfo/NutritionInfo';
@@ -10,6 +10,7 @@ import CookeryInfo from './RecipeInfo/CookeryInfo';
 import ReviewInfo from './RecipeInfo/ReviewInfo';
 import { CallSplitOutlined, LocalDiningOutlined } from '@mui/icons-material';
 import styled from '@emotion/styled';
+import Reviews from './RecipeReviews';
 
 // dummy data
 const recipe = {
@@ -32,6 +33,29 @@ const recipe = {
     { name: '소세지', amount: 10 },
   ],
   reviews: [
+    {
+      name: 'User1',
+      rating: 5,
+      registerDate: '24.01.10',
+      comment:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      forkedRecipe: null,
+    },
+    {
+      name: 'User2',
+      rating: 4,
+      registerDate: '24.09.30',
+      comment:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      forkedRecipe: 123456,
+    },
+    {
+      name: 'User3',
+      rating: 4.5,
+      registerDate: '24.03.12',
+      comment: 'Loved it, will make again.',
+      forkedRecipe: 999999,
+    },
     {
       name: 'User1',
       rating: 5,
@@ -79,6 +103,8 @@ const BottomContainer = styled.div`
 `;
 
 const RecipeInfo = () => {
+  const navigate = useNavigate();
+
   const { recipeId } = useParams();
   const [isLoading, setIsLoading] = useState(false); // Backend API 구현 후 true로 변경
   const [recipeInfo, setRecipeInfo] = useState([]);
@@ -114,6 +140,9 @@ const RecipeInfo = () => {
       />
       <Divider />
       <ReviewInfo reviews={recipe.reviews} />
+      <Box sx={{ display: 'flex', justifyContent: 'center', paddingBottom: '1rem' }}>
+        <Button onClick={() => navigate(`/recipe/${recipe.id}/reviews`)}>리뷰 더보기</Button>
+      </Box>
       <Divider />
       <BottomContainer>
         <Button

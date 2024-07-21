@@ -19,6 +19,7 @@ import Cart from './pages/Market/Cart';
 import Product from './pages/Market/Product';
 import NotFound from './pages/Error/NotFound';
 import RecipeEdit from './pages/Recipe/RecipeEdit';
+import RecipeReviews from './pages/Recipe/RecipeReviews';
 
 const ProtectedRoute = ({ isLoggined, path }) => {
   return isLoggined ? path : <Navigate to="/login" />;
@@ -44,6 +45,7 @@ function App() {
           <Route path="/recipe" element={<Recipe />} />
           <Route path="/recipe/:recipeId" element={<RecipeInfo />} />
           <Route path="/recipe/edit/:recipeId" element={<RecipeEdit />} />
+          <Route path="/recipe/:recipeId/reviews" element={<RecipeReviews />} />
           <Route
             path="/mypage"
             element={<ProtectedRoute isLoggined={isLoggined} path={<MyPage />} />}
