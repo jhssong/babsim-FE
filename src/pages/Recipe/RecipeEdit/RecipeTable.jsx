@@ -20,11 +20,7 @@ import { Edit, Delete, Add } from '@mui/icons-material';
 import { useState } from 'react';
 
 const RecipeTable = () => {
-  const [ingredients, setIngredients] = useState([
-    { id: 1, name: '방울토마토', quantity: 1, selected: false },
-    { id: 2, name: '계란', quantity: 1, selected: false },
-    { id: 3, name: '양상추', quantity: 1, selected: false },
-  ]);
+  const [ingredients, setIngredients] = useState([]);
   const [selectedCount, setSelectedCount] = useState(0);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingIngredient, setEditingIngredient] = useState(null);
