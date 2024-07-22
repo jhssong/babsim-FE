@@ -9,6 +9,7 @@ import { loginState } from '../../recoil/atoms';
 import RecipeTable from './RecipeEdit/RecipeTable';
 import RecipeTags from './RecipeEdit/RecipeTags';
 import CookeryEdit from './RecipeEdit/CookeryEdit';
+import CookeryEditModal from './RecipeEdit/CookeryEditModal';
 
 // dummy data
 const recipe = {
@@ -112,6 +113,7 @@ const RecipeEdit = () => {
   const [recipeInfo, setRecipeInfo] = useState([]);
   const [difficulty, setDifficulty] = useState('');
   const [timeError, setTimeError] = useState(false);
+  const [isCookeryModalOpen, setIsCookeryModalOpen] = useState(false); // 조리법 수정 모달창 열기/닫기
 
   const difficultyChange = (event) => {
     setDifficulty(event.target.value);
@@ -132,7 +134,9 @@ const RecipeEdit = () => {
 
   return (
     <>
-      {isLoading ? null : (
+      {isLoading ? null : isCookeryModalOpen ? (
+        <CookeryEditModal />
+      ) : (
         <>
           <AppBarWithTitle title="" rightIcon="done" set={setDone} />
           <Container>
@@ -226,7 +230,7 @@ const RecipeEdit = () => {
             <Divider sx={{ paddingTop: '1rem' }} />
             <RecipeTags recipeTags={recipe.tags} />
             <Divider sx={{ paddingTop: '1rem' }} />
-            <CookeryEdit recipe={recipe} />
+            <CookeryEdit recipe={recipe} setState={setIsCookeryModalOpen} />
           </Container>
         </>
       )}

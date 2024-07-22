@@ -30,12 +30,16 @@ export const EditButton = styled(IconButton)`
 `;
 
 // CookeryEdit 컴포넌트 정의
-const CookeryEdit = ({ recipe }) => {
+const CookeryEdit = ({ recipe, setState }) => {
   const theme = useTheme();
+
+  const onClick = () => {
+    setState(true);
+  };
 
   return (
     <Container theme={theme}>
-      <EditButton theme={theme} aria-label="edit">
+      <EditButton theme={theme} aria-label="edit" onClick={onClick}>
         <EditIcon />
       </EditButton>
       <CookeryInfo
