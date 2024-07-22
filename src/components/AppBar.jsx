@@ -15,12 +15,10 @@ const StyledHeader = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
+  align-items: center; // 수직 중앙 정렬
   padding: 0.625rem 1rem;
-
   width: 100%;
   height: 3rem;
-
   border-bottom: 1px solid #eeeeee;
 `;
 
@@ -28,8 +26,15 @@ const Container = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  align-items: center;
+  align-items: center; // 수직 중앙 정렬
   gap: 0.25rem;
+`;
+
+const IconWrapper = styled.p`
+  display: flex;
+  align-items: center; // 수직 중앙 정렬
+  margin: 0;
+  cursor: pointer;
 `;
 
 export function AppBarWithLogo() {
@@ -39,16 +44,17 @@ export function AppBarWithLogo() {
     <StyledHeader>
       <img src={logo} onClick={() => navigate('/')} />
       <Container>
-        <p onClick={() => navigate('/search')}>
+        <IconWrapper onClick={() => navigate('/search')}>
           <SearchOutlined />
-        </p>
-        <p onClick={() => navigate('/cart')}>
+        </IconWrapper>
+        <IconWrapper onClick={() => navigate('/cart')}>
           <ShoppingCartOutlined />
-        </p>
+        </IconWrapper>
       </Container>
     </StyledHeader>
   );
 }
+
 export function AppBarWithTitle({ title, rightIcon, onBackBtnClick, set }) {
   const navigate = useNavigate();
 
@@ -62,20 +68,20 @@ export function AppBarWithTitle({ title, rightIcon, onBackBtnClick, set }) {
   };
   return (
     <StyledHeader>
-      <p onClick={handleBackClick}>
+      <IconWrapper onClick={handleBackClick}>
         <ArrowBackIosOutlined />
-      </p>
+      </IconWrapper>
       <Typography>{title}</Typography>
       {rightIcon === 'share' ? (
-        <p onClick={() => set(true)}>
+        <IconWrapper onClick={() => set(true)}>
           <ShareOutlined />
-        </p>
+        </IconWrapper>
       ) : rightIcon === 'done' ? (
-        <p onClick={() => set(true)}>
+        <IconWrapper onClick={() => set(true)}>
           <DoneOutlined />
-        </p>
+        </IconWrapper>
       ) : (
-        <></>
+        <div style={{ width: '24px' }} /> // 아이콘이 없을 때도 균형 유지
       )}
     </StyledHeader>
   );

@@ -95,7 +95,7 @@ const BottomContainer = styled.div`
   padding-inline: 1rem;
 
   button:nth-child(1) {
-    width: 35%;
+    width: 42%;
   }
   button:nth-child(2) {
     width: 55%;
