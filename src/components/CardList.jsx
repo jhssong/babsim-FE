@@ -2,14 +2,10 @@ import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 
 const GridCardWrapper = styled.div`
-  display: flex;
-  padding: 0.5rem var(--none, 0rem);
-  justify-content: space-between;
-  align-items: flex-start;
-  align-content: center;
-  gap: 1rem 0.5rem;
-  align-self: stretch;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 두 개의 열로 고정 */
+  gap: 1rem;
+  width: 100%;
 `;
 
 const GridCardContainer = styled.div`
@@ -34,10 +30,16 @@ const RollCardWrapper = styled.div`
   overflow-x: auto;
   white-space: nowrap;
 
-  padding: 0.5rem var(--none, 0rem);
+  padding: 0.5rem 0;
   align-items: center;
   gap: 1rem;
   align-self: stretch;
+
+  & > * {
+    // 모든 자식 요소에 적용
+    flex: 1 0 auto; // 모든 아이템이 같은 비율로 공간을 차지하도록 설정
+    width: 45vw; // 최소 너비 설정
+  }
 `;
 
 const RollCardContainer = styled.div`
