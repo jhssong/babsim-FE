@@ -11,7 +11,7 @@ export const loginState = atom({
       age: '32',
       email: 'IU@naver.com',
       job: '가수',
-      allergy: ['알러지 ID', '알러지 ID', '알러지 ID'],
+      allergy: ['fish'],
     },
   },
 });
