@@ -1,7 +1,5 @@
 import styled from '@emotion/styled';
 
-import { AppBarWithLogo } from '../../components/AppBar';
-import NavBar from '../../components/NavBar';
 import { useRecoilValue } from 'recoil';
 import { loginState } from '../../recoil/atoms';
 import { useEffect, useRef, useState } from 'react';
@@ -10,6 +8,10 @@ import { GridCardList } from '../../components/CardList';
 import { VCard } from '../../components/Card';
 import { useNavigate } from 'react-router-dom';
 import { Edit } from '@mui/icons-material';
+
+import { AppBarWithLogo } from '../../components/AppBar';
+import NavBar from '../../components/NavBar';
+import RecipeEdit from './RecipeEdit';
 
 const Container = styled.div`
   display: flex;
@@ -29,6 +31,7 @@ const Recipe = () => {
   const [allergy, setAllergy] = useState(true);
   const containerRef = useRef(null);
   const [showButton, setShowButton] = useState(true);
+  const [writeRecipe, setWriteRecipe] = useState(false);
 
   let navigate = useNavigate();
 
@@ -214,39 +217,46 @@ const Recipe = () => {
 
   return (
     <>
-      <AppBarWithLogo />
-      <Container ref={containerRef}>
-        <Categories setCategory={setCategory} categories={categories} />
-        {isLoggined ? <AllergyFilter allergy={allergy} setAllergy={setAllergy} /> : <></>}
-        <GridCardList>
-          {filteredRecipes.map((recipe, index) => (
-            <VCard
-              key={recipe.id}
-              product={recipe}
-              index={index}
-              type="recipe"
-              onClick={() => navigate(`/recipe/${recipe.id}`)}
-            />
-          ))}
-        </GridCardList>
-        {showButton && (
-          <Button
-            variant="contained"
-            sx={{
-              borderRadius: '4rem',
-              position: 'fixed',
-              bottom: '8rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-            }}>
-            <Edit />
-            <Typography variant="caption">레시피 등록하기</Typography>
-          </Button>
-        )}
-      </Container>
+      {writeRecipe ? (
+        <RecipeEdit mode={'write'} />
+      ) : (
+        <>
+          <AppBarWithLogo />
+          <Container ref={containerRef}>
+            <Categories setCategory={setCategory} categories={categories} />
+            {isLoggined ? <AllergyFilter allergy={allergy} setAllergy={setAllergy} /> : <></>}
+            <GridCardList>
+              {filteredRecipes.map((recipe, index) => (
+                <VCard
+                  key={recipe.id}
+                  product={recipe}
+                  index={index}
+                  type="recipe"
+                  onClick={() => navigate(`/recipe/${recipe.id}`)}
+                />
+              ))}
+            </GridCardList>
+            {showButton && (
+              <Button
+                variant="contained"
+                sx={{
+                  borderRadius: '4rem',
+                  position: 'fixed',
+                  bottom: '8rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                }}
+                onClick={() => setWriteRecipe(true)}>
+                <Edit />
+                <Typography variant="caption">레시피 등록하기</Typography>
+              </Button>
+            )}
+          </Container>
 
-      <NavBar page="recipe" />
+          <NavBar page="recipe" />
+        </>
+      )}
     </>
   );
 };
