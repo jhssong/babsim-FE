@@ -19,8 +19,8 @@ const Recipe = styled.div`
 `;
 
 const RecipeImage = styled.img`
-  width: 7.5rem;
-  height: 7.5rem;
+  width: 29vw;
+  height: 29vw;
   object-fit: cover;
   border-radius: 0.25rem;
 `;
@@ -110,14 +110,14 @@ export const HCard = ({ recipe, index, onClick }) => {
 
 const ProdcutContainer = styled.div`
   display: flex;
-  width: auto;
+  width: 100%;
   flex-direction: column;
   align-items: flex-start;
 `;
 
 const ProductImage = styled.img`
-  width: 12.1875rem;
-  height: 9.2665rem;
+  width: 100%;
+  height: 25vw; /* 화면 너비의 75% (4:3 비율 유지) */
   object-fit: cover;
   border-radius: 0.25rem;
 `;
@@ -129,7 +129,7 @@ const ProductInfo = styled.div`
   justify-content: center;
   align-items: flex-start;
   align-self: stretch;
-  width: 12.1875rem;
+  width: 100%;
 `;
 export const VCard = ({ type, product, index, style, onClick }) => {
   return (
