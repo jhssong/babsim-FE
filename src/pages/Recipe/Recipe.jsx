@@ -1,19 +1,22 @@
 import styled from '@emotion/styled';
 
-import { AppBarWithLogo } from '../../components/AppBar';
-import NavBar from '../../components/NavBar';
 import { useRecoilValue } from 'recoil';
 import { loginState } from '../../recoil/atoms';
-import { useState } from 'react';
-import { Chip, Stack, Switch, Typography } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
+import { Button, Chip, Stack, Switch, Typography } from '@mui/material';
 import { GridCardList } from '../../components/CardList';
 import { VCard } from '../../components/Card';
 import { useNavigate } from 'react-router-dom';
+import { Edit } from '@mui/icons-material';
+
+import { AppBarWithLogo } from '../../components/AppBar';
+import NavBar from '../../components/NavBar';
+import RecipeEdit from './RecipeEdit';
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   flex: 1 0 0;
   align-self: stretch;
   overflow-y: auto;
@@ -26,6 +29,10 @@ const Recipe = () => {
   const user = useRecoilValue(loginState).user;
   const [category, setCategory] = useState('all');
   const [allergy, setAllergy] = useState(true);
+  const containerRef = useRef(null);
+  const [showButton, setShowButton] = useState(true);
+  const [writeRecipe, setWriteRecipe] = useState(false);
+
   let navigate = useNavigate();
 
   const categories = [
@@ -48,6 +55,78 @@ const Recipe = () => {
 
   const data = {
     0: [
+      {
+        id: '0',
+        img: 'https://i.namu.wiki/i/U_nuVL__0tNfEPk8Eb9PXISEad-qOs4aOEI0u-Zclq928dHx835CxJjMk3HKzg4ieprrKff_42Th2Tao7yezAg.webp',
+        name: 'Kimchi',
+        tags: ['Korean', 'Spicy', 'Fermented'],
+        cookingTime: 7200,
+        rate: 4.8,
+        allergies: ['fish'],
+      },
+      {
+        id: '0',
+        img: 'https://i.namu.wiki/i/U_nuVL__0tNfEPk8Eb9PXISEad-qOs4aOEI0u-Zclq928dHx835CxJjMk3HKzg4ieprrKff_42Th2Tao7yezAg.webp',
+        name: 'Kimchi',
+        tags: ['Korean', 'Spicy', 'Fermented'],
+        cookingTime: 7200,
+        rate: 4.8,
+        allergies: ['fish'],
+      },
+      {
+        id: '0',
+        img: 'https://i.namu.wiki/i/U_nuVL__0tNfEPk8Eb9PXISEad-qOs4aOEI0u-Zclq928dHx835CxJjMk3HKzg4ieprrKff_42Th2Tao7yezAg.webp',
+        name: 'Kimchi',
+        tags: ['Korean', 'Spicy', 'Fermented'],
+        cookingTime: 7200,
+        rate: 4.8,
+        allergies: ['fish'],
+      },
+      {
+        id: '0',
+        img: 'https://i.namu.wiki/i/U_nuVL__0tNfEPk8Eb9PXISEad-qOs4aOEI0u-Zclq928dHx835CxJjMk3HKzg4ieprrKff_42Th2Tao7yezAg.webp',
+        name: 'Kimchi',
+        tags: ['Korean', 'Spicy', 'Fermented'],
+        cookingTime: 7200,
+        rate: 4.8,
+        allergies: ['fish'],
+      },
+      {
+        id: '0',
+        img: 'https://i.namu.wiki/i/U_nuVL__0tNfEPk8Eb9PXISEad-qOs4aOEI0u-Zclq928dHx835CxJjMk3HKzg4ieprrKff_42Th2Tao7yezAg.webp',
+        name: 'Kimchi',
+        tags: ['Korean', 'Spicy', 'Fermented'],
+        cookingTime: 7200,
+        rate: 4.8,
+        allergies: ['fish'],
+      },
+      {
+        id: '0',
+        img: 'https://i.namu.wiki/i/U_nuVL__0tNfEPk8Eb9PXISEad-qOs4aOEI0u-Zclq928dHx835CxJjMk3HKzg4ieprrKff_42Th2Tao7yezAg.webp',
+        name: 'Kimchi',
+        tags: ['Korean', 'Spicy', 'Fermented'],
+        cookingTime: 7200,
+        rate: 4.8,
+        allergies: ['fish'],
+      },
+      {
+        id: '0',
+        img: 'https://i.namu.wiki/i/U_nuVL__0tNfEPk8Eb9PXISEad-qOs4aOEI0u-Zclq928dHx835CxJjMk3HKzg4ieprrKff_42Th2Tao7yezAg.webp',
+        name: 'Kimchi',
+        tags: ['Korean', 'Spicy', 'Fermented'],
+        cookingTime: 7200,
+        rate: 4.8,
+        allergies: ['fish'],
+      },
+      {
+        id: '0',
+        img: 'https://i.namu.wiki/i/U_nuVL__0tNfEPk8Eb9PXISEad-qOs4aOEI0u-Zclq928dHx835CxJjMk3HKzg4ieprrKff_42Th2Tao7yezAg.webp',
+        name: 'Kimchi',
+        tags: ['Korean', 'Spicy', 'Fermented'],
+        cookingTime: 7200,
+        rate: 4.8,
+        allergies: ['fish'],
+      },
       {
         id: '0',
         img: 'https://i.namu.wiki/i/U_nuVL__0tNfEPk8Eb9PXISEad-qOs4aOEI0u-Zclq928dHx835CxJjMk3HKzg4ieprrKff_42Th2Tao7yezAg.webp',
@@ -109,6 +188,24 @@ const Recipe = () => {
     ],
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (containerRef.current) {
+        // 여기서 '200'은 스크롤 허용 범위를 설정하는 값
+        setShowButton(containerRef.current.scrollTop < 150);
+      }
+    };
+
+    // 참조된 컴포넌트에 스크롤 이벤트 리스너 등록
+    const containerElement = containerRef.current;
+    containerElement.addEventListener('scroll', handleScroll);
+
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      containerElement.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   const getIndexByCategory = () => {
     return data[categories.indexOf(category) + 1] || [];
   };
@@ -120,24 +217,46 @@ const Recipe = () => {
 
   return (
     <>
-      <AppBarWithLogo />
-      <Container>
-        <Categories setCategory={setCategory} categories={categories} />
-        {isLoggined ? <AllergyFilter allergy={allergy} setAllergy={setAllergy} /> : <></>}
-        <GridCardList>
-          {filteredRecipes.map((recipe, index) => (
-            <VCard
-              key={recipe.id}
-              product={recipe}
-              index={index}
-              type="recipe"
-              onClick={() => navigate(`/recipe/${recipe.id}`)}
-            />
-          ))}
-        </GridCardList>
-      </Container>
+      {writeRecipe ? (
+        <RecipeEdit mode={'write'} />
+      ) : (
+        <>
+          <AppBarWithLogo />
+          <Container ref={containerRef}>
+            <Categories setCategory={setCategory} categories={categories} />
+            {isLoggined ? <AllergyFilter allergy={allergy} setAllergy={setAllergy} /> : <></>}
+            <GridCardList>
+              {filteredRecipes.map((recipe, index) => (
+                <VCard
+                  key={recipe.id}
+                  product={recipe}
+                  index={index}
+                  type="recipe"
+                  onClick={() => navigate(`/recipe/${recipe.id}`)}
+                />
+              ))}
+            </GridCardList>
+            {showButton && (
+              <Button
+                variant="contained"
+                sx={{
+                  borderRadius: '4rem',
+                  position: 'fixed',
+                  bottom: '8rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                }}
+                onClick={() => setWriteRecipe(true)}>
+                <Edit />
+                <Typography variant="caption">레시피 등록하기</Typography>
+              </Button>
+            )}
+          </Container>
 
-      <NavBar page="recipe" />
+          <NavBar page="recipe" />
+        </>
+      )}
     </>
   );
 };
