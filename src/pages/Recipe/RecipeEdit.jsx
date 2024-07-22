@@ -137,7 +137,7 @@ const RecipeEdit = () => {
   return (
     <>
       {isLoading ? null : isCookeryModalOpen ? (
-        <CookeryEditModal />
+        <CookeryEditModal recipe={recipe} onBackBtnClick={setIsCookeryModalOpen} />
       ) : (
         <>
           <AppBarWithTitle title="" rightIcon="done" set={setDone} />

@@ -43,7 +43,7 @@ const formatTime = (timer) => {
 };
 
 // Cookery 컴포넌트 정의
-const Cookery = ({ image, desc, timer, order }) => {
+export const Cookery = ({ image, desc, timer, order }) => {
   return (
     <StyledHeader>
       {image === null ? (
