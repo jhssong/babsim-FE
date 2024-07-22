@@ -215,6 +215,10 @@ const Recipe = () => {
     return !recipe.allergies.some((allergyItem) => user.allergy.includes(allergyItem));
   });
 
+  const writeHandClick = () => {
+    return isLoggined ? setWriteRecipe(true) : navigate('/login');
+  };
+
   return (
     <>
       {writeRecipe ? (
@@ -247,7 +251,7 @@ const Recipe = () => {
                   alignItems: 'center',
                   gap: '0.5rem',
                 }}
-                onClick={() => setWriteRecipe(true)}>
+                onClick={writeHandClick}>
                 <Edit />
                 <Typography variant="caption">레시피 등록하기</Typography>
               </Button>
