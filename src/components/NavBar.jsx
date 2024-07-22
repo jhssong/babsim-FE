@@ -12,10 +12,10 @@ import { useNavigate } from 'react-router-dom';
 const Container = styled.div`
   display: flex;
   width: 100%;
-  height: 4.47938rem;
+  height: 4rem;
   justify-content: center;
   align-items: flex-start;
-  position: fixed;
+
   bottom: 0;
 `;
 
@@ -35,31 +35,31 @@ const NavBar = ({ page }) => {
   return (
     <>
       <Container>
-        <Wrapper onClick={() => navigate('recipe')}>
+        <Wrapper onClick={() => navigate('/recipe')}>
           <AssignmentOutlined color={page === 'recipe' ? 'primary' : 'inherit'} />
           <Typography variant="caption" color={page === 'recipe' ? 'primary' : 'inherit'}>
             레시피
           </Typography>
         </Wrapper>
-        <Wrapper onClick={() => navigate('scrap')}>
+        <Wrapper onClick={() => navigate('/scrap')}>
           <BookmarkBorderOutlined color={page === 'scrap' ? 'primary' : 'inherit'} />
           <Typography variant="caption" color={page === 'scrap' ? 'primary' : 'inherit'}>
             스크랩
           </Typography>
         </Wrapper>
-        <Wrapper onClick={() => navigate('home')}>
+        <Wrapper onClick={() => navigate('/')}>
           <HomeOutlined color={page === 'home' ? 'primary' : 'inherit'} />
           <Typography variant="caption" color={page === 'home' ? 'primary' : 'inherit'}>
             홈
           </Typography>
         </Wrapper>
-        <Wrapper onClick={() => navigate('market')}>
+        <Wrapper onClick={() => navigate('/market')}>
           <StorefrontOutlined color={page === 'market' ? 'primary' : 'inherit'} />
           <Typography variant="caption" color={page === 'market' ? 'primary' : 'inherit'}>
             마켓
           </Typography>
         </Wrapper>
-        <Wrapper onClick={() => navigate('mypage')}>
+        <Wrapper onClick={() => navigate('/mypage')}>
           <AccountCircleOutlined color={page === 'mypage' ? 'primary' : 'inherit'} />
           <Typography variant="caption" color={page === 'mypage' ? 'primary' : 'inherit'}>
             마이페이지

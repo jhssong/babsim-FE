@@ -21,9 +21,6 @@ const StyledHeader = styled.div`
   width: 100%;
   height: 3rem;
 
-  position: fixed;
-  top: 0;
-
   border-bottom: 1px solid #eeeeee;
 `;
 
@@ -52,11 +49,20 @@ export function AppBarWithLogo() {
     </StyledHeader>
   );
 }
-export function AppBarWithTitle({ title, rightIcon, set }) {
-  let navigate = useNavigate();
+export function AppBarWithTitle({ title, rightIcon, onBackBtnClick, set }) {
+  const navigate = useNavigate();
+
+  const handleBackClick = () => {
+    if (onBackBtnClick === undefined) {
+      // 아무 지정 안하면 뒤로가기
+      navigate(-1);
+    } else {
+      onBackBtnClick(false); // 상태 변화
+    }
+  };
   return (
     <StyledHeader>
-      <p onClick={() => navigate(-1)}>
+      <p onClick={handleBackClick}>
         <ArrowBackIosOutlined />
       </p>
       <Typography>{title}</Typography>
