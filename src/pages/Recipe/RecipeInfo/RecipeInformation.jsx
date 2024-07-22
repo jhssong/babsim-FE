@@ -27,7 +27,7 @@ const RecipeImageContainer = styled.div`
 
   img {
     width: 100%;
-    height: 300px;
+    height: 16rem;
     object-fit: cover;
   }
 `;
