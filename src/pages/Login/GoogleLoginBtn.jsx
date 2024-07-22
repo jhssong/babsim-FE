@@ -1,6 +1,6 @@
 import { googleLoginWithPopup } from '../../utils/firebase/login';
 
-const GoogleLoginBtn = ({ setIsLoading, setLoginData, setIsLoggedIn }) => {
+const GoogleLoginBtn = ({ setLoginData, setLoginLevel }) => {
   const styles = {
     button: {
       WebkitUserSelect: 'none',
@@ -29,7 +29,7 @@ const GoogleLoginBtn = ({ setIsLoading, setLoginData, setIsLoggedIn }) => {
       transition: 'background-color .218s, border-color .218s, box-shadow .218s',
       verticalAlign: 'middle',
       whiteSpace: 'nowrap',
-      width: 'auto',
+      width: '183px',
       maxWidth: '400px',
       minWidth: 'min-content',
     },
@@ -99,12 +99,11 @@ const GoogleLoginBtn = ({ setIsLoading, setLoginData, setIsLoggedIn }) => {
   };
 
   async function loginToGoogle() {
-    setIsLoading(true);
+    setLoginLevel(-1);
     const res = await googleLoginWithPopup();
     console.log(res);
     setLoginData(res);
-    setIsLoading(false);
-    setIsLoggedIn(true);
+    setLoginLevel(1);
   }
 
   return (

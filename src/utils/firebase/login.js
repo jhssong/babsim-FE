@@ -14,7 +14,7 @@ export async function googleLoginWithPopup() {
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
     const loginData = {
-      id: user.uid,
+      id: 'google&' + user.uid,
       name: user.displayName,
       email: user.email,
       img: user.photoURL,

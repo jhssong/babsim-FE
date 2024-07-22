@@ -3,12 +3,12 @@ import { useEffect } from 'react';
 // @ts-ignore
 import KakaoLoginPNG from '../../assets/images/kakao_login_medium_narrow.png';
 
-const KakaoLoginBtn = ({ setIsLoading, setLoginData, setIsLoggedIn }) => {
+const KakaoLoginBtn = ({ setLoginData, setLoginLevel }) => {
   async function openKakaoLogin() {
-    setIsLoading(true);
+    setLoginLevel(-1);
     await fetch('http://localhost:8080/api/members/kakao/redirect', {
       headers: {
-        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
     })
       .then((response) => response.json())
@@ -24,18 +24,20 @@ const KakaoLoginBtn = ({ setIsLoading, setLoginData, setIsLoggedIn }) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Accept: 'application/json',
       },
       body: JSON.stringify({
         code: code,
       }),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to login to kakao');
+        }
+        return response.json();
+      })
       .then((data) => {
-        console.log(data);
         setLoginData(data);
-        setIsLoading(false);
-        setIsLoggedIn(true);
+        setLoginLevel(1);
       });
   }
 
