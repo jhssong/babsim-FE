@@ -1,3 +1,4 @@
+// @ts-nocheck
 // @ts-ignore
 import AppLogoPNG from '../../assets/images/logo512.png';
 import styled from '@emotion/styled';
@@ -31,23 +32,26 @@ const Login = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginData, setLoginData] = useState(null);
 
-  useEffect(() => {
-    if (loginData != null) {
-      console.log(loginData);
-      setIsLoggedIn(true);
-    }
-  }, [loginData]);
-
   return isLoading ? (
     <LoadingWrapper>
       <CircularProgress />
     </LoadingWrapper>
   ) : (
     <Wrapper>
-      {isLoggedIn ? 'hello world' : 'not logged in'}
+      {isLoggedIn ? 'logged in' : 'not logged in'}
+      <div></div>
+      {isLoading ? 'loading' : 'not loading'}
       <img src={AppLogoPNG} width={256} height={256} />
-      <GoogleLoginBtn setIsLoading={setIsLoading} setLoginData={setLoginData} />
-      <KakaoLoginBtn />
+      <GoogleLoginBtn
+        setIsLoading={setIsLoading}
+        setLoginData={setLoginData}
+        setIsLoggedIn={setIsLoggedIn}
+      />
+      <KakaoLoginBtn
+        setIsLoading={setIsLoading}
+        setLoginData={setLoginData}
+        setIsLoggedIn={setIsLoggedIn}
+      />
     </Wrapper>
   );
 };
