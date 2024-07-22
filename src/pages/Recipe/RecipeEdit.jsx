@@ -1,3 +1,5 @@
+// 작성자만 수정할 수 있는 로직 추가 필요
+
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AppBarWithTitle } from '../../components/AppBar';

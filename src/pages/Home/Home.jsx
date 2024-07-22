@@ -17,6 +17,7 @@ const Container = styled.div`
   flex: 1 0 0;
   align-self: stretch;
   overflow-y: auto;
+  overflow-x: hidden;
   height: calc(100vh - 7rem);
 `;
 

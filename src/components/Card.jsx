@@ -64,7 +64,7 @@ const Rating = styled.div`
   align-items: center;
 `;
 
-export const HCard = ({ recipe, index }) => {
+export const HCard = ({ recipe, index, onClick }) => {
   const formatCookingTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
@@ -79,7 +79,7 @@ export const HCard = ({ recipe, index }) => {
   return (
     <RecipeContiner>
       <Typography variant="h6">{index + 1}</Typography>
-      <Recipe>
+      <Recipe onClick={onClick}>
         <RecipeImage src={recipe.img} alt={recipe.name} />
         <RecipeInfo>
           <HashTags>
@@ -131,9 +131,9 @@ const ProductInfo = styled.div`
   align-self: stretch;
   width: 12.1875rem;
 `;
-export const VCard = ({ type, product, index, style }) => {
+export const VCard = ({ type, product, index, style, onClick }) => {
   return (
-    <ProdcutContainer style={style}>
+    <ProdcutContainer style={style} onClick={onClick}>
       <ProductImage src={product.img} alt={product.name} />
       <ProductInfo>
         {type === 'recipe' ? (
@@ -149,12 +149,16 @@ export const VCard = ({ type, product, index, style }) => {
         )}
         <Typography variant="body1">{product.name}</Typography>
         {type !== 'recipe' ? <Typography variant="body2">{product.price}</Typography> : <></>}
-        <Rating>
-          <Star color="primary" fontSize="small" />
-          <Typography variant="body2" sx={{ color: 'subbackground.main' }}>
-            {product.rate}
-          </Typography>
-        </Rating>
+        {type !== 'nft' ? (
+          <Rating>
+            <Star color="primary" fontSize="small" />
+            <Typography variant="body2" sx={{ color: 'subbackground.main' }}>
+              {product.rate}
+            </Typography>
+          </Rating>
+        ) : (
+          <></>
+        )}
       </ProductInfo>
     </ProdcutContainer>
   );
