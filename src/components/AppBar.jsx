@@ -5,6 +5,7 @@ import {
   ShareOutlined,
   DoneOutlined,
   ArrowBackIosOutlined,
+  ArrowForwardOutlined,
 } from '@mui/icons-material';
 import { Typography } from '@mui/material';
 import logo from '../assets/images/logo.svg';
@@ -66,23 +67,39 @@ export function AppBarWithTitle({ title, rightIcon, onBackBtnClick, set }) {
       onBackBtnClick(false); // 상태 변화
     }
   };
+
+  const BuildRightIcon = (rightIcon) => {
+    switch (rightIcon) {
+      case 'share':
+        return (
+          <IconWrapper onClick={() => set(true)}>
+            <ShareOutlined />
+          </IconWrapper>
+        );
+      case 'done':
+        return (
+          <IconWrapper onClick={() => set(true)}>
+            <DoneOutlined />
+          </IconWrapper>
+        );
+      case 'next':
+        return (
+          <IconWrapper onClick={() => set(true)}>
+            <ArrowForwardOutlined />
+          </IconWrapper>
+        );
+      default:
+        return <div style={{ width: '24px' }} />;
+    }
+  };
+
   return (
     <StyledHeader>
       <IconWrapper onClick={handleBackClick}>
         <ArrowBackIosOutlined />
       </IconWrapper>
       <Typography>{title}</Typography>
-      {rightIcon === 'share' ? (
-        <IconWrapper onClick={() => set(true)}>
-          <ShareOutlined />
-        </IconWrapper>
-      ) : rightIcon === 'done' ? (
-        <IconWrapper onClick={() => set(true)}>
-          <DoneOutlined />
-        </IconWrapper>
-      ) : (
-        <div style={{ width: '24px' }} /> // 아이콘이 없을 때도 균형 유지
-      )}
+      <BuildRightIcon />
     </StyledHeader>
   );
 }
