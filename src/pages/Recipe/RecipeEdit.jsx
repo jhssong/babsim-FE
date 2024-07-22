@@ -1,5 +1,3 @@
-// 작성자만 수정할 수 있는 로직 추가 필요
-
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AppBarWithTitle } from '../../components/AppBar';
@@ -14,53 +12,21 @@ import CookeryEdit from './RecipeEdit/CookeryEdit';
 import CookeryEditModal from './RecipeEdit/CookeryEditModal';
 
 // dummy data
-const recipe = {
-  id: '12345',
-  imgURLs: ['https://d2v80xjmx68n4w.cloudfront.net/gigs/fPoZ31584321311.jpg?w=652', null],
-  name: '짱구 도시락',
-  description: '짱구가 어디갈 때 먹는 도시락',
-  rate: 4,
-  difficulty: '초급',
-  cookingTime: 10,
-  tags: ['짱구', '도시락', '초간단'],
-  allergys: ['gluten', 'peanuts', 'shellfish'],
-  ingredients: [
-    { name: '방울토마토', amount: 1 },
-    { name: '계란', amount: 1 },
-    { name: '양상추', amount: 1 },
-    { name: '소세지', amount: 10 },
-  ],
-  reviews: [
-    {
-      name: 'User1',
-      rating: 5,
-      registerDate: '24.01.10',
-      comment:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      forkedRecipe: null,
-    },
-    {
-      name: 'User2',
-      rating: 4,
-      registerDate: '24.09.30',
-      comment:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      forkedRecipe: 123456,
-    },
-    {
-      name: 'User3',
-      rating: 4.5,
-      registerDate: '24.03.12',
-      comment: 'Loved it, will make again.',
-      forkedRecipe: 999999,
-    },
-  ],
-  recipeImgs: ['https://example.com/step1.jpg', 'https://example.com/step2.jpg'],
-  recipeDescs: [
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    'Cook the vegetables in a pan.',
-  ],
-  recipeTimers: [10, 120],
+const initialRecipe = {
+  id: '',
+  imgURLs: [null, null],
+  name: '',
+  description: '',
+  rate: 0,
+  difficulty: '',
+  cookingTime: 0,
+  tags: [],
+  allergys: [],
+  ingredients: [],
+  reviews: [],
+  recipeImgs: [],
+  recipeDescs: [],
+  recipeTimers: [],
 };
 
 const Container = styled.div`
@@ -106,13 +72,13 @@ const EditIcon = styled(Edit)`
   height: 32px;
 `;
 
-const RecipeEdit = () => {
+const RecipeEdit = ({ mode }) => {
   const isLoggined = useRecoilValue(loginState).isLoggedIn;
 
   const { recipeId } = useParams();
   const [isLoading, setIsLoading] = useState(false); // Backend API 구현 후 true로 변경
   const [isDone, setDone] = useState(false);
-  const [recipeInfo, setRecipeInfo] = useState([]);
+  const [recipeInfo, setRecipeInfo] = useState(initialRecipe);
   const [difficulty, setDifficulty] = useState('');
   const [timeError, setTimeError] = useState(false);
   const [isCookeryModalOpen, setIsCookeryModalOpen] = useState(false); // 조리법 수정 모달창 열기/닫기
@@ -122,13 +88,20 @@ const RecipeEdit = () => {
   };
 
   const getRecipeInfo = async () => {
-    const json = await (await fetch(` http://localhost:5173/api/recipe/${recipeId}`)).json();
+    const json = await (await fetch(`http://localhost:5173/api/recipe/${recipeId}`)).json();
     setRecipeInfo(json);
-    isLoading(false);
+    setIsLoading(false);
   };
+
   useEffect(() => {
-    getRecipeInfo();
-  }, []);
+    if (mode === 'edit') {
+      getRecipeInfo();
+    } else if (mode === 'write') {
+      setRecipeInfo(initialRecipe);
+      setIsLoading(false);
+    }
+  }, [mode, recipeId]);
+
   useEffect(() => {
     // POST 요청
     // 이전 페이지로 돌아가서? 성공 메세지 출력
@@ -137,13 +110,17 @@ const RecipeEdit = () => {
   return (
     <>
       {isLoading ? null : isCookeryModalOpen ? (
-        <CookeryEditModal recipe={recipe} onBackBtnClick={setIsCookeryModalOpen} />
+        <CookeryEditModal recipe={recipeInfo} onBackBtnClick={setIsCookeryModalOpen} />
       ) : (
         <>
           <AppBarWithTitle title="" rightIcon="done" set={setDone} />
           <Container>
             <ImageSize>
-              <Image src={recipe.imgURLs[0]} />
+              {recipeInfo.imgURLs[0] ? (
+                <Image src={recipeInfo.imgURLs[0]} />
+              ) : (
+                <div style={{ width: '100%', height: '100%', backgroundColor: '#e0e0e0' }} />
+              )}
               <EditIconContainer>
                 <EditIcon />
               </EditIconContainer>
@@ -152,18 +129,20 @@ const RecipeEdit = () => {
               id="recipeTitle"
               label="레시피 이름"
               sx={{ width: '100%' }}
-              defaultValue={recipe.name}
+              value={recipeInfo.name}
               inputProps={{ maxLength: 20 }}
+              onChange={(e) => setRecipeInfo({ ...recipeInfo, name: e.target.value })}
             />
             <Divider />
             <TextField
-              id="recipeTitle"
+              id="recipeDescription"
               label="레시피 설명"
               sx={{ width: '100%', marginTop: '1rem' }}
-              defaultValue={recipe.description}
+              value={recipeInfo.description}
               multiline
               rows={5}
               inputProps={{ maxLength: 100 }}
+              onChange={(e) => setRecipeInfo({ ...recipeInfo, description: e.target.value })}
             />
             <FormControl
               sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}
@@ -187,7 +166,7 @@ const RecipeEdit = () => {
                 label="요리 시간 (분)"
                 type="number"
                 sx={{ width: '25%', marginTop: '1rem' }}
-                defaultValue={Math.floor(recipe.cookingTime / 60)}
+                value={Math.floor(recipeInfo.cookingTime / 60)}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -198,8 +177,11 @@ const RecipeEdit = () => {
                   maxLength: 2,
                 }}
                 onChange={(event) => {
-                  event.target.value < 0 ? (event.target.value = 0) : event.target.value;
-                  event.target.value > 999 ? (event.target.value = 999) : event.target.value;
+                  const value = Math.max(0, Math.min(60, Number(event.target.value)));
+                  setRecipeInfo({
+                    ...recipeInfo,
+                    cookingTime: value * 60 + (recipeInfo.cookingTime % 60),
+                  });
                 }}
                 error={timeError}
                 helperText={timeError ? '시간을 정확히 입력해주세요.' : ''}
@@ -209,30 +191,33 @@ const RecipeEdit = () => {
                 label="요리 시간 (초)"
                 type="number"
                 sx={{ width: '25%', marginTop: '1rem' }}
-                defaultValue={recipe.cookingTime % 60}
+                value={recipeInfo.cookingTime % 60}
                 InputLabelProps={{
                   shrink: true,
                 }}
                 inputProps={{
                   min: 0,
                   step: 1,
-                  max: 86400,
-                  maxLength: 5,
+                  max: 60,
+                  maxLength: 2,
                 }}
                 onChange={(event) => {
-                  event.target.value < 0 ? (event.target.value = 0) : event.target.value;
-                  event.target.value > 60 ? (event.target.value = 60) : event.target.value;
+                  const value = Math.max(0, Math.min(60, Number(event.target.value)));
+                  setRecipeInfo({
+                    ...recipeInfo,
+                    cookingTime: Math.floor(recipeInfo.cookingTime / 60) * 60 + value,
+                  });
                 }}
                 error={timeError}
                 helperText={timeError ? '시간을 정확히 입력해주세요.' : ''}
               />
             </FormControl>
             <Divider sx={{ paddingTop: '1rem' }} />
-            <RecipeTable ingredients={recipe.ingredients} />
+            <RecipeTable ingredients={recipeInfo.ingredients} />
             <Divider sx={{ paddingTop: '1rem' }} />
-            <RecipeTags recipeTags={recipe.tags} />
+            <RecipeTags recipeTags={recipeInfo.tags} />
             <Divider sx={{ paddingTop: '1rem' }} />
-            <CookeryEdit recipe={recipe} setState={setIsCookeryModalOpen} />
+            <CookeryEdit recipe={recipeInfo} setState={setIsCookeryModalOpen} />
           </Container>
         </>
       )}
