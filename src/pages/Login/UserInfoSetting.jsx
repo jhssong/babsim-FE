@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { AppBarWithTitle } from '../../components/AppBar';
 import styled from '@emotion/styled';
 import { Avatar, Button, MenuItem, TextField, Typography } from '@mui/material';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const InfoReqWrapper = styled.div`
   display: flex;
@@ -22,7 +23,10 @@ const Divider40 = styled.div`
   height: 2.5rem;
 `;
 
-const UserInfoSetting = ({ loginData, setLoginData, setLoginLevel }) => {
+const UserInfoSetting = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { loginData } = location.state || {};
   const [name, setName] = useState(loginData.name);
   const [nameError, setNameError] = useState(false);
   const [job, setJob] = useState(loginData.job ?? '');
@@ -48,10 +52,8 @@ const UserInfoSetting = ({ loginData, setLoginData, setLoginLevel }) => {
       return;
     }
 
-    const newLoginData = { ...loginData };
-    newLoginData['job'] = job;
-    setLoginData(newLoginData);
-    setLoginLevel(2);
+    loginData['job'] = job;
+    navigate('/login/allergySetting', { state: { loginData } });
   };
 
   return (
@@ -59,7 +61,9 @@ const UserInfoSetting = ({ loginData, setLoginData, setLoginLevel }) => {
       <AppBarWithTitle
         title={null}
         rightIcon={null}
-        onBackBtnClick={() => setLoginLevel(0)}
+        onBackBtnClick={() => {
+          navigate(-1);
+        }}
         set={null}
       />
       <InfoReqWrapper>

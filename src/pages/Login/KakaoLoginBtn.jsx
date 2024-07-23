@@ -1,11 +1,12 @@
-// @ts-ignore
 import { useEffect } from 'react';
 // @ts-ignore
 import KakaoLoginPNG from '../../assets/images/kakao_login_medium_narrow.png';
+import { useNavigate } from 'react-router-dom';
 
-const KakaoLoginBtn = ({ setLoginData, setLoginLevel }) => {
+const KakaoLoginBtn = ({ onHandleLoginSuccess }) => {
+  const navigate = useNavigate();
+
   async function openKakaoLogin() {
-    setLoginLevel(-1);
     await fetch('http://localhost:8080/api/members/kakao/redirect', {
       headers: {
         'Content-Type': 'application/json',
@@ -36,8 +37,7 @@ const KakaoLoginBtn = ({ setLoginData, setLoginLevel }) => {
         return response.json();
       })
       .then((data) => {
-        setLoginData(data);
-        setLoginLevel(1);
+        onHandleLoginSuccess(data);
       });
   }
 
@@ -49,6 +49,7 @@ const KakaoLoginBtn = ({ setLoginData, setLoginLevel }) => {
   useEffect(() => {
     if (hasSpecificParam()) {
       const code = new URL(document.location.toString()).searchParams.get('code');
+      navigate('/login', { replace: true });
       loginToKakao(code);
     }
   }, []);

@@ -1,6 +1,6 @@
 import { googleLoginWithPopup } from '../../utils/firebase/login';
 
-const GoogleLoginBtn = ({ setLoginData, setLoginLevel }) => {
+const GoogleLoginBtn = ({ onHandleLoginSuccess, setIsLoading }) => {
   const styles = {
     button: {
       WebkitUserSelect: 'none',
@@ -99,11 +99,11 @@ const GoogleLoginBtn = ({ setLoginData, setLoginLevel }) => {
   };
 
   async function loginToGoogle() {
-    setLoginLevel(-1);
-    const res = await googleLoginWithPopup();
-    console.log(res);
-    setLoginData(res);
-    setLoginLevel(1);
+    setIsLoading(true);
+    const loginData = await googleLoginWithPopup();
+    console.log('Google LoginData: ', loginData);
+    onHandleLoginSuccess(loginData);
+    setIsLoading(false);
   }
 
   return (

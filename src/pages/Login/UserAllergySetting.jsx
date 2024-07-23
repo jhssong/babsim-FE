@@ -14,6 +14,7 @@ import {
   ListItemText,
   Typography,
 } from '@mui/material';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const AllergyReqWrapper = styled.div`
   display: flex;
@@ -33,7 +34,10 @@ const Divider40 = styled.div`
   height: 2.5rem;
 `;
 
-const UserAllergySetting = ({ loginData, setLoginLevel }) => {
+const UserAllergySetting = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { loginData } = location.state || {};
   const [allergies, setAllergies] = useState(allergyList);
 
   const handleToggle = (index) => () => {
@@ -50,6 +54,7 @@ const UserAllergySetting = ({ loginData, setLoginLevel }) => {
     finalLoginData['allergy'] = getAllergyList();
     console.log(finalLoginData);
     const loggedData = await createMember(finalLoginData);
+    navigate('/', { replace: true });
   }
 
   function getAllergyList() {
@@ -65,7 +70,9 @@ const UserAllergySetting = ({ loginData, setLoginLevel }) => {
       <AppBarWithTitle
         title={null}
         rightIcon={null}
-        onBackBtnClick={() => setLoginLevel(1)}
+        onBackBtnClick={() => {
+          navigate(-1);
+        }}
         set={null}
       />
       <AllergyReqWrapper>
