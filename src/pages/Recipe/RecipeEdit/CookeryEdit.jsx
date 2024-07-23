@@ -1,21 +1,25 @@
 import CookeryInfo from '../RecipeInfo/CookeryInfo';
 import styled from '@emotion/styled';
-import { useTheme } from '@mui/material/styles';
-import { IconButton } from '@mui/material';
+import { useTheme, Typography } from '@mui/material';
+import { Button, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
 // Container 스타일 정의
 const Container = styled.div`
   position: relative;
-  border: 2px solid ${({ theme }) => theme.palette.primary.main}; // MUI primary color for border
-  background-color: #f0f0f0; // Light gray color for background
+  border: 1px solid ${({ theme }) => theme.palette.primary.main}; 
+  background-color: {({ theme }) => theme.palette.background.paper};
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding-top: 30px; // Space for the edit button
+  display: flex;
+  flex-direction: column;
+  align-items: center;f
+  justify-content: center;
 `;
 
 // EditButton 스타일 정의
-export const EditButton = styled(IconButton)`
+const EditButton = styled(IconButton)`
   position: absolute;
   border-radius: 5%;
   width: 32px;
@@ -37,11 +41,18 @@ const CookeryEdit = ({ recipe, setState }) => {
     setState(true);
   };
 
+  console.log(recipe.id);
   return (
     <Container theme={theme}>
-      <EditButton theme={theme} aria-label="edit" onClick={onClick}>
-        <EditIcon />
-      </EditButton>
+      {recipe.id === '' ? (
+        <Button variant="text" onClick={onClick}>
+          <Typography variant="h6">요리법 추가하기</Typography>
+        </Button>
+      ) : (
+        <EditButton theme={theme} aria-label="edit" onClick={onClick}>
+          <EditIcon />
+        </EditButton>
+      )}
       <CookeryInfo
         images={recipe.recipeImgs}
         descs={recipe.recipeDescs}

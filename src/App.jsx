@@ -46,7 +46,7 @@ function App() {
           <Route path="/recipe/:recipeId" element={<RecipeInfo />} />
           <Route
             path="/recipe/edit/:recipeId"
-            element={<ProtectedRoute isLoggined={isLoggined} path={<RecipeEdit />} />}
+            element={<ProtectedRoute isLoggined={isLoggined} path={<RecipeEdit mode={'edit'} />} />}
           />
           <Route
             path="/mypage"

@@ -56,19 +56,18 @@ export function AppBarWithLogo() {
   );
 }
 
-export function AppBarWithTitle({ title, rightIcon, onBackBtnClick, set }) {
+export function AppBarWithTitle({ title, rightIcon, onRightIconClick, onBackBtnClick }) {
   const navigate = useNavigate();
 
   const handleBackClick = () => {
     if (onBackBtnClick === undefined) {
-      // 아무 지정 안하면 뒤로가기
       navigate(-1);
     } else {
-      onBackBtnClick(false); // 상태 변화
+      onBackBtnClick(false);
     }
   };
 
-  const BuildRightIcon = (rightIcon) => {
+  const BuildRightIcon = ({ rightIcon }) => {
     switch (rightIcon) {
       case 'share':
         return (
@@ -79,6 +78,12 @@ export function AppBarWithTitle({ title, rightIcon, onBackBtnClick, set }) {
       case 'done':
         return (
           <IconWrapper onClick={() => set(true)}>
+            <DoneOutlined />
+          </IconWrapper>
+        );
+      case 'doneInCookeryEditModal':
+        return (
+          <IconWrapper onClick={onRightIconClick}>
             <DoneOutlined />
           </IconWrapper>
         );
@@ -99,7 +104,7 @@ export function AppBarWithTitle({ title, rightIcon, onBackBtnClick, set }) {
         <ArrowBackIosOutlined />
       </IconWrapper>
       <Typography>{title}</Typography>
-      <BuildRightIcon />
+      <BuildRightIcon rightIcon={rightIcon} />
     </StyledHeader>
   );
 }

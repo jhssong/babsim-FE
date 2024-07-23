@@ -49,23 +49,19 @@ export const Cookery = ({ image, desc, timer, order }) => {
       {image === null ? (
         <img src={image} alt="Cookery" />
       ) : (
-        <Skeleton variant="rectangular" width={210} height={118} />
+        <Skeleton animation="wave" variant="rectangular" width={210} height={118} />
       )}
       <Container>
         <TextContainer>
           <Typography variant="h6">{order}</Typography>
-          {desc ? <Typography variant="body5">{desc}</Typography> : <Skeleton variant="text" />}
+          <Typography variant="body5">{desc ? desc : '설명이 없습니다.'}</Typography>
         </TextContainer>
-        {timer ? (
-          <TextContainer id="timerText">
-            <TimerOutlined />
-            <Typography variant="body5" color="primary">
-              {formatTime(timer)}
-            </Typography>{' '}
-          </TextContainer>
-        ) : (
-          <Skeleton variant="text" />
-        )}
+        <TextContainer id="timerText">
+          <TimerOutlined />
+          <Typography variant="body5" color="primary">
+            {formatTime(timer)}
+          </Typography>{' '}
+        </TextContainer>
       </Container>
     </StyledHeader>
   );
