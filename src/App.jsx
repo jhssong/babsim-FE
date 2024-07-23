@@ -21,13 +21,12 @@ import NotFound from './pages/Error/NotFound';
 import RecipeEdit from './pages/Recipe/RecipeEdit';
 import RecipeReviews from './pages/Recipe/RecipeReviews';
 
-const ProtectedRoute = ({ isLoggined, path }) => {
+const ProtectedRoute = ({ path }) => {
+  const isLoggined = useRecoilValue(loginState).isLoggedIn;
   return isLoggined ? path : <Navigate to="/login" />;
 };
 
 function App() {
-  const isLoggined = useRecoilValue(loginState).isLoggedIn;
-
   return (
     <>
       <GlobalStyle />
@@ -37,25 +36,13 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/market" element={<Market />} />
-          <Route
-            path="/cart"
-            element={<ProtectedRoute isLoggined={isLoggined} path={<Cart />} />}
-          />
+          <Route path="/cart" element={<ProtectedRoute path={<Cart />} />} />
           <Route path="/product/:productId" element={<Product />} />
           <Route path="/recipe" element={<Recipe />} />
           <Route path="/recipe/:recipeId" element={<RecipeInfo />} />
-          <Route
-            path="/recipe/edit/:recipeId"
-            element={<ProtectedRoute isLoggined={isLoggined} path={<RecipeEdit />} />}
-          />
-          <Route
-            path="/mypage"
-            element={<ProtectedRoute isLoggined={isLoggined} path={<MyPage />} />}
-          />
-          <Route
-            path="/scrap"
-            element={<ProtectedRoute isLoggined={isLoggined} path={<Scrap />} />}
-          />
+          <Route path="/recipe/edit/:recipeId" element={<ProtectedRoute path={<RecipeEdit />} />} />
+          <Route path="/mypage" element={<ProtectedRoute path={<MyPage />} />} />
+          <Route path="/scrap" element={<ProtectedRoute path={<Scrap />} />} />
           <Route path="/search" element={<Search />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
