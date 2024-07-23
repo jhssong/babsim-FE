@@ -68,7 +68,7 @@ export function AppBarWithTitle({ title, rightIcon, onBackBtnClick, set }) {
     }
   };
 
-  const BuildRightIcon = (rightIcon) => {
+  const BuildRightIcon = ({ rightIcon }) => {
     switch (rightIcon) {
       case 'share':
         return (
@@ -99,7 +99,7 @@ export function AppBarWithTitle({ title, rightIcon, onBackBtnClick, set }) {
         <ArrowBackIosOutlined />
       </IconWrapper>
       <Typography>{title}</Typography>
-      <BuildRightIcon />
+      <BuildRightIcon rightIcon={rightIcon} />
     </StyledHeader>
   );
 }
