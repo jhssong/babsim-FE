@@ -7,9 +7,10 @@ import {
   ArrowBackIosOutlined,
   ArrowForwardOutlined,
 } from '@mui/icons-material';
-import { Typography } from '@mui/material';
+import { Snackbar, Typography } from '@mui/material';
 import logo from '../assets/images/logo.svg';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 // Emotion을 이용해 스타일을 적용한 컴포넌트 정의
 const StyledHeader = styled.div`
@@ -34,7 +35,6 @@ const Container = styled.div`
 const IconWrapper = styled.p`
   display: flex;
   align-items: center; // 수직 중앙 정렬
-  margin: 0;
   cursor: pointer;
 `;
 
@@ -58,6 +58,7 @@ export function AppBarWithLogo() {
 
 export function AppBarWithTitle({ title, rightIcon, onRightIconClick, onBackBtnClick }) {
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
 
   const handleBackClick = () => {
     if (onBackBtnClick === undefined) {
@@ -67,11 +68,30 @@ export function AppBarWithTitle({ title, rightIcon, onRightIconClick, onBackBtnC
     }
   };
 
+  const handleShareClick = () => {
+    const url = window.location.href;
+    navigator.clipboard
+      .writeText(url)
+      .then(() => {
+        setOpen(true);
+      })
+      .catch((err) => {
+        console.error('Failed to copy: ', err);
+      });
+  };
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
+
   const BuildRightIcon = ({ rightIcon }) => {
     switch (rightIcon) {
       case 'share':
         return (
-          <IconWrapper onClick={() => set(true)}>
+          <IconWrapper onClick={handleShareClick}>
             <ShareOutlined />
           </IconWrapper>
         );
@@ -105,6 +125,13 @@ export function AppBarWithTitle({ title, rightIcon, onRightIconClick, onBackBtnC
       </IconWrapper>
       <Typography>{title}</Typography>
       <BuildRightIcon rightIcon={rightIcon} />
+      <Snackbar
+        open={open}
+        autoHideDuration={800}
+        onClose={handleSnackbarClose}
+        message="URL이 복사되었습니다."
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      />
     </StyledHeader>
   );
 }
