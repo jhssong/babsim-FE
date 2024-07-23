@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-// @ts-ignore
+
 import KakaoLoginPNG from '../../assets/images/kakao_login_medium_narrow.png';
 import { useNavigate } from 'react-router-dom';
 
