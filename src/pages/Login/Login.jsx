@@ -1,4 +1,3 @@
-// @ts-ignore
 import AppLogoPNG from '../../assets/images/logo512.png';
 import styled from '@emotion/styled';
 import GoogleLoginBtn from './GoogleLoginBtn';
@@ -38,7 +37,7 @@ const BeforeLogin = () => {
 
   function onHandleLoginSuccess(data) {
     const newLoginData = { ...loginData };
-    // @ts-ignore
+
     newLoginData.user = data;
     newLoginData.isLoggedIn = false;
     setLoginData(newLoginData);
