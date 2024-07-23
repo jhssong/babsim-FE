@@ -78,11 +78,7 @@ const UserInfoSetting = () => {
           <Typography variant="h6">기본적인 정보를 확인할게요.</Typography>
         </WidthFill>
         <Divider40 />
-        <Avatar
-          alt="Remy Sharp"
-          src="/static/images/avatar/1.jpg"
-          sx={{ width: 100, height: 100 }}
-        />
+        <Avatar alt="Remy Sharp" src={loginData.user.img} sx={{ width: 100, height: 100 }} />
         <Divider40 />
         <TextField
           id="memberName"
