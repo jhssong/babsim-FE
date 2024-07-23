@@ -2,6 +2,8 @@ import styled from '@emotion/styled';
 
 import { AppBarWithTitle } from '../../components/AppBar';
 import { Box, Button, Typography } from '@mui/material';
+import ComingSoonModal from '../../components/ComingSoonModal';
+import { useState } from 'react';
 
 const Container = styled.div`
   display: flex;
@@ -13,8 +15,20 @@ const Container = styled.div`
 `;
 
 const Cart = () => {
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+    setTimeout(() => {
+      setOpen(false);
+    }, 2000); // 2000 milliseconds = 2 seconds
+  };
+
+  const handleClose = () => setOpen(false);
+
   return (
     <>
+      <ComingSoonModal open={open} onClose={handleClose} />
       <AppBarWithTitle title="장바구니" />
       <Container>
         <Typography variant="body1">장바구니에 든게 없어용...</Typography>
@@ -33,7 +47,8 @@ const Cart = () => {
             backgroundColor: 'primary.light',
             width: '100%',
             height: '100%',
-          }}>
+          }}
+          onClick={handleOpen}>
           <Typography variant="body1">구매하기</Typography>
         </Button>
       </Box>
