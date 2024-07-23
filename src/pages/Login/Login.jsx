@@ -6,6 +6,8 @@ import KakaoLoginBtn from './KakaoLoginBtn';
 import { useNavigate } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
 import { useState } from 'react';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { loginState } from '../../recoil/atoms';
 
 const Wrapper = styled.div`
   display: flex;
@@ -31,10 +33,16 @@ const Divider16 = styled.div`
 `;
 const BeforeLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [loginData, setLoginData] = useRecoilState(loginState);
   const navigate = useNavigate();
 
-  function onHandleLoginSuccess(loginData) {
-    navigate('/login/infoSetting', { state: { loginData } });
+  function onHandleLoginSuccess(data) {
+    const newLoginData = { ...loginData };
+    // @ts-ignore
+    newLoginData.user = data;
+    newLoginData.isLoggedIn = false;
+    setLoginData(newLoginData);
+    navigate('/login/infoSetting');
   }
   return (
     <>

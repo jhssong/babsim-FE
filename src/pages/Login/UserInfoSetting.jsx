@@ -3,6 +3,8 @@ import { AppBarWithTitle } from '../../components/AppBar';
 import styled from '@emotion/styled';
 import { Avatar, Button, MenuItem, TextField, Typography } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { loginState } from '../../recoil/atoms';
 
 const InfoReqWrapper = styled.div`
   display: flex;
@@ -25,11 +27,10 @@ const Divider40 = styled.div`
 
 const UserInfoSetting = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { loginData } = location.state || {};
-  const [name, setName] = useState(loginData.name);
+  const [loginData, setLoginData] = useRecoilState(loginState);
+  const [name, setName] = useState(loginData.user.name);
   const [nameError, setNameError] = useState(false);
-  const [job, setJob] = useState(loginData.job ?? '');
+  const [job, setJob] = useState(loginData.user.job ?? '');
   const [jobError, setJobError] = useState(false);
 
   const handleName = (event) => {
@@ -51,9 +52,15 @@ const UserInfoSetting = () => {
       setJobError(true);
       return;
     }
-
-    loginData['job'] = job;
-    navigate('/login/allergySetting', { state: { loginData } });
+    const newLoginData = {
+      ...loginData,
+      user: {
+        ...loginData.user,
+        job: job,
+      },
+    };
+    setLoginData(newLoginData);
+    navigate('/login/allergySetting');
   };
 
   return (

@@ -7,21 +7,19 @@ const KakaoLoginBtn = ({ onHandleLoginSuccess }) => {
   const navigate = useNavigate();
 
   async function openKakaoLogin() {
-    await fetch('http://localhost:8080/api/members/kakao/redirect', {
+    const response = await fetch('http://localhost:8080/api/members/kakao/redirect', {
       headers: {
         'Content-Type': 'application/json',
       },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.url) {
-          window.location.href = data.url;
-        }
-      });
+    });
+
+    if (!response.ok) throw new Error('Failed to create periodical donation');
+    const responseData = await response.json();
+    if (responseData.url) window.location.href = responseData.url;
   }
 
   async function loginToKakao(code) {
-    await fetch('http://localhost:8080/api/members/kakao', {
+    const response = await fetch('http://localhost:8080/api/members/kakao', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -29,16 +27,11 @@ const KakaoLoginBtn = ({ onHandleLoginSuccess }) => {
       body: JSON.stringify({
         code: code,
       }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to login to kakao');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        onHandleLoginSuccess(data);
-      });
+    });
+
+    if (!response.ok) throw new Error('Failed to create periodical donation');
+    const responseData = await response.json();
+    onHandleLoginSuccess(responseData);
   }
 
   function hasSpecificParam() {

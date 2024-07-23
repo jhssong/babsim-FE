@@ -14,7 +14,9 @@ import {
   ListItemText,
   Typography,
 } from '@mui/material';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { loginState } from '../../recoil/atoms';
 
 const AllergyReqWrapper = styled.div`
   display: flex;
@@ -36,8 +38,7 @@ const Divider40 = styled.div`
 
 const UserAllergySetting = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { loginData } = location.state || {};
+  const [loginData, setLoginData] = useRecoilState(loginState);
   const [allergies, setAllergies] = useState(allergyList);
 
   const handleToggle = (index) => () => {
@@ -50,10 +51,18 @@ const UserAllergySetting = () => {
   };
 
   async function handleClick() {
-    const finalLoginData = { ...loginData };
-    finalLoginData['allergy'] = getAllergyList();
-    console.log(finalLoginData);
-    const loggedData = await createMember(finalLoginData);
+    const finalLoginUserData = { ...loginData.user, allergy: getAllergyList() };
+
+    const loggedInUserData = await createMember(finalLoginUserData);
+
+    const newLoginData = {
+      ...loginData,
+      user: loggedInUserData,
+      isLoggedIn: true,
+    };
+    setLoginData(newLoginData);
+    console.log('Get member data');
+    console.log(newLoginData);
     navigate('/', { replace: true });
   }
 
