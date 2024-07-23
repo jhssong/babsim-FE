@@ -8,8 +8,11 @@ import Slider from 'react-slick';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
+  align-items: flex-start;
+  flex: 1 0 0;
+  align-self: stretch;
+  overflow-y: auto;
+  overflow-x: hidden;
   height: calc(100vh - 7rem);
 `;
 
@@ -23,7 +26,7 @@ const Product = () => {
     ],
     name: '상품 이름',
     desc: '상품 상세 정보',
-    price: '상품 가격',
+    price: 20000,
     rate: 3.5,
     stock: '상품 재고',
     sellerID: '판매자 ID',
@@ -50,7 +53,7 @@ const Product = () => {
         <Button
           variant="outlined"
           sx={{
-            width: '50%',
+            width: '100%',
             height: '100%',
           }}>
           <Typography variant="body1">장바구니 담기</Typography>
@@ -101,29 +104,17 @@ const Banner = ({ images }) => {
 };
 
 const Info = ({ data }) => {
-  const CustomRating = styled(Rating)({
-    '& .MuiRating-iconFilled': {
-      color: '#f57c00', // 채워진 별 색상
-    },
-    '& .MuiRating-iconEmpty': {
-      color: '#000000', // 빈 별 색상
-    },
-    '& .MuiRating-iconHover': {
-      color: '#ffb74d', // 호버 시 별 색상 (선택 사항)
-    },
-    fontSize: '0.75rem', // caption 크기로 설정
-  });
-
   return (
     <Box
       sx={{
-        display: 'flex',
-        alignItems: 'center',
         width: '100%',
         padding: '1rem',
       }}>
       <Box
         sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.25rem',
           width: '100%',
           padding: '1rem',
           border: '1px solid',
@@ -132,21 +123,41 @@ const Info = ({ data }) => {
         }}>
         <Box
           sx={{
-            borderRadius: '0.25rem',
-            borderColor: 'primary.main',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
           }}>
-          <Box>
-            <Typography variant="body1">
-              {data.sellerName}
-              <CustomRating
-                name="custom-rating"
-                value={data.rate}
-                precision={0.5} // 별점을 0.5 단위로 설정
-                sx={{}}
-              />
+          <Typography variant="body1">{data.sellerName}</Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.25rem',
+            }}>
+            <Rating
+              name="custom-rating"
+              value={data.rate}
+              precision={0.5} // 별점을 0.5 단위로 설정
+              readOnly
+              sx={{
+                '& .MuiRating-iconFilled': {
+                  color: 'primary.main', // 채워진 별 색상
+                },
+                '& .MuiRating-iconEmpty': {
+                  color: '#000000', // 빈 별 색상
+                },
+                fontSize: '0.75rem', // caption 크기로 설정
+              }}
+            />
+            <Typography variant="caption" sx={{ color: 'primary.light' }}>
+              ({data.rate})
             </Typography>
           </Box>
         </Box>
+        <Typography variant="h5">{data.name}</Typography>
+        <Typography variant="h5" color="primary">
+          {data.price.toLocaleString()}원
+        </Typography>
       </Box>
     </Box>
   );
