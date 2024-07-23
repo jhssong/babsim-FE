@@ -106,19 +106,9 @@ const GoogleLoginBtn = ({ onHandleLoginSuccess, setIsLoading }) => {
   }
 
   return (
-    <button
-      // @ts-ignore
-      style={styles.button}
-      className="gsi-material-button"
-      onClick={loginToGoogle}>
-      <div
-        // @ts-ignore
-        style={styles.state}
-        className="gsi-material-button-state"></div>
-      <div
-        // @ts-ignore
-        style={styles.contentWrapper}
-        className="gsi-material-button-content-wrapper">
+    <button style={styles.button} className="gsi-material-button" onClick={loginToGoogle}>
+      <div style={styles.state} className="gsi-material-button-state"></div>
+      <div style={styles.contentWrapper} className="gsi-material-button-content-wrapper">
         <div style={styles.icon} className="gsi-material-button-icon">
           <svg
             version="1.1"
