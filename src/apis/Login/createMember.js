@@ -8,6 +8,5 @@ export default async function createMember(data) {
   });
   if (!response.ok) throw new Error('Failed to create periodical donation');
   const responseData = await response.json();
-  console.log(responseData);
   return responseData;
 }

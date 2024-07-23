@@ -101,7 +101,6 @@ const GoogleLoginBtn = ({ onHandleLoginSuccess, setIsLoading }) => {
   async function loginToGoogle() {
     setIsLoading(true);
     const loginData = await googleLoginWithPopup();
-    console.log('Google LoginData: ', loginData);
     onHandleLoginSuccess(loginData);
     setIsLoading(false);
   }
