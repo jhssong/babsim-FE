@@ -20,6 +20,8 @@ import Product from './pages/Market/Product';
 import NotFound from './pages/Error/NotFound';
 import RecipeEdit from './pages/Recipe/RecipeEdit';
 import RecipeReviews from './pages/Recipe/RecipeReviews';
+import UserInfoSetting from './pages/Login/UserInfoSetting';
+import UserAllergySetting from './pages/Login/UserAllergySetting';
 
 const ProtectedRoute = ({ path }) => {
   const isLoggined = useRecoilValue(loginState).isLoggedIn;
@@ -35,6 +37,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/login/infoSetting" element={<UserInfoSetting />} />
+          <Route path="/login/allergySetting" element={<UserAllergySetting />} />
           <Route path="/market" element={<Market />} />
           <Route path="/cart" element={<ProtectedRoute path={<Cart />} />} />
           <Route path="/product/:productId" element={<Product />} />
