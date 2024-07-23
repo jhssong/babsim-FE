@@ -52,7 +52,6 @@ const UserAllergySetting = () => {
 
   async function handleClick() {
     const finalLoginUserData = { ...loginData.user, allergy: getAllergyList() };
-
     const loggedInUserData = await createMember(finalLoginUserData);
 
     const newLoginData = {
@@ -61,8 +60,6 @@ const UserAllergySetting = () => {
       isLoggedIn: true,
     };
     setLoginData(newLoginData);
-    console.log('Get member data');
-    console.log(newLoginData);
     navigate('/', { replace: true });
   }
 
