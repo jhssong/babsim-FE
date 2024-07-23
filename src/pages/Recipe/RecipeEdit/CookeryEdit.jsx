@@ -44,7 +44,7 @@ const CookeryEdit = ({ recipe, setState }) => {
   console.log(recipe.id);
   return (
     <Container theme={theme}>
-      {recipe.id === '' ? (
+      {recipe.recipeDescs.length === 0 ? (
         <Button variant="text" onClick={onClick}>
           <Typography variant="h6">요리법 추가하기</Typography>
         </Button>
