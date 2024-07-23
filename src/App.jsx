@@ -19,7 +19,6 @@ import Cart from './pages/Market/Cart';
 import Product from './pages/Market/Product';
 import NotFound from './pages/Error/NotFound';
 import RecipeEdit from './pages/Recipe/RecipeEdit';
-import RecipeReviews from './pages/Recipe/RecipeReviews';
 
 const ProtectedRoute = ({ path }) => {
   const isLoggined = useRecoilValue(loginState).isLoggedIn;
@@ -40,18 +39,9 @@ function App() {
           <Route path="/product/:productId" element={<Product />} />
           <Route path="/recipe" element={<Recipe />} />
           <Route path="/recipe/:recipeId" element={<RecipeInfo />} />
-          <Route
-            path="/recipe/edit/:recipeId"
-            element={<ProtectedRoute isLoggined={isLoggined} path={<RecipeEdit mode={'edit'} />} />}
-          />
-          <Route
-            path="/mypage"
-            element={<ProtectedRoute isLoggined={isLoggined} path={<MyPage />} />}
-          />
-          <Route
-            path="/scrap"
-            element={<ProtectedRoute isLoggined={isLoggined} path={<Scrap />} />}
-          />
+          <Route path="/recipe/edit/:recipeId" element={<ProtectedRoute path={<RecipeEdit />} />} />
+          <Route path="/mypage" element={<ProtectedRoute path={<MyPage />} />} />
+          <Route path="/scrap" element={<ProtectedRoute path={<Scrap />} />} />
           <Route path="/search" element={<Search />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
