@@ -3,7 +3,7 @@ import { atom } from 'recoil';
 export const loginState = atom({
   key: 'loginState',
   default: {
-    isLoggedIn: true,
+    isLoggedIn: false,
     user: {
       id: 1,
       name: '아이유',
