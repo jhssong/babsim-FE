@@ -17,7 +17,7 @@ import {
   Typography,
 } from '@mui/material';
 import { Edit, Delete, Add } from '@mui/icons-material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const RecipeTable = () => {
   const [ingredients, setIngredients] = useState([]);
@@ -105,13 +105,25 @@ const RecipeTable = () => {
     setIsDialogOpen(true);
   };
 
+  useEffect(() => {
+    // API 연결시 코드 수정하기
+    setIngredients([
+      { id: 1, name: '방울토마토', quantity: 1, selected: false },
+      { id: 2, name: '계란', quantity: 1, selected: false },
+      { id: 3, name: '양상추', quantity: 1, selected: false },
+      { id: 4, name: '소세지', quantity: 10, selected: false },
+    ]);
+  }, []);
+
   return (
     <div>
       <Toolbar>
         {selectedCount === 0 ? (
           <Typography variant="h6">재료</Typography>
         ) : (
-          <Typography variant="body" fontWeight='bold'>{selectedCount}개가 선택됨</Typography>
+          <Typography variant="body" fontWeight="bold">
+            {selectedCount}개가 선택됨
+          </Typography>
         )}
         <div style={{ marginLeft: 'auto' }}>
           <IconButton color="primary" onClick={handleAddClick}>

@@ -19,9 +19,6 @@ import Cart from './pages/Market/Cart';
 import Product from './pages/Market/Product';
 import NotFound from './pages/Error/NotFound';
 import RecipeEdit from './pages/Recipe/RecipeEdit';
-import RecipeReviews from './pages/Recipe/RecipeReviews';
-import UserInfoSetting from './pages/Login/UserInfoSetting';
-import UserAllergySetting from './pages/Login/UserAllergySetting';
 
 const ProtectedRoute = ({ path }) => {
   const isLoggined = useRecoilValue(loginState).isLoggedIn;
