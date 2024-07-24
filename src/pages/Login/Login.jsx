@@ -43,7 +43,6 @@ const BeforeLogin = () => {
   }
 
   useEffect(() => {
-    console.log(isLoggedIn);
     if (isLoggedIn) {
       alert('이미 로그인되었습니다.');
       navigate('/');
@@ -63,7 +62,7 @@ const BeforeLogin = () => {
           <Divider16 />
           <KakaoLoginBtn onHandleLoginSuccess={onHandleLoginSuccess} />
           <Divider16 />
-          <p onClick={googleLogout}>Google Logout</p>
+          <p onClick={() => navigate('/')}>로그인 없이 계속하기</p>
         </Wrapper>
       )}
     </>
