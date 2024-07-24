@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Container,
   Button,
@@ -10,6 +10,7 @@ import {
   DialogTitle,
   TextField,
   Grid,
+  Box,
 } from '@mui/material';
 import { AppBarWithTitle } from '../../../components/AppBar';
 import { Cookery } from '../RecipeInfo/CookeryInfo';
@@ -192,6 +193,25 @@ const CookeryEditModal = ({ recipe, onBackBtnClick, setRecipeState, setModalStat
         onBackBtnClick={onBackBtnClick}
         onRightIconClick={handleSave}
       />
+      {cookeries.length === 0 ? (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: '50vh',
+          }}>
+          <Typography
+            variant="body1"
+            style={{
+              textAlign: 'center',
+              padding: '1rem',
+            }}>
+            🍳 요리법을 추가해주세요! <br />
+            추가된 요리법은 드래그해서 순서를 바꿀 수 있어요.
+          </Typography>
+        </Box>
+      ) : null}
 
       <Container>
         <DragDropContext onDragEnd={handleDragEnd}>

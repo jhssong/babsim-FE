@@ -1,7 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AppBarWithTitle } from '../../components/AppBar';
-import { Box, Button, Divider, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  TextField,
+  Typography,
+} from '@mui/material';
 import RecipeInformation, { RecipeInfoImage } from './RecipeInfo/RecipeInformation';
 import AllergyInfo from './RecipeInfo/AllergyInfo';
 import NutritionInfo from './RecipeInfo/NutritionInfo';
@@ -25,7 +35,7 @@ const recipe = {
   difficulty: '초급',
   cookingTime: 10,
   tags: ['짱구', '도시락', '초간단'],
-  allergys: ['gluten', 'peanuts', 'shellfish'],
+  allergys: [1, 2, 3, 4, 5, 6],
   ingredients: [
     { name: '방울토마토', amount: 1 },
     { name: '계란', amount: 1 },
@@ -108,6 +118,7 @@ const RecipeInfo = () => {
   const { recipeId } = useParams();
   const [isLoading, setIsLoading] = useState(false); // Backend API 구현 후 true로 변경
   const [isReviewMore, setIsReviewMore] = useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [recipeInfo, setRecipeInfo] = useState([]);
 
   const getRecipeInfo = async () => {
@@ -122,7 +133,7 @@ const RecipeInfo = () => {
   return (
     <>
       {isReviewMore ? (
-        <RecipeReviews onBackBtnClick={setIsReviewMore} />
+          <RecipeReviews onBackBtnClick={setIsReviewMore} />
       ) : (
         <>
           <AppBarWithTitle title="" rightIcon="share" />
