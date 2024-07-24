@@ -21,6 +21,7 @@ import ReviewInfo from './RecipeInfo/ReviewInfo';
 import { CallSplitOutlined, LocalDiningOutlined } from '@mui/icons-material';
 import styled from '@emotion/styled';
 import RecipeReviews from './RecipeReviews';
+import RecipeEdit from './RecipeEdit';
 
 // dummy data
 const recipe = {
@@ -119,6 +120,7 @@ const RecipeInfo = () => {
   const [isLoading, setIsLoading] = useState(false); // Backend API 구현 후 true로 변경
   const [isReviewMore, setIsReviewMore] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [isForkOpen, setIsForkOpen] = useState(false);
   const [recipeInfo, setRecipeInfo] = useState([]);
 
   const getRecipeInfo = async () => {
@@ -130,76 +132,79 @@ const RecipeInfo = () => {
     getRecipeInfo();
   }, []);
 
+  if (isReviewMore) {
+    return <RecipeReviews onBackBtnClick={setIsReviewMore} />;
+  }
+
+  if (isForkOpen) {
+    return <RecipeEdit mode="fork" />;
+  }
+
   return (
     <>
-      {isReviewMore ? (
-          <RecipeReviews onBackBtnClick={setIsReviewMore} />
-      ) : (
-        <>
-          <AppBarWithTitle title="" rightIcon="share" />
-          <RecipeInfoImage imgs={recipe.imgURLs} isLoading={isLoading} />
-          <RecipeInformation recipeInfo={recipe} isLoading={isLoading} />
-          <Divider />
-          <AllergyInfo allergys={recipe.allergys} />
-          <Divider />
-          <NutritionInfo />
-          <Divider />
-          <IngredientInfo ingredients={recipe.ingredients} />
-          <Divider />
-          <Typography variant="h5" sx={{ padding: '1rem' }}>
-            레시피
+      <AppBarWithTitle title="" rightIcon="share" />
+      <RecipeInfoImage imgs={recipe.imgURLs} isLoading={isLoading} />
+      <RecipeInformation recipeInfo={recipe} isLoading={isLoading} />
+      <Divider />
+      <AllergyInfo allergys={recipe.allergys} />
+      <Divider />
+      <NutritionInfo />
+      <Divider />
+      <IngredientInfo ingredients={recipe.ingredients} />
+      <Divider />
+      <Typography variant="h5" sx={{ padding: '1rem' }}>
+        레시피
+      </Typography>
+      <CookeryInfo
+        images={recipe.recipeImgs}
+        descs={recipe.recipeDescs}
+        timers={recipe.recipeTimers}
+      />
+      <Divider />
+      <ReviewInfo reviews={recipe.reviews} />
+      <Box sx={{ display: 'flex', justifyContent: 'center', paddingBottom: '1rem' }}>
+        <Button onClick={() => setIsReviewMore(true)}>리뷰 더보기</Button>
+      </Box>
+      <Divider />
+      <BottomContainer>
+        <Button
+          onClick={() => setIsForkOpen(true)}
+          startIcon={
+            <CallSplitOutlined
+              sx={{
+                minWidth: 'auto',
+                minHeight: 'auto',
+                padding: 0,
+                width: '32px',
+                height: '32px',
+              }}
+            />
+          }
+          variant="contained"
+          color="primary">
+          <Typography variant="button" fontWeight="bold">
+            포크하기
           </Typography>
-          <CookeryInfo
-            images={recipe.recipeImgs}
-            descs={recipe.recipeDescs}
-            timers={recipe.recipeTimers}
-          />
-          <Divider />
-          <ReviewInfo reviews={recipe.reviews} />
-          <Box sx={{ display: 'flex', justifyContent: 'center', paddingBottom: '1rem' }}>
-            <Button onClick={() => setIsReviewMore(true)}>리뷰 더보기</Button>
-          </Box>
-          <Divider />
-          <BottomContainer>
-            <Button
-              startIcon={
-                <CallSplitOutlined
-                  sx={{
-                    minWidth: 'auto',
-                    minHeight: 'auto',
-                    padding: 0,
-                    width: '32px',
-                    height: '32px',
-                  }}
-                />
-              }
-              variant="contained"
-              color="primary">
-              <Typography variant="button" fontWeight="bold">
-                포크하기
-              </Typography>
-            </Button>
-            <Button
-              startIcon={
-                <LocalDiningOutlined
-                  sx={{
-                    minWidth: 'auto',
-                    minHeight: 'auto',
-                    padding: 0,
-                    width: '32px',
-                    height: '32px',
-                  }}
-                />
-              }
-              variant="contained"
-              color="primary">
-              <Typography variant="button" fontWeight="bold">
-                요리하기
-              </Typography>
-            </Button>
-          </BottomContainer>
-        </>
-      )}
+        </Button>
+        <Button
+          startIcon={
+            <LocalDiningOutlined
+              sx={{
+                minWidth: 'auto',
+                minHeight: 'auto',
+                padding: 0,
+                width: '32px',
+                height: '32px',
+              }}
+            />
+          }
+          variant="contained"
+          color="primary">
+          <Typography variant="button" fontWeight="bold">
+            요리하기
+          </Typography>
+        </Button>
+      </BottomContainer>
     </>
   );
 };
