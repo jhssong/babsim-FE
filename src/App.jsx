@@ -51,7 +51,7 @@ function App() {
     onAuthStateChanged(auth, async (currentUser) => {
       if (getLoggedInPlatform() == 'google' && isTryingToLogin == false) {
         try {
-          console.log(' 설마?');
+          console.log('Detect google userId. Tyring to find user data');
           const userData = await getMember('google&' + currentUser.uid);
           setUserData(userData);
           setIsLoggedIn(true);
@@ -90,8 +90,9 @@ function App() {
           <Route path="/recipe" element={<Recipe />} />
           <Route path="/recipe/:recipeId" element={<RecipeInfo />} />
           {/* 로그인 때문에 잠시 주석 처리 <Route path="/recipe/edit/:recipeId" element={<ProtectedRoute path={<RecipeEdit />} />} /> */}
-          <Route path="/recipe/edit/:recipeId" element={<RecipeEdit />} /> 
-          <Route path="/recipe/fork/:recipeId" element={<RecipeEdit />} /> {/* 작업 완료 후 forkPage도 Protected 필요 */}
+          <Route path="/recipe/edit/:recipeId" element={<RecipeEdit />} />
+          <Route path="/recipe/fork/:recipeId" element={<RecipeEdit />} />{' '}
+          {/* 작업 완료 후 forkPage도 Protected 필요 */}
           <Route path="/mypage" element={<ProtectedRoute path={<MyPage />} />} />
           <Route path="/scrap" element={<ProtectedRoute path={<Scrap />} />} />
           <Route path="/search" element={<Search />} />
