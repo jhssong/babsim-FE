@@ -1,11 +1,11 @@
 import { VCard } from '../../components/Card';
 import { GridCardList } from '../../components/CardList';
 import { useRecoilValue } from 'recoil';
-import { loginState } from '../../recoil/atoms';
+import { loginState, userDataState } from '../../recoil/atoms';
 import { useNavigate } from 'react-router-dom';
 
 const RecommendedRecipe = () => {
-  const user = useRecoilValue(loginState).user.name;
+  const user = useRecoilValue(userDataState).name;
   let navigate = useNavigate();
 
   const recipesData = {

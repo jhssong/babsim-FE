@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import allergyList from '../../assets/constants/allergyList';
 import createMember from '../../apis/Login/createMember';
 import styled from '@emotion/styled';
@@ -15,8 +15,13 @@ import {
   Typography,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
-import { loginState } from '../../recoil/atoms';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import {
+  isLoggedInState,
+  isTryingToLoginState,
+  loginState,
+  userDataState,
+} from '../../recoil/atoms';
 
 const AllergyReqWrapper = styled.div`
   display: flex;
@@ -38,8 +43,10 @@ const Divider40 = styled.div`
 
 const UserAllergySetting = () => {
   const navigate = useNavigate();
-  const [loginData, setLoginData] = useRecoilState(loginState);
+  const [userData, setUserData] = useRecoilState(userDataState);
   const [allergies, setAllergies] = useState(allergyList);
+  const setIsTryingToLogin = useSetRecoilState(isTryingToLoginState);
+  const setIsLoggedIn = useSetRecoilState(isLoggedInState);
 
   const handleToggle = (index) => () => {
     const newAllergies = [...allergies];
@@ -51,15 +58,16 @@ const UserAllergySetting = () => {
   };
 
   async function handleClick() {
-    const finalLoginUserData = { ...loginData.user, allergy: getAllergyList() };
-    const loggedInUserData = await createMember(finalLoginUserData);
-
-    const newLoginData = {
-      ...loginData,
-      user: loggedInUserData,
-      isLoggedIn: true,
+    const newUserData = {
+      ...userData,
+      allergy: getAllergyList(),
     };
-    setLoginData(newLoginData);
+
+    const loggedInUserData = await createMember(newUserData);
+    console.log(loggedInUserData);
+    setUserData(loggedInUserData);
+    setIsTryingToLogin(false);
+    setIsLoggedIn(true);
     navigate('/', { replace: true });
   }
 
@@ -70,6 +78,16 @@ const UserAllergySetting = () => {
     });
     return allergy;
   }
+
+  useEffect(() => {
+    if (userData == null) {
+      alert('잘못된 접근입니다.');
+      navigate('/login');
+    } else if (userData.isLoggedIn) {
+      alert('이미 로그인되었습니다.');
+      navigate('/');
+    }
+  }, []);
 
   return (
     <>

@@ -4,9 +4,10 @@ import GoogleLoginBtn from './GoogleLoginBtn';
 import KakaoLoginBtn from './KakaoLoginBtn';
 import { useNavigate } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { loginState } from '../../recoil/atoms';
+import { isLoggedInState, userDataState } from '../../recoil/atoms';
+import { googleLogout } from '../../utils/firebase/login';
 
 const Wrapper = styled.div`
   display: flex;
@@ -32,17 +33,23 @@ const Divider16 = styled.div`
 `;
 const BeforeLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [loginData, setLoginData] = useRecoilState(loginState);
+  const setUserData = useSetRecoilState(userDataState);
+  const [isLoggedIn, setIsLoggedIn] = useRecoilState(isLoggedInState);
   const navigate = useNavigate();
 
   function onHandleLoginSuccess(data) {
-    const newLoginData = { ...loginData };
-
-    newLoginData.user = data;
-    newLoginData.isLoggedIn = false;
-    setLoginData(newLoginData);
+    setUserData(data);
     navigate('/login/infoSetting');
   }
+
+  useEffect(() => {
+    console.log(isLoggedIn);
+    if (isLoggedIn) {
+      alert('이미 로그인되었습니다.');
+      navigate('/');
+    }
+  }, []);
+
   return (
     <>
       {isLoading ? (
@@ -56,6 +63,7 @@ const BeforeLogin = () => {
           <Divider16 />
           <KakaoLoginBtn onHandleLoginSuccess={onHandleLoginSuccess} />
           <Divider16 />
+          <p onClick={googleLogout}>Google Logout</p>
         </Wrapper>
       )}
     </>

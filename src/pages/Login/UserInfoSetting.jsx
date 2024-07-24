@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AppBarWithTitle } from '../../components/AppBar';
 import styled from '@emotion/styled';
 import { Avatar, Button, MenuItem, TextField, Typography } from '@mui/material';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useRecoilState, useSetRecoilState } from 'recoil';
-import { loginState } from '../../recoil/atoms';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { isLoggedInState, userDataState } from '../../recoil/atoms';
 
 const InfoReqWrapper = styled.div`
   display: flex;
@@ -27,11 +27,12 @@ const Divider40 = styled.div`
 
 const UserInfoSetting = () => {
   const navigate = useNavigate();
-  const [loginData, setLoginData] = useRecoilState(loginState);
-  const [name, setName] = useState(loginData.user.name);
+  const [name, setName] = useState('');
   const [nameError, setNameError] = useState(false);
-  const [job, setJob] = useState(loginData.user.job ?? '');
+  const [job, setJob] = useState('');
   const [jobError, setJobError] = useState(false);
+  const [userData, setUserData] = useRecoilState(userDataState);
+  const isLoggedIn = useRecoilValue(isLoggedInState);
 
   const handleName = (event) => {
     setNameError(event.target.value == null);
@@ -52,16 +53,25 @@ const UserInfoSetting = () => {
       setJobError(true);
       return;
     }
-    const newLoginData = {
-      ...loginData,
-      user: {
-        ...loginData.user,
-        job: job,
-      },
-    };
-    setLoginData(newLoginData);
+
+    setUserData({ ...userData, job: job });
     navigate('/login/allergySetting');
   };
+
+  useEffect(() => {
+    console.log('infoSetting: ', userData);
+    if (userData == null) {
+      alert('잘못된 접근입니다.');
+      navigate('/login');
+    } else if (isLoggedIn) {
+      alert('이미 로그인되었습니다.');
+      navigate('/');
+    }
+  }, []);
+
+  useEffect(() => {
+    setName(userData.name);
+  }, [userData]);
 
   return (
     <>
@@ -78,14 +88,14 @@ const UserInfoSetting = () => {
           <Typography variant="h6">기본적인 정보를 확인할게요.</Typography>
         </WidthFill>
         <Divider40 />
-        <Avatar alt="Remy Sharp" src={loginData.user.img} sx={{ width: 100, height: 100 }} />
+        <Avatar alt="Remy Sharp" src={userData.img} sx={{ width: 100, height: 100 }} />
         <Divider40 />
         <TextField
           id="memberName"
           label="이름"
           sx={{ width: '100%' }}
           onChange={handleName}
-          defaultValue={name}
+          defaultValue={userData.name}
           inputProps={{ maxLength: 20 }}
           error={nameError}
           helperText={nameError ? '이름을 입력해주세요' : ''}

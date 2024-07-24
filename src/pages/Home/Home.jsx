@@ -6,7 +6,7 @@ import WeeklyRecipe from './WeeklyRecipe';
 import RecommendedProduct from './RecommendedProduct';
 import RecommendedRecipe from './RecommendedRecipe';
 import { useRecoilValue } from 'recoil';
-import { loginState } from '../../recoil/atoms';
+import { isLoggedInState } from '../../recoil/atoms';
 
 const Container = styled.div`
   display: flex;
@@ -22,7 +22,7 @@ const Container = styled.div`
 `;
 
 const Home = () => {
-  const isLoggined = useRecoilValue(loginState).isLoggedIn;
+  const isLoggined = useRecoilValue(isLoggedInState);
 
   return (
     <>
