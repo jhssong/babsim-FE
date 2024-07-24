@@ -1,8 +1,8 @@
 import { ThemeProvider } from '@emotion/react';
 import { CssBaseline } from '@mui/material';
-import { Navigate, Route, Routes } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
-import { loginState } from './recoil/atoms';
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+import { useSetRecoilState, useRecoilValue } from 'recoil';
+import { isLoggedInState, isTryingToLoginState, userDataState } from './recoil/atoms';
 
 import theme from './styles/theme';
 import GlobalStyle from './styles/GlobalStyle';
@@ -21,13 +21,53 @@ import NotFound from './pages/Error/NotFound';
 import RecipeEdit from './pages/Recipe/RecipeEdit';
 import UserInfoSetting from './pages/Login/UserInfoSetting';
 import UserAllergySetting from './pages/Login/UserAllergySetting';
+import { useEffect } from 'react';
+import { auth, onAuthStateChanged } from './utils/firebase/firebase';
+import getMember from './apis/Login/getMember';
+import { getLoggedInPlatform } from './utils/firebase/localStorage';
 
 const ProtectedRoute = ({ path }) => {
-  const isLoggined = useRecoilValue(loginState).isLoggedIn;
-  return isLoggined ? path : <Navigate to="/login" />;
+  const isLoggedIn = useRecoilValue(isLoggedInState);
+  return isLoggedIn ? path : <Navigate to="/login" />;
+};
+
+const ProtectedRouteForLogin = ({ path }) => {
+  const isTryingToLogin = useRecoilValue(isTryingToLoginState);
+  const isLoggedIn = useRecoilValue(isLoggedInState);
+
+  if (isTryingToLogin) return path;
+  else if (isLoggedIn) return <Navigate to="/" />;
+  else return <Navigate to="/login" />;
 };
 
 function App() {
+  const navigate = useNavigate();
+  const setUserData = useSetRecoilState(userDataState);
+  const setIsLoggedIn = useSetRecoilState(isLoggedInState);
+  const isTryingToLogin = useRecoilValue(isTryingToLoginState);
+
+  async function checkLogin() {
+    // Check google login session
+    onAuthStateChanged(auth, async (currentUser) => {
+      if (getLoggedInPlatform() == 'google' && isTryingToLogin == false) {
+        try {
+          console.log(' 설마?');
+          const userData = await getMember('google&' + currentUser.uid);
+          setUserData(userData);
+          setIsLoggedIn(true);
+          navigate('/');
+        } catch (error) {
+          console.error(error);
+          navigate('/login');
+        }
+      }
+    });
+  }
+
+  useEffect(() => {
+    checkLogin();
+  }, []);
+
   return (
     <>
       <GlobalStyle />
@@ -36,8 +76,14 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/login/infoSetting" element={<UserInfoSetting />} />
-          <Route path="/login/allergySetting" element={<UserAllergySetting />} />
+          <Route
+            path="/login/infoSetting"
+            element={<ProtectedRouteForLogin path={<UserInfoSetting />} />}
+          />
+          <Route
+            path="/login/allergySetting"
+            element={<ProtectedRouteForLogin path={<UserAllergySetting />} />}
+          />
           <Route path="/market" element={<Market />} />
           <Route path="/cart" element={<ProtectedRoute path={<Cart />} />} />
           <Route path="/product/:productId" element={<Product />} />
