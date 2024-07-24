@@ -222,7 +222,7 @@ const Recipe = () => {
   return (
     <>
       {writeRecipe ? (
-        <RecipeEdit mode={'write'} />
+        <RecipeEdit mode={'write'} onBackBtnClick={setWriteRecipe} />
       ) : (
         <>
           <AppBarWithLogo />
