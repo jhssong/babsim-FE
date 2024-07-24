@@ -137,7 +137,7 @@ const RecipeInfo = () => {
   }
 
   if (isForkOpen) {
-    return <RecipeEdit mode="fork" />;
+    return <RecipeEdit mode="fork" onBackBtnClick={setIsForkOpen} />;
   }
 
   return (
