@@ -155,11 +155,16 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
   const [isDone, setDone] = useState(false);
   const [recipeInfo, setRecipeInfo] = useState(initialRecipe);
   const [difficulty, setDifficulty] = useState('');
+  const [category, setCategory] = useState('');
   const [timeError, setTimeError] = useState(false);
   const [isCookeryModalOpen, setIsCookeryModalOpen] = useState(false); // 조리법 수정 모달창 열기/닫기
 
   const difficultyChange = (event) => {
     setDifficulty(event.target.value);
+  };
+
+  const categoryChange = (event) => {
+    setCategory(event.target.value);
   };
 
   const getRecipeInfo = async () => {
@@ -250,7 +255,7 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
               </Select>
               <TextField
                 id="recipeMinute"
-                label="요리 시간 (분)"
+                label="시간(분)"
                 type="number"
                 sx={{ width: '25%', marginTop: '1rem' }}
                 value={Math.floor(recipeInfo.cookingTime / 60)}
@@ -275,7 +280,7 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
               />
               <TextField
                 id="recipeSecond"
-                label="요리 시간 (초)"
+                label="시간(초)"
                 type="number"
                 sx={{ width: '25%', marginTop: '1rem' }}
                 value={recipeInfo.cookingTime % 60}
@@ -298,6 +303,36 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
                 error={timeError}
                 helperText={timeError ? '시간을 정확히 입력해주세요.' : ''}
               />
+            </FormControl>
+            <FormControl
+              sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}
+              fullWidth>
+              <InputLabel id="category" sx={{ marginTop: '1rem' }}>
+                카테고리
+              </InputLabel>
+              <Select
+                labelId="category"
+                id="category"
+                value={category}
+                label="recipeCategory"
+                onChange={categoryChange}
+                sx={{ width: '100%', marginTop: '1rem' }}>
+                <MenuItem value={'메인요리'}>메인요리</MenuItem>
+                <MenuItem value={'밑반찬'}>밑반찬</MenuItem>
+                <MenuItem value={'간식'}>간식</MenuItem>
+                <MenuItem value={'간단요리'}>간단요리</MenuItem>
+                <MenuItem value={'비건요리'}>비건요리</MenuItem>
+                <MenuItem value={'안주'}>안주</MenuItem>
+                <MenuItem value={'베이킹'}>베이킹</MenuItem>
+                <MenuItem value={'다이어트'}>다이어트</MenuItem>
+                <MenuItem value={'오븐 요리'}>오븐 요리</MenuItem>
+                <MenuItem value={'키토'}>키토</MenuItem>
+                <MenuItem value={'도시락'}>도시락</MenuItem>
+                <MenuItem value={'한식'}>한식</MenuItem>
+                <MenuItem value={'양식'}>양식</MenuItem>
+                <MenuItem value={'일식'}>일식</MenuItem>
+                <MenuItem value={'중식'}>중식</MenuItem>
+              </Select>
             </FormControl>
             <Divider sx={{ paddingTop: '1rem' }} />
             <RecipeTable ingredients={recipeInfo.ingredients} />
