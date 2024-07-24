@@ -151,15 +151,20 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
   const isLoggined = useRecoilValue(loginState).isLoggedIn;
 
   const { recipeId } = useParams();
-  const [isLoading, setIsLoading] = useState(false); // Backend API 구현 후 true로 변경
+  const [isLoading, setIsLoading] = useState(false);
   const [isDone, setDone] = useState(false);
   const [recipeInfo, setRecipeInfo] = useState(initialRecipe);
   const [difficulty, setDifficulty] = useState('');
+  const [category, setCategory] = useState('');
   const [timeError, setTimeError] = useState(false);
-  const [isCookeryModalOpen, setIsCookeryModalOpen] = useState(false); // 조리법 수정 모달창 열기/닫기
+  const [isCookeryModalOpen, setIsCookeryModalOpen] = useState(false);
 
   const difficultyChange = (event) => {
     setDifficulty(event.target.value);
+  };
+
+  const categoryChange = (event) => {
+    setCategory(event.target.value);
   };
 
   const getRecipeInfo = async () => {
@@ -169,7 +174,7 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
   };
 
   useEffect(() => {
-    if (mode === 'edit') {
+    if (mode === 'edit' || mode === 'fork') {
       getRecipeInfo();
       setRecipeInfo(recipe); // test
     } else if (mode === 'write') {
@@ -183,131 +188,159 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
     // 이전 페이지로 돌아가서? 성공 메세지 출력
   }, [isDone]);
 
+  // 조건부 렌더링
+  if (isLoading) {
+    return null;
+  }
+
+  if (isCookeryModalOpen) {
+    return (
+      <CookeryEditModal
+        recipe={recipeInfo}
+        onBackBtnClick={() => setIsCookeryModalOpen(false)}
+        setRecipeState={setRecipeInfo}
+        setModalState={setIsCookeryModalOpen}
+      />
+    );
+  }
+
   return (
     <>
-      {isLoading ? null : isCookeryModalOpen ? (
-        <CookeryEditModal
-          recipe={recipeInfo}
-          onBackBtnClick={setIsCookeryModalOpen}
-          setRecipeState={setRecipeInfo}
-          setModalState={setIsCookeryModalOpen}
+      <AppBarWithTitle
+        title=""
+        rightIcon="done"
+        set={setDone}
+        onBackBtnClick={onBackBtnClick}
+        onRightIconClick={() => console.log('Save clicked')}
+      />
+      <Container>
+        <ImageSize>
+          {recipeInfo.imgURLs[0] ? (
+            <Image src={recipeInfo.imgURLs[0]} />
+          ) : (
+            <div style={{ width: '100%', height: '100%', backgroundColor: '#e0e0e0' }} />
+          )}
+          <EditIconContainer>
+            <EditIcon />
+          </EditIconContainer>
+        </ImageSize>
+        <TextField
+          id="recipeTitle"
+          label="레시피 이름"
+          sx={{ width: '100%' }}
+          value={recipeInfo.name}
+          inputProps={{ maxLength: 20 }}
+          onChange={(e) => setRecipeInfo({ ...recipeInfo, name: e.target.value })}
         />
-      ) : (
-        <>
-          <AppBarWithTitle
-            title=""
-            rightIcon="done"
-            set={setDone}
-            onBackBtnClick={onBackBtnClick}
-            onRightIconClick={() => console.log('Save clicked')}
+        <Divider />
+        <TextField
+          id="recipeDescription"
+          label="레시피 설명"
+          sx={{ width: '100%', marginTop: '1rem' }}
+          value={recipeInfo.description}
+          multiline
+          rows={5}
+          inputProps={{ maxLength: 100 }}
+          onChange={(e) => setRecipeInfo({ ...recipeInfo, description: e.target.value })}
+        />
+        <FormControl
+          sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}
+          fullWidth>
+          <InputLabel id="difficulty" sx={{ marginTop: '1rem' }}>
+            요리 난이도
+          </InputLabel>
+          <Select
+            labelId="difficulty"
+            id="difficulty"
+            value={difficulty}
+            label="recipeDifficulty"
+            onChange={difficultyChange}
+            sx={{ width: '45%', marginTop: '1rem' }}>
+            <MenuItem value={'초급'}>초급</MenuItem>
+            <MenuItem value={'중급'}>중급</MenuItem>
+            <MenuItem value={'고급'}>고급</MenuItem>
+          </Select>
+          <TextField
+            id="recipeMinute"
+            label="시간(분)"
+            type="number"
+            sx={{ width: '25%', marginTop: '1rem' }}
+            value={Math.floor(recipeInfo.cookingTime / 60)}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            inputProps={{
+              min: 0,
+              step: 1,
+              max: 60,
+              maxLength: 2,
+            }}
+            onChange={(event) => {
+              const value = Math.max(0, Math.min(60, Number(event.target.value)));
+              setRecipeInfo({
+                ...recipeInfo,
+                cookingTime: value * 60 + (recipeInfo.cookingTime % 60),
+              });
+            }}
+            error={timeError}
+            helperText={timeError ? '시간을 정확히 입력해주세요.' : ''}
           />
-          <Container>
-            <ImageSize>
-              {recipeInfo.imgURLs[0] ? (
-                <Image src={recipeInfo.imgURLs[0]} />
-              ) : (
-                <div style={{ width: '100%', height: '100%', backgroundColor: '#e0e0e0' }} />
-              )}
-              <EditIconContainer>
-                <EditIcon />
-              </EditIconContainer>
-            </ImageSize>
-            <TextField
-              id="recipeTitle"
-              label="레시피 이름"
-              sx={{ width: '100%' }}
-              value={recipeInfo.name}
-              inputProps={{ maxLength: 20 }}
-              onChange={(e) => setRecipeInfo({ ...recipeInfo, name: e.target.value })}
-            />
-            <Divider />
-            <TextField
-              id="recipeDescription"
-              label="레시피 설명"
-              sx={{ width: '100%', marginTop: '1rem' }}
-              value={recipeInfo.description}
-              multiline
-              rows={5}
-              inputProps={{ maxLength: 100 }}
-              onChange={(e) => setRecipeInfo({ ...recipeInfo, description: e.target.value })}
-            />
-            <FormControl
-              sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}
-              fullWidth>
-              <InputLabel id="difficulty" sx={{ marginTop: '1rem' }}>
-                요리 난이도
-              </InputLabel>
-              <Select
-                labelId="difficulty"
-                id="difficulty"
-                value={difficulty}
-                label="recipeDifficulty"
-                onChange={difficultyChange}
-                sx={{ width: '45%', marginTop: '1rem' }}>
-                <MenuItem value={'초급'}>초급</MenuItem>
-                <MenuItem value={'중급'}>중급</MenuItem>
-                <MenuItem value={'고급'}>고급</MenuItem>
-              </Select>
-              <TextField
-                id="recipeMinute"
-                label="요리 시간 (분)"
-                type="number"
-                sx={{ width: '25%', marginTop: '1rem' }}
-                value={Math.floor(recipeInfo.cookingTime / 60)}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                inputProps={{
-                  min: 0,
-                  step: 1,
-                  max: 60,
-                  maxLength: 2,
-                }}
-                onChange={(event) => {
-                  const value = Math.max(0, Math.min(60, Number(event.target.value)));
-                  setRecipeInfo({
-                    ...recipeInfo,
-                    cookingTime: value * 60 + (recipeInfo.cookingTime % 60),
-                  });
-                }}
-                error={timeError}
-                helperText={timeError ? '시간을 정확히 입력해주세요.' : ''}
-              />
-              <TextField
-                id="recipeSecond"
-                label="요리 시간 (초)"
-                type="number"
-                sx={{ width: '25%', marginTop: '1rem' }}
-                value={recipeInfo.cookingTime % 60}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                inputProps={{
-                  min: 0,
-                  step: 1,
-                  max: 60,
-                  maxLength: 2,
-                }}
-                onChange={(event) => {
-                  const value = Math.max(0, Math.min(60, Number(event.target.value)));
-                  setRecipeInfo({
-                    ...recipeInfo,
-                    cookingTime: Math.floor(recipeInfo.cookingTime / 60) * 60 + value,
-                  });
-                }}
-                error={timeError}
-                helperText={timeError ? '시간을 정확히 입력해주세요.' : ''}
-              />
-            </FormControl>
-            <Divider sx={{ paddingTop: '1rem' }} />
-            <RecipeTable ingredients={recipeInfo.ingredients} />
-            <Divider sx={{ paddingTop: '1rem' }} />
-            <RecipeTags recipeTags={recipeInfo.tags} />
-            <Divider sx={{ paddingTop: '1rem' }} />
-            <CookeryEdit recipe={recipeInfo} setState={setIsCookeryModalOpen} />
-          </Container>
-        </>
-      )}
+          <TextField
+            id="recipeSecond"
+            label="시간(초)"
+            type="number"
+            sx={{ width: '25%', marginTop: '1rem' }}
+            value={recipeInfo.cookingTime % 60}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            inputProps={{
+              min: 0,
+              step: 1,
+              max: 60,
+              maxLength: 2,
+            }}
+            onChange={(event) => {
+              const value = Math.max(0, Math.min(60, Number(event.target.value)));
+              setRecipeInfo({
+                ...recipeInfo,
+                cookingTime: Math.floor(recipeInfo.cookingTime / 60) * 60 + value,
+              });
+            }}
+            error={timeError}
+            helperText={timeError ? '시간을 정확히 입력해주세요.' : ''}
+          />
+        </FormControl>
+        <FormControl
+          sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}
+          fullWidth>
+          <InputLabel id="category" sx={{ marginTop: '1rem' }}>
+            카테고리
+          </InputLabel>
+          <Select
+            labelId="category"
+            id="category"
+            value={category}
+            label="recipeCategory"
+            onChange={categoryChange}
+            sx={{ width: '100%', marginTop: '1rem' }}>
+            <MenuItem value={'메인요리'}>메인요리</MenuItem>
+            <MenuItem value={'간단요리'}>간단요리</MenuItem>
+            <MenuItem value={'비건요리'}>비건요리</MenuItem>
+            <MenuItem value={'안주'}>안주</MenuItem>
+            <MenuItem value={'베이킹'}>베이킹</MenuItem>
+            <MenuItem value={'다이어트'}>다이어트</MenuItem>
+            <MenuItem value={'오븐 요리'}>오븐 요리</MenuItem>
+            <MenuItem value={'키토'}>키토</MenuItem>
+          </Select>
+        </FormControl>
+        <Divider sx={{ paddingTop: '1rem' }} />
+        <RecipeTable ingredients={recipeInfo.ingredients} />
+        <Divider sx={{ paddingTop: '1rem' }} />
+        <RecipeTags recipeTags={recipeInfo.tags} />
+        <Divider sx={{ paddingTop: '1rem' }} />
+        <CookeryEdit recipe={recipeInfo} setState={setIsCookeryModalOpen} />
+      </Container>
     </>
   );
 };

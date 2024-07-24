@@ -1,7 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AppBarWithTitle } from '../../components/AppBar';
-import { Box, Button, Divider, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  TextField,
+  Typography,
+} from '@mui/material';
 import RecipeInformation, { RecipeInfoImage } from './RecipeInfo/RecipeInformation';
 import AllergyInfo from './RecipeInfo/AllergyInfo';
 import NutritionInfo from './RecipeInfo/NutritionInfo';
@@ -11,6 +21,7 @@ import ReviewInfo from './RecipeInfo/ReviewInfo';
 import { CallSplitOutlined, LocalDiningOutlined } from '@mui/icons-material';
 import styled from '@emotion/styled';
 import RecipeReviews from './RecipeReviews';
+import RecipeEdit from './RecipeEdit';
 
 // dummy data
 const recipe = {
@@ -25,7 +36,7 @@ const recipe = {
   difficulty: '초급',
   cookingTime: 10,
   tags: ['짱구', '도시락', '초간단'],
-  allergys: ['gluten', 'peanuts', 'shellfish'],
+  allergys: [1, 2, 3, 4, 5, 6],
   ingredients: [
     { name: '방울토마토', amount: 1 },
     { name: '계란', amount: 1 },
@@ -108,6 +119,8 @@ const RecipeInfo = () => {
   const { recipeId } = useParams();
   const [isLoading, setIsLoading] = useState(false); // Backend API 구현 후 true로 변경
   const [isReviewMore, setIsReviewMore] = useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [isForkOpen, setIsForkOpen] = useState(false);
   const [recipeInfo, setRecipeInfo] = useState([]);
 
   const getRecipeInfo = async () => {
@@ -119,76 +132,79 @@ const RecipeInfo = () => {
     getRecipeInfo();
   }, []);
 
+  if (isReviewMore) {
+    return <RecipeReviews onBackBtnClick={setIsReviewMore} />;
+  }
+
+  if (isForkOpen) {
+    return <RecipeEdit mode="fork" />;
+  }
+
   return (
     <>
-      {isReviewMore ? (
-        <RecipeReviews onBackBtnClick={setIsReviewMore} />
-      ) : (
-        <>
-          <AppBarWithTitle title="" rightIcon="share" />
-          <RecipeInfoImage imgs={recipe.imgURLs} isLoading={isLoading} />
-          <RecipeInformation recipeInfo={recipe} isLoading={isLoading} />
-          <Divider />
-          <AllergyInfo allergys={recipe.allergys} />
-          <Divider />
-          <NutritionInfo />
-          <Divider />
-          <IngredientInfo ingredients={recipe.ingredients} />
-          <Divider />
-          <Typography variant="h5" sx={{ padding: '1rem' }}>
-            레시피
+      <AppBarWithTitle title="" rightIcon="share" />
+      <RecipeInfoImage imgs={recipe.imgURLs} isLoading={isLoading} />
+      <RecipeInformation recipeInfo={recipe} isLoading={isLoading} />
+      <Divider />
+      <AllergyInfo allergys={recipe.allergys} />
+      <Divider />
+      <NutritionInfo />
+      <Divider />
+      <IngredientInfo ingredients={recipe.ingredients} />
+      <Divider />
+      <Typography variant="h5" sx={{ padding: '1rem' }}>
+        레시피
+      </Typography>
+      <CookeryInfo
+        images={recipe.recipeImgs}
+        descs={recipe.recipeDescs}
+        timers={recipe.recipeTimers}
+      />
+      <Divider />
+      <ReviewInfo reviews={recipe.reviews} />
+      <Box sx={{ display: 'flex', justifyContent: 'center', paddingBottom: '1rem' }}>
+        <Button onClick={() => setIsReviewMore(true)}>리뷰 더보기</Button>
+      </Box>
+      <Divider />
+      <BottomContainer>
+        <Button
+          onClick={() => setIsForkOpen(true)}
+          startIcon={
+            <CallSplitOutlined
+              sx={{
+                minWidth: 'auto',
+                minHeight: 'auto',
+                padding: 0,
+                width: '32px',
+                height: '32px',
+              }}
+            />
+          }
+          variant="contained"
+          color="primary">
+          <Typography variant="button" fontWeight="bold">
+            포크하기
           </Typography>
-          <CookeryInfo
-            images={recipe.recipeImgs}
-            descs={recipe.recipeDescs}
-            timers={recipe.recipeTimers}
-          />
-          <Divider />
-          <ReviewInfo reviews={recipe.reviews} />
-          <Box sx={{ display: 'flex', justifyContent: 'center', paddingBottom: '1rem' }}>
-            <Button onClick={() => setIsReviewMore(true)}>리뷰 더보기</Button>
-          </Box>
-          <Divider />
-          <BottomContainer>
-            <Button
-              startIcon={
-                <CallSplitOutlined
-                  sx={{
-                    minWidth: 'auto',
-                    minHeight: 'auto',
-                    padding: 0,
-                    width: '32px',
-                    height: '32px',
-                  }}
-                />
-              }
-              variant="contained"
-              color="primary">
-              <Typography variant="button" fontWeight="bold">
-                포크하기
-              </Typography>
-            </Button>
-            <Button
-              startIcon={
-                <LocalDiningOutlined
-                  sx={{
-                    minWidth: 'auto',
-                    minHeight: 'auto',
-                    padding: 0,
-                    width: '32px',
-                    height: '32px',
-                  }}
-                />
-              }
-              variant="contained"
-              color="primary">
-              <Typography variant="button" fontWeight="bold">
-                요리하기
-              </Typography>
-            </Button>
-          </BottomContainer>
-        </>
-      )}
+        </Button>
+        <Button
+          startIcon={
+            <LocalDiningOutlined
+              sx={{
+                minWidth: 'auto',
+                minHeight: 'auto',
+                padding: 0,
+                width: '32px',
+                height: '32px',
+              }}
+            />
+          }
+          variant="contained"
+          color="primary">
+          <Typography variant="button" fontWeight="bold">
+            요리하기
+          </Typography>
+        </Button>
+      </BottomContainer>
     </>
   );
 };

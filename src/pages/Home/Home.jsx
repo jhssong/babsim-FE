@@ -26,6 +26,7 @@ const Home = () => {
 
   return (
     <>
+      
       <AppBarWithLogo />
       <Container>
         <WeeklyRecipe />
