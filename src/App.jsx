@@ -27,7 +27,6 @@ import getMember from './apis/Login/getMember';
 import { getLoggedInPlatform, getLoginToken } from './apis/Login/localStorage';
 
 const ProtectedRoute = ({ path }) => {
-  return path;
   const isLoggedIn = useRecoilValue(isLoggedInState);
   return isLoggedIn ? path : <Navigate to="/login" />;
 };
@@ -48,21 +47,18 @@ function App() {
   const isTryingToLogin = useRecoilValue(isTryingToLoginState);
 
   async function checkLogin() {
-    // Check google login session
-    onAuthStateChanged(auth, async (currentUser) => {
-      if (getLoggedInPlatform() == 'google' && isTryingToLogin == false) {
-        try {
-          console.log('Tyring to find google user data');
-          const userData = await getMember('google&' + currentUser.uid);
-          setUserData(userData);
-          setIsLoggedIn(true);
-          navigate('/');
-        } catch (error) {
-          console.error(error);
-          navigate('/login');
-        }
+    if (getLoggedInPlatform() == 'google' && isTryingToLogin == false) {
+      try {
+        console.log('Tyring to find google user data');
+        const userData = await getMember('google&' + currentUser.uid);
+        setUserData(userData);
+        setIsLoggedIn(true);
+        navigate('/');
+      } catch (error) {
+        console.error(error);
+        navigate('/login');
       }
-    });
+    }
     if (getLoggedInPlatform() == 'kakao' && isTryingToLogin == false) {
       try {
         console.log('Tyring to find kakao user data');

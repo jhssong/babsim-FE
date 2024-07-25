@@ -5,7 +5,7 @@ import { Box, Button, Snackbar, Typography } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logout from '../../apis/Login/logout';
-import { isTryingToLoginState } from '../../recoil/atoms';
+import { isLoggedInState, isTryingToLoginState, userDataState } from '../../recoil/atoms';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 const Container = styled.div`
@@ -22,25 +22,30 @@ const MyPage = () => {
   const [message, setMessage] = useState('');
   let navigate = useNavigate();
   const setIsTryingToLogin = useSetRecoilState(isTryingToLoginState);
+  const setUserData = useSetRecoilState(userDataState);
+  const setIsLoggedIn = useSetRecoilState(isLoggedInState);
 
   const handleSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
+    if (reason === 'clickaway') return;
     setOpen(false);
-    navigate(-1);
   };
 
   const handleLogout = async () => {
-    const status = await logout(navigate, setIsTryingToLogin);
-    // if (status) {
-    //   navigate('/');
-    //   setMessage('로그아웃되었습니다.');
-    //   setOpen(true);
-    // } else {
-    //   setMessage('로그아웃에 실패했습니다.');
-    //   setOpen(true);
-    // }
+    setIsTryingToLogin(true);
+    setMessage('ddd');
+    setOpen(true);
+    const status = await logout();
+    if (status) {
+      setMessage('로그아웃되었습니다');
+      setOpen(true);
+      navigate('/');
+      setUserData(null);
+      setIsTryingToLogin(false);
+      setIsLoggedIn(false);
+    } else {
+      setMessage('로그아웃에 실패하였습니다');
+      setOpen(true);
+    }
   };
 
   return (

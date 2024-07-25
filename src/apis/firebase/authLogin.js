@@ -1,3 +1,4 @@
+import { resetLoginStorage } from '../Login/localStorage';
 import {
   auth,
   setPersistence,
@@ -27,4 +28,15 @@ export async function googleLoginWithPopup() {
   }
 }
 
-export { signOut, auth };
+export async function googleLogout() {
+  try {
+    await signOut(auth);
+    console.log('Google logged out');
+    resetLoginStorage();
+    return true;
+  } catch (error) {
+    console.error(error);
+    console.log('Google logged out failed');
+    return false;
+  }
+}
