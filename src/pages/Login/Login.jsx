@@ -6,8 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { isLoggedInState, userDataState } from '../../recoil/atoms';
-import { googleLogout } from '../../utils/firebase/login';
+import { isLoggedInState, isTryingToLoginState, userDataState } from '../../recoil/atoms';
 
 const Wrapper = styled.div`
   display: flex;
@@ -33,12 +32,14 @@ const Divider16 = styled.div`
 `;
 const BeforeLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const setUserData = useSetRecoilState(userDataState);
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(isLoggedInState);
+  const setUserData = useSetRecoilState(userDataState);
+  const setIsTryingToLogin = useSetRecoilState(isTryingToLoginState);
   const navigate = useNavigate();
 
   function onHandleLoginSuccess(data) {
     setUserData(data);
+    setIsTryingToLogin(true);
     navigate('/login/infoSetting');
   }
 

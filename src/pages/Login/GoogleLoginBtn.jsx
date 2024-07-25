@@ -1,12 +1,7 @@
-import { useSetRecoilState } from 'recoil';
-import { googleLoginWithPopup } from '../../utils/firebase/login';
-import { isTryingToLoginState, userDataState } from '../../recoil/atoms';
-import { loggedInWithGoogle } from '../../utils/firebase/localStorage';
+import { googleLoginWithPopup } from '../../apis/firebase/authLogin';
+import { saveLoggedInPlatform } from '../../apis/Login/localStorage';
 
 const GoogleLoginBtn = ({ onHandleLoginSuccess, setIsLoading }) => {
-  const setUserData = useSetRecoilState(userDataState);
-  const setIsTryingToLogin = useSetRecoilState(isTryingToLoginState);
-
   const styles = {
     button: {
       WebkitUserSelect: 'none',
@@ -107,11 +102,11 @@ const GoogleLoginBtn = ({ onHandleLoginSuccess, setIsLoading }) => {
   async function loginToGoogle() {
     setIsLoading(true);
     const userData = await googleLoginWithPopup();
-    if (userData != null) onHandleLoginSuccess(userData);
-    setUserData(userData);
-    setIsLoading(false);
-    loggedInWithGoogle();
-    setIsTryingToLogin(true);
+    if (userData != null) {
+      setIsLoading(false);
+      saveLoggedInPlatform('google');
+      onHandleLoginSuccess(userData);
+    }
   }
 
   return (

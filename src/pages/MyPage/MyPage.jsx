@@ -4,6 +4,9 @@ import { AppBarWithTitle } from '../../components/AppBar';
 import { Box, Button, Snackbar, Typography } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import logout from '../../apis/Login/logout';
+import { isLoggedInState, isTryingToLoginState, userDataState } from '../../recoil/atoms';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 const Container = styled.div`
   display: flex;
@@ -18,13 +21,36 @@ const MyPage = () => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
   let navigate = useNavigate();
+  const setIsTryingToLogin = useSetRecoilState(isTryingToLoginState);
+  const setUserData = useSetRecoilState(userDataState);
+  const setIsLoggedIn = useSetRecoilState(isLoggedInState);
 
   const handleSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
+    if (reason === 'clickaway') return;
     setOpen(false);
-    navigate(-1);
+  };
+
+  const handleLogout = async () => {
+    setIsTryingToLogin(true);
+    const status = await logout();
+    if (status) {
+      setMessage('로그아웃되었습니다');
+      setOpen(true);
+      navigate('/');
+      setUserData(null);
+      setIsTryingToLogin(false);
+      setIsLoggedIn(false);
+    } else {
+      setMessage('로그아웃에 실패하였습니다');
+      setOpen(true);
+    }
+  };
+
+  const handleUnregister = () => {
+    setIsLoggedIn(false);
+    setUserData(null);
+    setMessage('탈퇴되었습니다');
+    setOpen(true);
   };
 
   return (
@@ -45,10 +71,7 @@ const MyPage = () => {
               width: '100%',
               height: '100%',
             }}
-            onClick={() => {
-              setMessage('로그아웃되었습니다.');
-              setOpen(true);
-            }}>
+            onClick={handleLogout}>
             <Typography variant="body1">로그아웃</Typography>
           </Button>
         </Box>
@@ -67,11 +90,8 @@ const MyPage = () => {
               width: '100%',
               height: '100%',
             }}
-            onClick={() => {
-              setMessage('탈퇴되었습니다.');
-              setOpen(true);
-            }}>
-            <Typography variant="body1">탍퇴하기</Typography>
+            onClick={handleUnregister}>
+            <Typography variant="body1">탈퇴하기</Typography>
           </Button>
         </Box>
       </Container>

@@ -1,12 +1,8 @@
 const loggedInPlatformKey = 'loggedInPlatformKey';
 const loginTokenKey = 'loginTokenKey';
 
-export function loggedInWithGoogle() {
-  localStorage.setItem(loggedInPlatformKey, 'google');
-}
-
-export function loggedInWithKakao() {
-  localStorage.setItem(loggedInPlatformKey, 'kakao');
+export function saveLoggedInPlatform(platform) {
+  localStorage.setItem(loggedInPlatformKey, platform);
 }
 
 export function getLoggedInPlatform() {
@@ -19,4 +15,9 @@ export function saveLoginToken(key) {
 
 export function getLoginToken() {
   return localStorage.getItem(loginTokenKey);
+}
+
+export function resetLoginStorage() {
+  localStorage.clear(loggedInPlatformKey);
+  localStorage.clear(loginTokenKey);
 }
