@@ -1,7 +1,32 @@
+import { useEffect, useState } from 'react';
 import { VCard } from '../../components/Card';
 import { RollCardList } from '../../components/CardList';
+import { getProductRecommend } from '../../apis/Market/getProduct';
+import { set } from 'date-fns';
+import Loading from '../../components/Loading';
 
 const RecommendedProduct = () => {
+  // const [productData, setProductData] = useState([]);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
+  // useEffect(() => {
+  //   const fetchRecommendedProduct = async () => {
+  //     try {
+  //       const data = await getProductRecommend();
+  //       setProductData(data);
+  //       setLoading(false);
+  //     } catch (error) {
+  //       setError(error);
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchRecommendedProduct();
+  // }, []);
+
+  // if (loading) return <Loading />;
+  // if (error) return <div>Error: {error.message}</div>;
+
   const productData = {
     list: [
       {
