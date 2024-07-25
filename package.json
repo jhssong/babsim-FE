@@ -13,6 +13,10 @@
   "dependencies": {
     "@mui/icons-material": "^5.16.4",
     "@mui/material": "^5.16.4",
+<<<<<<< HEAD
+    "axios": "^1.7.2",
+=======
+>>>>>>> 027816c8513bc44d1c3d145e956eea6c0d950f50
     "date-fns": "^3.6.0",
     "firebase": "^10.12.4",
     "react": "^18.3.1",
