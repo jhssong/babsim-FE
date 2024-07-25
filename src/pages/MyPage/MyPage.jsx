@@ -32,8 +32,6 @@ const MyPage = () => {
 
   const handleLogout = async () => {
     setIsTryingToLogin(true);
-    setMessage('ddd');
-    setOpen(true);
     const status = await logout();
     if (status) {
       setMessage('로그아웃되었습니다');
@@ -46,6 +44,13 @@ const MyPage = () => {
       setMessage('로그아웃에 실패하였습니다');
       setOpen(true);
     }
+  };
+
+  const handleUnregister = () => {
+    setIsLoggedIn(false);
+    setUserData(null);
+    setMessage('탈퇴되었습니다');
+    setOpen(true);
   };
 
   return (
@@ -85,10 +90,7 @@ const MyPage = () => {
               width: '100%',
               height: '100%',
             }}
-            onClick={() => {
-              setMessage('탈퇴되었습니다.');
-              setOpen(true);
-            }}>
+            onClick={handleUnregister}>
             <Typography variant="body1">탈퇴하기</Typography>
           </Button>
         </Box>
