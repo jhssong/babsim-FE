@@ -10,6 +10,7 @@ import RecipeTable from './RecipeEdit/RecipeTable';
 import RecipeTags from './RecipeEdit/RecipeTags';
 import CookeryEdit from './RecipeEdit/CookeryEdit';
 import CookeryEditModal from './RecipeEdit/CookeryEditModal';
+import ScrollToTop from '../../components/ScrollToTop';
 
 // dummy data
 const initialRecipe = {
@@ -206,6 +207,7 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
 
   return (
     <>
+      <ScrollToTop />
       <AppBarWithTitle
         title=""
         rightIcon="done"

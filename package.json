@@ -13,7 +13,10 @@
   "dependencies": {
     "@mui/icons-material": "^5.16.4",
     "@mui/material": "^5.16.4",
+<<<<<<< HEAD
     "axios": "^1.7.2",
+=======
+>>>>>>> 027816c8513bc44d1c3d145e956eea6c0d950f50
     "date-fns": "^3.6.0",
     "firebase": "^10.12.4",
     "react": "^18.3.1",
@@ -24,7 +27,8 @@
     "react-slick": "^0.30.2",
     "react-swipeable": "^7.0.1",
     "recoil": "^0.7.7",
-    "slick-carousel": "^1.8.1"
+    "slick-carousel": "^1.8.1",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
