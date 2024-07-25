@@ -1,17 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AppBarWithTitle } from '../../components/AppBar';
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Divider, Typography } from '@mui/material';
 import RecipeInformation, { RecipeInfoImage } from './RecipeInfo/RecipeInformation';
 import AllergyInfo from './RecipeInfo/AllergyInfo';
 import NutritionInfo from './RecipeInfo/NutritionInfo';
@@ -39,9 +29,9 @@ const recipe = {
   tags: ['짱구', '도시락', '초간단'],
   allergys: [1, 2, 3, 4, 5, 6],
   ingredients: [
-    { name: '방울토마토', amount: 1 },
-    { name: '계란', amount: 1 },
-    { name: '양상추', amount: 1 },
+    { name: '방울토마토', amount: '12개' },
+    { name: '계란', amount: '반개' },
+    { name: '양상추', amount: '20g' },
     { name: '소세지', amount: 10 },
   ],
   reviews: [
