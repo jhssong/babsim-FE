@@ -35,7 +35,7 @@ export const Ingredient = ({ name, amount, link }) => {
   return (
     <IngredientContainer>
       <NameText variant="body2">{name}</NameText>
-      <AmountText variant="body2">{amount}개</AmountText>
+      <AmountText variant="body2">{amount}</AmountText>
       <LinkButton variant="contained" size="small" color="primary" onClick={onBtnClick}>
         구매
       </LinkButton>

@@ -8,6 +8,7 @@ import {
   GoogleAuthProvider,
   signOut,
 } from 'firebase/auth';
+import { getStorage, ref, getDownloadURL, uploadBytes } from 'firebase/storage';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBeuNC7ZXPQ-SZNA70D8wp3tvpPfTxBOss',
@@ -22,6 +23,8 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
+export const storage = getStorage();
+
 export {
   onAuthStateChanged,
   setPersistence,
@@ -30,3 +33,5 @@ export {
   GoogleAuthProvider,
   signOut,
 };
+
+export { ref, getDownloadURL, uploadBytes };

@@ -7,6 +7,7 @@ import RecommendedProduct from './RecommendedProduct';
 import RecommendedRecipe from './RecommendedRecipe';
 import { useRecoilValue } from 'recoil';
 import { isLoggedInState } from '../../recoil/atoms';
+import ImageCard from '../../components/ImageCard';
 
 const Container = styled.div`
   display: flex;
@@ -26,7 +27,6 @@ const Home = () => {
 
   return (
     <>
-      
       <AppBarWithLogo />
       <Container>
         <WeeklyRecipe />

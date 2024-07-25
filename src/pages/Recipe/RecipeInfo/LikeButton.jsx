@@ -1,12 +1,14 @@
 import { FavoriteBorderOutlined, FavoriteOutlined } from '@mui/icons-material';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import setLike from '../../../apis/Recipe/RecipeInfo/setLike';
 
-const LikeButton = ({ liked }) => {
-  const [isLiked, setIsLiked] = useState(false);
-  useEffect(() => {
-    // POST 요청 보내기
-    setIsLiked(liked);
-  }, [liked]);
+const LikeButton = ({ liked, recipeId, memberId }) => {
+  const [isLiked, setIsLiked] = useState(liked);
+
+  const handleLike = async () => {
+    setLike(recipeId, memberId);
+    setIsLiked(!isLiked);
+  }
 
   return (
     <>
@@ -14,13 +16,13 @@ const LikeButton = ({ liked }) => {
         <FavoriteOutlined
           color="primary"
           sx={{ cursor: 'pointer' }}
-          onClick={() => setIsLiked(false)}
+          onClick={handleLike}
         />
       ) : (
         <FavoriteBorderOutlined
           color="primary"
           sx={{ cursor: 'pointer' }}
-          onClick={() => setIsLiked(true)}
+          onClick={handleLike}
         />
       )}
     </>
