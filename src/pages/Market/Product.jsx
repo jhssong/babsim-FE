@@ -7,6 +7,8 @@ import Slider from 'react-slick';
 import ComingSoonModal from '../../components/ComingSoonModal';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
+import Loading from '../../components/Loading';
+import { getProductInfo } from '../../apis/Market/getProduct';
 
 const Container = styled.div`
   display: flex;
@@ -23,7 +25,25 @@ const Product = () => {
   const [open, setOpen] = useState(false);
   const { productId } = useParams();
 
-  useEffect(() => {}, []);
+  // const [productData, setProductData] = useState([]);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
+  // useEffect(() => {
+  //   const fetchProduct = async (productId) => {
+  //     try {
+  //       const data = await getProductInfo(productId);
+  //       setProductData(data);
+  //       setLoading(false);
+  //     } catch (error) {
+  //       setError(error);
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchProduct(productId);
+  // }, []);
+  // if (loading) return <Loading />;
+  // if (error) return <div>Error: {error.message}</div>;
 
   const handleOpen = () => {
     setOpen(true);
@@ -34,7 +54,7 @@ const Product = () => {
 
   const handleClose = () => setOpen(false);
 
-  const data = {
+  const productData = {
     id: '상품 ID',
     img: [
       'https://cdn.hankyung.com/photo/202401/BF.35541769.1.jpg',
@@ -55,8 +75,8 @@ const Product = () => {
       <ComingSoonModal open={open} onClose={handleClose} />
       <AppBarWithTitle rightIcon="share" />
       <Container>
-        <Banner images={data.img} />
-        <Info data={data} />
+        <Banner images={productData.img} />
+        <Info data={productData} />
       </Container>
       <Box
         sx={{

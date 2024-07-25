@@ -2,10 +2,11 @@ import styled from '@emotion/styled';
 
 import { Typography } from '@mui/material';
 import { format } from 'date-fns';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSwipeable } from 'react-swipeable';
 import { HCard } from '../../components/Card';
 import { useNavigate } from 'react-router-dom';
+import Loading from '../../components/Loading';
 
 const WeeklyRecipeContainer = styled.div`
   display: flex;
@@ -34,6 +35,26 @@ const WeeklyRecipeContents = styled.div`
 `;
 
 const WeeklyRecipe = () => {
+  // const [recipesData, setRecipetData] = useState([]);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
+  // useEffect(() => {
+  //   const fetchWeeklyRecipe = async () => {
+  //     try {
+  //       const data = await getRecipeWeek();
+  //       setRecipetData(data);
+  //       setLoading(false);
+  //     } catch (error) {
+  //       setError(error);
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchWeeklyRecipe();
+  // }, []);
+  // if (loading) return <Loading />;
+  // if (error) return <div>Error: {error.message}</div>;
+
   const recipesData = {
     list: [
       {

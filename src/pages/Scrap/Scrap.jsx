@@ -3,10 +3,12 @@ import styled from '@emotion/styled';
 import { AppBarWithLogo } from '../../components/AppBar';
 import NavBar from '../../components/NavBar';
 import { Box, Tab, Tabs } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GridCardList } from '../../components/CardList';
 import { VCard } from '../../components/Card';
 import { useNavigate } from 'react-router-dom';
+import { getRecipeForked, getRecipeLikes, getRecipeOwn } from '../../apis/Recipe/getRecipe';
+import Loading from '../../components/Loading';
 
 const Container = styled.div`
   display: flex;
@@ -23,153 +25,182 @@ const Scrap = () => {
   const [value, setValue] = useState('fork');
   let navigate = useNavigate();
 
-  const fork = {
-    list: [
-      {
-        id: '0',
-        img: 'https://i.namu.wiki/i/R0AhIJhNi8fkU2Al72pglkrT8QenAaCJd1as-d_iY6MC8nub1iI5VzIqzJlLa-1uzZm--TkB-KHFiT-P-t7bEg.webp',
-        name: 'Spaghetti Carbonara',
-        tags: ['Italian', 'Pasta', 'Creamy'],
-        cookingTime: 1800,
-        rate: 4.5,
-        allergies: ['dairy', 'egg'],
-      },
-      {
-        id: '0',
-        img: 'https://i.namu.wiki/i/R0AhIJhNi8fkU2Al72pglkrT8QenAaCJd1as-d_iY6MC8nub1iI5VzIqzJlLa-1uzZm--TkB-KHFiT-P-t7bEg.webp',
-        name: 'Chicken Curry',
-        tags: ['Indian', 'Spicy', 'Chicken'],
-        cookingTime: 2400,
-        rate: 4.7,
-        allergies: ['nut'],
-      },
-      {
-        id: '0',
-        img: 'https://i.namu.wiki/i/R0AhIJhNi8fkU2Al72pglkrT8QenAaCJd1as-d_iY6MC8nub1iI5VzIqzJlLa-1uzZm--TkB-KHFiT-P-t7bEg.webp',
-        name: '조재용의 특제 시부야 초록라멘 국물이 아주 끝내줘요 아주 그냥 ',
-        tags: ['Vegan', 'Healthy', 'Bowl', 'Bowl', 'Bowl', 'Bowl', 'Bowl', 'Bowl'],
-        cookingTime: 1500,
-        rate: 4.9,
-        allergies: ['soy', 'sesame'],
-      },
-      {
-        id: '0',
-        img: 'https://i.namu.wiki/i/R0AhIJhNi8fkU2Al72pglkrT8QenAaCJd1as-d_iY6MC8nub1iI5VzIqzJlLa-1uzZm--TkB-KHFiT-P-t7bEg.webp',
-        name: 'Beef Tacos',
-        tags: ['Mexican', 'Beef', 'Spicy'],
-        cookingTime: 1200,
-        rate: 4.3,
-        allergies: ['gluten'],
-      },
-      {
-        id: '0',
-        img: 'https://i.namu.wiki/i/R0AhIJhNi8fkU2Al72pglkrT8QenAaCJd1as-d_iY6MC8nub1iI5VzIqzJlLa-1uzZm--TkB-KHFiT-P-t7bEg.webp',
-        name: 'Beef Tacos',
-        tags: ['Mexican', 'Beef', 'Spicy'],
-        cookingTime: 1200,
-        rate: 4.3,
-        allergies: ['gluten'],
-      },
-    ],
-  };
+  // const [recipeData, setRecipeData] = useState({ fork: [], like: [], my: [] });
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
+  // useEffect(() => {
+  //   const fetchScrap = async () => {
+  //     try {
+  //       const like = await getRecipeLikes();
+  //       const fork = await getRecipeForked();
+  //       const own = await getRecipeOwn();
+  //       const data = {
+  //         like: like,
+  //         fork: fork,
+  //         my: own,
+  //       };
+  //       setRecipeData(data);
+  //       setLoading(false);
+  //     } catch (error) {
+  //       setError(error);
+  //       setLoading(false);
+  //     }
+  //   };
 
-  const like = {
-    list: [
-      {
-        id: '0',
-        img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
-        name: 'Spaghetti Carbonara',
-        tags: ['Italian', 'Pasta', 'Creamy'],
-        cookingTime: 1800,
-        rate: 4.5,
-        allergies: ['dairy', 'egg'],
-      },
-      {
-        id: '0',
-        img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
-        name: 'Chicken Curry',
-        tags: ['Indian', 'Spicy', 'Chicken'],
-        cookingTime: 2400,
-        rate: 4.7,
-        allergies: ['nut'],
-      },
-      {
-        id: '0',
-        img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
-        name: '조재용의 특제 시부야 초록라멘 국물이 아주 끝내줘요 아주 그냥 ',
-        tags: ['Vegan', 'Healthy', 'Bowl', 'Bowl', 'Bowl', 'Bowl', 'Bowl', 'Bowl'],
-        cookingTime: 1500,
-        rate: 4.9,
-        allergies: ['soy', 'sesame'],
-      },
-      {
-        id: '0',
-        img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
-        name: 'Beef Tacos',
-        tags: ['Mexican', 'Beef', 'Spicy'],
-        cookingTime: 1200,
-        rate: 4.3,
-        allergies: ['gluten'],
-      },
-      {
-        id: '0',
-        img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
-        name: 'Beef Tacos',
-        tags: ['Mexican', 'Beef', 'Spicy'],
-        cookingTime: 1200,
-        rate: 4.3,
-        allergies: ['gluten'],
-      },
-    ],
-  };
-  const my = {
-    list: [
-      {
-        id: '0',
-        img: 'https://dimg.donga.com/wps/SPORTS/IMAGE/2022/01/27/111487381.1.jpg',
-        name: 'Spaghetti Carbonara',
-        tags: ['Italian', 'Pasta', 'Creamy'],
-        cookingTime: 1800,
-        rate: 4.5,
-        allergies: ['dairy', 'egg'],
-      },
-      {
-        id: '0',
-        img: 'https://dimg.donga.com/wps/SPORTS/IMAGE/2022/01/27/111487381.1.jpg',
-        name: 'Chicken Curry',
-        tags: ['Indian', 'Spicy', 'Chicken'],
-        cookingTime: 2400,
-        rate: 4.7,
-        allergies: ['nut'],
-      },
-      {
-        id: '0',
-        img: 'https://dimg.donga.com/wps/SPORTS/IMAGE/2022/01/27/111487381.1.jpg',
-        name: '조재용의 특제 시부야 초록라멘 국물이 아주 끝내줘요 아주 그냥 ',
-        tags: ['Vegan', 'Healthy', 'Bowl', 'Bowl', 'Bowl', 'Bowl', 'Bowl', 'Bowl'],
-        cookingTime: 1500,
-        rate: 4.9,
-        allergies: ['soy', 'sesame'],
-      },
-      {
-        id: '0',
-        img: 'https://dimg.donga.com/wps/SPORTS/IMAGE/2022/01/27/111487381.1.jpg',
-        name: 'Beef Tacos',
-        tags: ['Mexican', 'Beef', 'Spicy'],
-        cookingTime: 1200,
-        rate: 4.3,
-        allergies: ['gluten'],
-      },
-      {
-        id: '0',
-        img: 'https://dimg.donga.com/wps/SPORTS/IMAGE/2022/01/27/111487381.1.jpg',
-        name: 'Beef Tacos',
-        tags: ['Mexican', 'Beef', 'Spicy'],
-        cookingTime: 1200,
-        rate: 4.3,
-        allergies: ['gluten'],
-      },
-    ],
+  //   fetchScrap();
+  // }, []);
+
+  // if (loading) return <Loading />;
+  // if (error) return <div>Error: {error.message}</div>;
+
+  const recipeData = {
+    fork: {
+      list: [
+        {
+          id: '0',
+          img: 'https://i.namu.wiki/i/R0AhIJhNi8fkU2Al72pglkrT8QenAaCJd1as-d_iY6MC8nub1iI5VzIqzJlLa-1uzZm--TkB-KHFiT-P-t7bEg.webp',
+          name: 'Spaghetti Carbonara',
+          tags: ['Italian', 'Pasta', 'Creamy'],
+          cookingTime: 1800,
+          rate: 4.5,
+          allergies: ['dairy', 'egg'],
+        },
+        {
+          id: '0',
+          img: 'https://i.namu.wiki/i/R0AhIJhNi8fkU2Al72pglkrT8QenAaCJd1as-d_iY6MC8nub1iI5VzIqzJlLa-1uzZm--TkB-KHFiT-P-t7bEg.webp',
+          name: 'Chicken Curry',
+          tags: ['Indian', 'Spicy', 'Chicken'],
+          cookingTime: 2400,
+          rate: 4.7,
+          allergies: ['nut'],
+        },
+        {
+          id: '0',
+          img: 'https://i.namu.wiki/i/R0AhIJhNi8fkU2Al72pglkrT8QenAaCJd1as-d_iY6MC8nub1iI5VzIqzJlLa-1uzZm--TkB-KHFiT-P-t7bEg.webp',
+          name: '조재용의 특제 시부야 초록라멘 국물이 아주 끝내줘요 아주 그냥 ',
+          tags: ['Vegan', 'Healthy', 'Bowl', 'Bowl', 'Bowl', 'Bowl', 'Bowl', 'Bowl'],
+          cookingTime: 1500,
+          rate: 4.9,
+          allergies: ['soy', 'sesame'],
+        },
+        {
+          id: '0',
+          img: 'https://i.namu.wiki/i/R0AhIJhNi8fkU2Al72pglkrT8QenAaCJd1as-d_iY6MC8nub1iI5VzIqzJlLa-1uzZm--TkB-KHFiT-P-t7bEg.webp',
+          name: 'Beef Tacos',
+          tags: ['Mexican', 'Beef', 'Spicy'],
+          cookingTime: 1200,
+          rate: 4.3,
+          allergies: ['gluten'],
+        },
+        {
+          id: '0',
+          img: 'https://i.namu.wiki/i/R0AhIJhNi8fkU2Al72pglkrT8QenAaCJd1as-d_iY6MC8nub1iI5VzIqzJlLa-1uzZm--TkB-KHFiT-P-t7bEg.webp',
+          name: 'Beef Tacos',
+          tags: ['Mexican', 'Beef', 'Spicy'],
+          cookingTime: 1200,
+          rate: 4.3,
+          allergies: ['gluten'],
+        },
+      ],
+    },
+    like: {
+      list: [
+        {
+          id: '0',
+          img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
+          name: 'Spaghetti Carbonara',
+          tags: ['Italian', 'Pasta', 'Creamy'],
+          cookingTime: 1800,
+          rate: 4.5,
+          allergies: ['dairy', 'egg'],
+        },
+        {
+          id: '0',
+          img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
+          name: 'Chicken Curry',
+          tags: ['Indian', 'Spicy', 'Chicken'],
+          cookingTime: 2400,
+          rate: 4.7,
+          allergies: ['nut'],
+        },
+        {
+          id: '0',
+          img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
+          name: '조재용의 특제 시부야 초록라멘 국물이 아주 끝내줘요 아주 그냥 ',
+          tags: ['Vegan', 'Healthy', 'Bowl', 'Bowl', 'Bowl', 'Bowl', 'Bowl', 'Bowl'],
+          cookingTime: 1500,
+          rate: 4.9,
+          allergies: ['soy', 'sesame'],
+        },
+        {
+          id: '0',
+          img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
+          name: 'Beef Tacos',
+          tags: ['Mexican', 'Beef', 'Spicy'],
+          cookingTime: 1200,
+          rate: 4.3,
+          allergies: ['gluten'],
+        },
+        {
+          id: '0',
+          img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
+          name: 'Beef Tacos',
+          tags: ['Mexican', 'Beef', 'Spicy'],
+          cookingTime: 1200,
+          rate: 4.3,
+          allergies: ['gluten'],
+        },
+      ],
+    },
+    my: {
+      list: [
+        {
+          id: '0',
+          img: 'https://dimg.donga.com/wps/SPORTS/IMAGE/2022/01/27/111487381.1.jpg',
+          name: 'Spaghetti Carbonara',
+          tags: ['Italian', 'Pasta', 'Creamy'],
+          cookingTime: 1800,
+          rate: 4.5,
+          allergies: ['dairy', 'egg'],
+        },
+        {
+          id: '0',
+          img: 'https://dimg.donga.com/wps/SPORTS/IMAGE/2022/01/27/111487381.1.jpg',
+          name: 'Chicken Curry',
+          tags: ['Indian', 'Spicy', 'Chicken'],
+          cookingTime: 2400,
+          rate: 4.7,
+          allergies: ['nut'],
+        },
+        {
+          id: '0',
+          img: 'https://dimg.donga.com/wps/SPORTS/IMAGE/2022/01/27/111487381.1.jpg',
+          name: '조재용의 특제 시부야 초록라멘 국물이 아주 끝내줘요 아주 그냥 ',
+          tags: ['Vegan', 'Healthy', 'Bowl', 'Bowl', 'Bowl', 'Bowl', 'Bowl', 'Bowl'],
+          cookingTime: 1500,
+          rate: 4.9,
+          allergies: ['soy', 'sesame'],
+        },
+        {
+          id: '0',
+          img: 'https://dimg.donga.com/wps/SPORTS/IMAGE/2022/01/27/111487381.1.jpg',
+          name: 'Beef Tacos',
+          tags: ['Mexican', 'Beef', 'Spicy'],
+          cookingTime: 1200,
+          rate: 4.3,
+          allergies: ['gluten'],
+        },
+        {
+          id: '0',
+          img: 'https://dimg.donga.com/wps/SPORTS/IMAGE/2022/01/27/111487381.1.jpg',
+          name: 'Beef Tacos',
+          tags: ['Mexican', 'Beef', 'Spicy'],
+          cookingTime: 1200,
+          rate: 4.3,
+          allergies: ['gluten'],
+        },
+      ],
+    },
   };
 
   return (
@@ -178,7 +209,12 @@ const Scrap = () => {
       <Container>
         <CostomTabs value={value} setValue={setValue} />
         <GridCardList>
-          {(value === 'like' ? like : value === 'fork' ? fork : my).list.map((recipe, index) => (
+          {(value === 'like'
+            ? recipeData.like
+            : value === 'fork'
+              ? recipeData.fork
+              : recipeData.my
+          ).list.map((recipe, index) => (
             <VCard
               key={recipe.id}
               product={recipe}

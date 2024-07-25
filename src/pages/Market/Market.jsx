@@ -8,6 +8,11 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { GridCardList, RollCardList } from '../../components/CardList';
 import { VCard } from '../../components/Card';
+import { useEffect, useState } from 'react';
+import getNfts from '../../apis/Market/getNfts';
+import { getProductHot } from '../../apis/Market/getProduct';
+import { avatarClasses } from '@mui/material';
+import Loading from '../../components/Loading';
 
 const Container = styled.div`
   display: flex;
@@ -26,6 +31,46 @@ const Market = () => {
     { url: '/assets/banners/chip.webp', alt: '감자칩 요리 공모전' },
     { url: '/assets/banners/gyoza.webp', alt: '왕교자 요리 공보전' },
   ];
+
+  // const [productData, setProductData] = useState({});
+  // const [nftDatas, setNftDatas] = useState({});
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
+  // useEffect(() => {
+  //   const fetchNfts = async () => {
+  //     try {
+  //       const data = await getNfts();
+  //       setNftDatas(data);
+  //     } catch (error) {
+  //       setError(error);
+  //     }
+  //   };
+
+  //   const fetchProducts = async () => {
+  //     try {
+  //       const data = await getProductHot();
+  //       setNftDatas(data);
+  //     } catch (error) {
+  //       setError(error);
+  //     }
+  //   };
+
+  //   const fetchAll = async () => {
+  //     try {
+  //       await fetchNfts();
+  //       await fetchProducts();
+  //       setLoading(false); // setLoading은 비동기 작업이 아니므로 await가 필요 없습니다.
+  //     } catch (error) {
+  //       console.error('Error fetching data:', error);
+  //       setLoading(false); // 에러가 발생해도 로딩 상태를 false로 설정
+  //     }
+  //   };
+
+  //   fetchAll();
+  // }, []);
+  // if (loading) return <Loading />;
+  // if (error) return <div>Error: {error.message}</div>;
+
   const nftDates = {
     list: [
       {

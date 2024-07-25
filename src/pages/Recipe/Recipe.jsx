@@ -12,6 +12,9 @@ import { Edit } from '@mui/icons-material';
 import { AppBarWithLogo } from '../../components/AppBar';
 import NavBar from '../../components/NavBar';
 import RecipeEdit from './RecipeEdit';
+import { getRecipeCateoreis } from '../../apis/Recipe/getRecipe';
+import Loading from '../../components/Loading';
+import { all } from 'axios';
 
 const Container = styled.div`
   display: flex;
@@ -27,15 +30,19 @@ const Container = styled.div`
 const Recipe = () => {
   const isLoggined = useRecoilValue(loginState).isLoggedIn;
   const user = useRecoilValue(loginState).user;
-  const [category, setCategory] = useState('all');
+  const [category, setCategory] = useState('모든요리');
   const [allergy, setAllergy] = useState(true);
   const containerRef = useRef(null);
   const [showButton, setShowButton] = useState(true);
   const [writeRecipe, setWriteRecipe] = useState(false);
 
+  // const [recipesData, setRecipetData] = useState({});
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
   let navigate = useNavigate();
 
   const categories = [
+    '모든요리',
     '메인요리',
     '간단요리',
     '비건요리',
@@ -46,8 +53,8 @@ const Recipe = () => {
     '키토',
   ];
 
-  const data = {
-    0: [
+  const recipesData = {
+    모든요리: [
       {
         id: '0',
         img: 'https://i.namu.wiki/i/U_nuVL__0tNfEPk8Eb9PXISEad-qOs4aOEI0u-Zclq928dHx835CxJjMk3HKzg4ieprrKff_42Th2Tao7yezAg.webp',
@@ -139,7 +146,7 @@ const Recipe = () => {
         allergies: ['dairy', 'egg'],
       },
     ],
-    1: [
+    메인요리: [
       {
         id: '0',
         img: 'https://dimg.donga.com/wps/SPORTS/IMAGE/2022/01/27/111487381.1.jpg',
@@ -159,7 +166,7 @@ const Recipe = () => {
         allergies: ['nut'],
       },
     ],
-    2: [
+    간단요리: [
       {
         id: '0',
         img: 'https://isplus.com/data/isp/image/2024/04/24/isp20240424000098.800x.0.jpg',
@@ -193,17 +200,32 @@ const Recipe = () => {
     const containerElement = containerRef.current;
     containerElement.addEventListener('scroll', handleScroll);
 
+    // const fetchRecipeCategory = async (categoryId) => {
+    //   try {
+    //     const data = await getRecipeCateoreis(categoryId);
+    //     setRecipesData((prevData) => ({
+    //       ...prevData,
+    //       categoryId: data.list,
+    //     }));
+    //     setLoading(false);
+    //   } catch (error) {
+    //     setError(error);
+    //     setLoading(false);
+    //   }
+    // };
+    // if (recipesData[category] === undefined) {
+    //   fetchRecipeCategory(categories.indexOf(category) + 1);
+    // }
     // 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
       containerElement.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [category]);
 
-  const getIndexByCategory = () => {
-    return data[categories.indexOf(category) + 1] || [];
-  };
+  // if (loading) return <Loading />;
+  // if (error) return <div>Error: {error.message}</div>;
 
-  const filteredRecipes = getIndexByCategory().filter((recipe) => {
+  const filteredRecipes = (recipesData[category] || []).filter((recipe) => {
     if (!allergy) return true;
     return !recipe.allergies.some((allergyItem) => user.allergy.includes(allergyItem));
   });
@@ -273,16 +295,18 @@ const Categories = ({ setCategory, categories }) => {
   const handleClick = (category) => {
     const newCategory = selectedCategory === category ? null : category;
     setSelectedCategory(newCategory);
-    setCategory(newCategory || 'all');
+    setCategory(newCategory || '모든요리');
   };
+
+  const filteredCategories = categories.slice(1, 9);
 
   return (
     <CategoryContainer>
       <Typography variant="h5">다양한 요리 카테고리</Typography>
       <Stack spacing={1}>
-        {Array.from({ length: Math.ceil(categories.length / 4) }).map((_, rowIndex) => (
+        {Array.from({ length: Math.ceil(filteredCategories.length / 4) }).map((_, rowIndex) => (
           <Stack direction="row" spacing={1} key={rowIndex}>
-            {categories.slice(rowIndex * 4, rowIndex * 4 + 4).map((category) => (
+            {filteredCategories.slice(rowIndex * 4, rowIndex * 4 + 4).map((category) => (
               <Chip
                 key={category}
                 label={category}

@@ -3,10 +3,33 @@ import { GridCardList } from '../../components/CardList';
 import { useRecoilValue } from 'recoil';
 import { loginState, userDataState } from '../../recoil/atoms';
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { getRecipeRecommend, getRecipeWeek } from '../../apis/Recipe/getRecipe';
+import Loading from '../../components/Loading';
 
 const RecommendedRecipe = () => {
-  const user = useRecoilValue(userDataState).name;
+  const user = useRecoilValue(userDataState);
   let navigate = useNavigate();
+
+  // const [recipesData, setRecipetData] = useState([]);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
+  // useEffect(() => {
+  //   const fetchRecommendedRecipe = async (userId) => {
+  //     try {
+  //       const data = await getRecipeRecommend(userId);
+  //       setRecipetData(data);
+  //       setLoading(false);
+  //     } catch (error) {
+  //       setError(error);
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchRecommendedRecipe(user.id);
+  // }, []);
+  // if (loading) return <Loading />;
+  // if (error) return <div>Error: {error.message}</div>;
 
   const recipesData = {
     list: [
@@ -58,7 +81,7 @@ const RecommendedRecipe = () => {
     ],
   };
   return (
-    <GridCardList title={`${user}님을 위한 추천 레시피`}>
+    <GridCardList title={`${user.name}님을 위한 추천 레시피`}>
       {recipesData.list.map((recipe, index) => (
         <VCard
           key={recipe.id}
