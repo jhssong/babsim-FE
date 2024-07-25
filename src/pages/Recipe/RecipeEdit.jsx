@@ -1,7 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AppBarWithTitle } from '../../components/AppBar';
-import { Divider, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import {
+  Button,
+  Divider,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from '@mui/material';
 import { Edit } from '@mui/icons-material';
 import styled from '@emotion/styled';
 import { useRecoilValue } from 'recoil';
@@ -11,6 +19,7 @@ import RecipeTags from './RecipeEdit/RecipeTags';
 import CookeryEdit from './RecipeEdit/CookeryEdit';
 import CookeryEditModal from './RecipeEdit/CookeryEditModal';
 import ScrollToTop from '../../components/ScrollToTop';
+import ImageCard from '../../components/ImageCard';
 
 // dummy data
 const initialRecipe = {
@@ -159,6 +168,9 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
   const [category, setCategory] = useState('');
   const [timeError, setTimeError] = useState(false);
   const [isCookeryModalOpen, setIsCookeryModalOpen] = useState(false);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+
+  const [imageUrls, setImageUrls] = useState(recipeInfo.imgURLs); // 수정 중인 레시피의 이미지 URL 리스트
 
   const difficultyChange = (event) => {
     setDifficulty(event.target.value);
@@ -194,6 +206,27 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
     return null;
   }
 
+  if (isImageModalOpen) {
+    const handleCancel = () => {
+      setIsImageModalOpen(false);
+    };
+    const handleDone = () => {
+      setRecipeInfo({ ...recipeInfo, imgURLs: imageUrls });
+      setIsImageModalOpen(false);
+    };
+    return (
+      <>
+        <ImageCard imageUrls={imageUrls} setImageUrls={setImageUrls} maxImageCount={3} />
+        <Button onClick={handleCancel} color="primary">
+          취소
+        </Button>
+        <Button onClick={handleDone} color="primary">
+          확인
+        </Button>
+      </>
+    );
+  }
+
   if (isCookeryModalOpen) {
     return (
       <CookeryEditModal
@@ -223,7 +256,11 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
             <div style={{ width: '100%', height: '100%', backgroundColor: '#e0e0e0' }} />
           )}
           <EditIconContainer>
-            <EditIcon />
+            <EditIcon
+              onClick={() => {
+                setIsImageModalOpen(true);
+              }}
+            />
           </EditIconContainer>
         </ImageSize>
         <TextField
