@@ -1,23 +1,14 @@
 import { FavoriteBorderOutlined, FavoriteOutlined } from '@mui/icons-material';
-import axios from 'axios';
 import { useState } from 'react';
+import setLike from '../../../apis/Recipe/RecipeInfo/setLike';
 
-const LikeButton = ({ recipeId, memberId }) => {
-  const [isLiked, setIsLiked] = useState(false);
+const LikeButton = ({ liked, recipeId, memberId }) => {
+  const [isLiked, setIsLiked] = useState(liked);
 
-   const handleLike = async () => {
-     try {
-       const response = await axios.post('/api/likes', {
-         recipeId,
-         memberId,
-       });
-       isLiked === true ? setIsLiked(false) : setIsLiked(true);
-
-       console.log(response.data); // 성공적으로 요청이 완료된 경우
-     } catch (error) {
-       console.error('Error liking the recipe:', error); // 요청 실패 시 에러 처리
-     }
-   };
+  const handleLike = async () => {
+    setLike(recipeId, memberId);
+    setIsLiked(!isLiked);
+  }
 
   return (
     <>

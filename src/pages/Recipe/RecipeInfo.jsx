@@ -22,6 +22,7 @@ import { CallSplitOutlined, LocalDiningOutlined } from '@mui/icons-material';
 import styled from '@emotion/styled';
 import RecipeReviews from './RecipeReviews';
 import RecipeEdit from './RecipeEdit';
+import getRecipeInfo from '../../apis/Recipe/RecipeInfo/getRecipeInfo';
 
 // dummy data
 const recipe = {
@@ -123,14 +124,15 @@ const RecipeInfo = () => {
   const [isForkOpen, setIsForkOpen] = useState(false);
   const [recipeInfo, setRecipeInfo] = useState([]);
 
-  const getRecipeInfo = async () => {
-    const json = await (await fetch(` http://localhost:5173/api/recipe/${recipeId}`)).json();
+  const fetchRecipeInfo = async () => {
+    const json = getRecipeInfo(recipeId);
     setRecipeInfo(json);
     isLoading(false);
   };
+
   useEffect(() => {
-    getRecipeInfo();
-  }, []);
+    fetchRecipeInfo();
+  }, [isReviewMore, isForkOpen]);
 
   if (isReviewMore) {
     return <RecipeReviews onBackBtnClick={setIsReviewMore} />;
