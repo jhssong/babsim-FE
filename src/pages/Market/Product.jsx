@@ -5,7 +5,8 @@ import { Rating } from '@mui/material';
 import { Box, Button, Typography } from '@mui/material';
 import Slider from 'react-slick';
 import ComingSoonModal from '../../components/ComingSoonModal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
 
 const Container = styled.div`
   display: flex;
@@ -20,6 +21,9 @@ const Container = styled.div`
 
 const Product = () => {
   const [open, setOpen] = useState(false);
+  const { productId } = useParams();
+
+  useEffect(() => {}, []);
 
   const handleOpen = () => {
     setOpen(true);
