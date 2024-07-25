@@ -269,29 +269,20 @@ const CategoryContainer = styled.div`
 
 const Categories = ({ setCategory, categories }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [showAll, setShowAll] = useState(false);
 
   const handleClick = (category) => {
-    if (category === buttonLabel) {
-      setShowAll((prevShowAll) => !prevShowAll);
-    } else {
-      const newCategory = selectedCategory === category ? null : category;
-      setSelectedCategory(newCategory);
-      setCategory(newCategory || 'all');
-    }
+    const newCategory = selectedCategory === category ? null : category;
+    setSelectedCategory(newCategory);
+    setCategory(newCategory || 'all');
   };
-  const buttonLabel = showAll ? '접기' : '모두보기';
-  const visibleCategories = showAll
-    ? [...categories, `${buttonLabel}`]
-    : [...categories.slice(0, 7), `${buttonLabel}`];
 
   return (
     <CategoryContainer>
       <Typography variant="h5">다양한 요리 카테고리</Typography>
       <Stack spacing={1}>
-        {Array.from({ length: Math.ceil(visibleCategories.length / 4) }).map((_, rowIndex) => (
+        {Array.from({ length: Math.ceil(categories.length / 4) }).map((_, rowIndex) => (
           <Stack direction="row" spacing={1} key={rowIndex}>
-            {visibleCategories.slice(rowIndex * 4, rowIndex * 4 + 4).map((category) => (
+            {categories.slice(rowIndex * 4, rowIndex * 4 + 4).map((category) => (
               <Chip
                 key={category}
                 label={category}
