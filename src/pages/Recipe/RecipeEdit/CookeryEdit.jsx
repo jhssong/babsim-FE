@@ -41,7 +41,6 @@ const CookeryEdit = ({ recipe, setState }) => {
     setState(true);
   };
 
-  console.log(recipe.id);
   return (
     <Container theme={theme}>
       {recipe.recipeDescs.length === 0 ? (

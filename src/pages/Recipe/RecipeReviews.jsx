@@ -22,7 +22,7 @@ import { useParams } from 'react-router-dom';
 import { Fullscreen, Reviews, Star } from '@mui/icons-material';
 import { loginState } from '../../recoil/atoms';
 import { useRecoilValue } from 'recoil';
-import { set } from 'date-fns';
+import getForkedRecipes from '../../apis/Reviews/getForkedRecipes';
 
 const labels = {
   1: '😥 별로예요',
@@ -39,6 +39,7 @@ const RecipeReviews = ({ onBackBtnClick }) => {
   const [ratingValue, setRatingValue] = useState(5);
   const [reviewText, setReviewText] = useState('');
   const [forkedRecipes, setForkedRecipes] = useState([]);
+  const [selectedForkedRecipe, setSelectedForkedRecipe] = useState('');
   const [alert, setAlert] = useState(false);
 
   const loginInfo = useRecoilValue(loginState);
@@ -53,22 +54,17 @@ const RecipeReviews = ({ onBackBtnClick }) => {
   // 리뷰 가져오기
   useEffect(() => {
     getReviews();
-    setAlert(false);
-  }, [isReviewModalOpen]);
+  }, []);
 
+  // 포크된 레시피 가져오기
   useEffect(() => {
-    const param = new URLSearchParams({
-      memberID: userId,
-    }); // 로그인한 사용자의 ID
-    const queryString = param.toString();
-    // 포크한 레시피 가져오기
-    const getForkedRecipes = async () => {
-      const response = await fetch(`http://localhost:5173/recipes/api/forked?${queryString}`);
-      const data = await response.json();
-      setForkedRecipes(data);
+    const fetchForkedRecipes = async () => {
+      const recipes = await getForkedRecipes(userId, recipeId);
+      setForkedRecipes(recipes);
     };
-    getForkedRecipes();
-  }, [userId]);
+
+    fetchForkedRecipes();
+  }, [userId, recipeId]);
 
   const [page, setPage] = useState(1);
   const reviewsPerPage = 5;
@@ -157,11 +153,15 @@ const RecipeReviews = ({ onBackBtnClick }) => {
             <Select
               labelId="forkedRecipe-label"
               id="forkedRecipe"
+              value={selectedForkedRecipe}
+              onChange={(e) => setSelectedForkedRecipe(e.target.value)}
               label="레시피 추가"
               sx={{ width: '100%' }}>
-              <MenuItem value={'초급'}>초급</MenuItem>
-              <MenuItem value={'중급'}>중급</MenuItem>
-              <MenuItem value={'고급'}>고급</MenuItem>
+              {forkedRecipes.map((recipe) => (
+                <MenuItem key={recipe.id} value={recipe.id}>
+                  {recipe.name}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </DialogContent>

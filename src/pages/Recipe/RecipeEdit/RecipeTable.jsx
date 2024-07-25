@@ -19,17 +19,23 @@ import {
 import { Edit, Delete, Add } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 
-const RecipeTable = () => {
-  const [ingredients, setIngredients] = useState([]);
+const RecipeTable = ({ ingredients, setIngredients }) => {
   const [selectedCount, setSelectedCount] = useState(0);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingIngredient, setEditingIngredient] = useState(null);
+
+  const renumberIngredients = (ingredients) => {
+    return ingredients.map((ingredient, index) => ({
+      ...ingredient,
+      id: index + 1,
+    }));
+  };
 
   const handleCheckboxChange = (id) => {
     const updatedIngredients = ingredients.map((ingredient) =>
       ingredient.id === id ? { ...ingredient, selected: !ingredient.selected } : ingredient
     );
-    setIngredients(updatedIngredients);
+    setIngredients(renumberIngredients(updatedIngredients));
     setSelectedCount(updatedIngredients.filter((ing) => ing.selected).length);
   };
 
@@ -39,7 +45,7 @@ const RecipeTable = () => {
       ...ingredient,
       selected: newSelected,
     }));
-    setIngredients(updatedIngredients);
+    setIngredients(renumberIngredients(updatedIngredients));
     setSelectedCount(newSelected ? updatedIngredients.length : 0);
   };
 
@@ -50,13 +56,13 @@ const RecipeTable = () => {
 
   const handleDeleteClick = (id) => {
     const updatedIngredients = ingredients.filter((ingredient) => ingredient.id !== id);
-    setIngredients(updatedIngredients);
+    setIngredients(renumberIngredients(updatedIngredients));
     setSelectedCount(updatedIngredients.filter((ing) => ing.selected).length);
   };
 
   const handleDeleteSelected = () => {
     const updatedIngredients = ingredients.filter((ingredient) => !ingredient.selected);
-    setIngredients(updatedIngredients);
+    setIngredients(renumberIngredients(updatedIngredients));
     setSelectedCount(0);
   };
 
@@ -71,27 +77,23 @@ const RecipeTable = () => {
       const updatedIngredients = ingredients.map((ingredient) =>
         ingredient.id === editingIngredient.id ? editingIngredient : ingredient
       );
-      setIngredients(updatedIngredients);
+      setIngredients(renumberIngredients(updatedIngredients));
     } else {
       // Add new ingredient
       const newIngredient = {
         ...editingIngredient,
         id: ingredients.length + 1,
       };
-      setIngredients([...ingredients, newIngredient]);
+      const updatedIngredients = [...ingredients, newIngredient];
+      setIngredients(renumberIngredients(updatedIngredients));
     }
     handleDialogClose();
   };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    let { name, value } = e.target;
+    value = value.replace(' ', '');
     setEditingIngredient({ ...editingIngredient, [name]: value });
-  };
-
-  const handleNumberChange = (event) => {
-    event.target.value < 1 ? (event.target.value = 1) : event.target.value;
-    event.target.value > 999 ? (event.target.value = 999) : event.target.value;
-    setEditingIngredient({ ...editingIngredient, [name]: event.target.value });
   };
 
   const handleAddClick = () => {
@@ -108,10 +110,10 @@ const RecipeTable = () => {
   useEffect(() => {
     // API 연결시 코드 수정하기
     setIngredients([
-      { id: 1, name: '방울토마토', quantity: 1, selected: false },
-      { id: 2, name: '계란', quantity: 1, selected: false },
-      { id: 3, name: '양상추', quantity: 1, selected: false },
-      { id: 4, name: '소세지', quantity: 10, selected: false },
+      { id: 1, name: '방울토마토', quantity: '10개', selected: false },
+      { id: 2, name: '계란', quantity: '반개', selected: false },
+      { id: 3, name: '양상추', quantity: '한조각', selected: false },
+      { id: 4, name: '소세지', quantity: '백개', selected: false },
     ]);
   }, []);
 
@@ -193,11 +195,10 @@ const RecipeTable = () => {
             margin="dense"
             label="개수"
             name="quantity"
-            type="number"
             value={editingIngredient?.quantity || ''}
-            onChange={handleNumberChange}
+            onChange={handleInputChange}
             inputProps={{
-              maxLength: 3,
+              maxLength: 8,
             }}
             fullWidth
           />

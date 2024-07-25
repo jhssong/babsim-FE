@@ -4,7 +4,7 @@
 @memberID (nullable) (String)
 */
 export default async function getRecipeInfo(recipeId, memberID) {
-  let url = `https://localhost:8080/recipes/${recipeId}`;
+  let url = `https://localhost:8080/api/recipes/${recipeId}`;
 
   // Query Parameter를 추가 (memberID가 있는 경우에만)
   if (memberID) {
