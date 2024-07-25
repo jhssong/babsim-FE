@@ -4,6 +4,9 @@ import { AppBarWithTitle } from '../../components/AppBar';
 import { Box, Button, Snackbar, Typography } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import logout from '../../apis/Login/logout';
+import { isTryingToLoginState } from '../../recoil/atoms';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 const Container = styled.div`
   display: flex;
@@ -18,6 +21,7 @@ const MyPage = () => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
   let navigate = useNavigate();
+  const setIsTryingToLogin = useSetRecoilState(isTryingToLoginState);
 
   const handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -25,6 +29,18 @@ const MyPage = () => {
     }
     setOpen(false);
     navigate(-1);
+  };
+
+  const handleLogout = async () => {
+    const status = await logout(navigate, setIsTryingToLogin);
+    // if (status) {
+    //   navigate('/');
+    //   setMessage('로그아웃되었습니다.');
+    //   setOpen(true);
+    // } else {
+    //   setMessage('로그아웃에 실패했습니다.');
+    //   setOpen(true);
+    // }
   };
 
   return (
@@ -45,10 +61,7 @@ const MyPage = () => {
               width: '100%',
               height: '100%',
             }}
-            onClick={() => {
-              setMessage('로그아웃되었습니다.');
-              setOpen(true);
-            }}>
+            onClick={handleLogout}>
             <Typography variant="body1">로그아웃</Typography>
           </Button>
         </Box>
@@ -71,7 +84,7 @@ const MyPage = () => {
               setMessage('탈퇴되었습니다.');
               setOpen(true);
             }}>
-            <Typography variant="body1">탍퇴하기</Typography>
+            <Typography variant="body1">탈퇴하기</Typography>
           </Button>
         </Box>
       </Container>

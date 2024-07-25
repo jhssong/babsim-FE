@@ -22,11 +22,12 @@ import RecipeEdit from './pages/Recipe/RecipeEdit';
 import UserInfoSetting from './pages/Login/UserInfoSetting';
 import UserAllergySetting from './pages/Login/UserAllergySetting';
 import { useEffect } from 'react';
-import { auth, onAuthStateChanged } from './utils/firebase/firebase';
+import { auth, onAuthStateChanged } from './apis/firebase/firebase';
 import getMember from './apis/Login/getMember';
-import { getLoggedInPlatform } from './utils/firebase/localStorage';
+import { getLoggedInPlatform, getLoginToken } from './apis/Login/localStorage';
 
 const ProtectedRoute = ({ path }) => {
+  return path;
   const isLoggedIn = useRecoilValue(isLoggedInState);
   return isLoggedIn ? path : <Navigate to="/login" />;
 };
@@ -51,7 +52,7 @@ function App() {
     onAuthStateChanged(auth, async (currentUser) => {
       if (getLoggedInPlatform() == 'google' && isTryingToLogin == false) {
         try {
-          console.log('Detect google userId. Tyring to find user data');
+          console.log('Tyring to find google user data');
           const userData = await getMember('google&' + currentUser.uid);
           setUserData(userData);
           setIsLoggedIn(true);
@@ -62,6 +63,18 @@ function App() {
         }
       }
     });
+    if (getLoggedInPlatform() == 'kakao' && isTryingToLogin == false) {
+      try {
+        console.log('Tyring to find kakao user data');
+        const userData = await getMember(getLoginToken());
+        setUserData(userData);
+        setIsLoggedIn(true);
+        navigate('/');
+      } catch (error) {
+        console.error(error);
+        navigate('/login');
+      }
+    }
   }
 
   useEffect(() => {

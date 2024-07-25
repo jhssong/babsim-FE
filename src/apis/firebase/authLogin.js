@@ -27,14 +27,4 @@ export async function googleLoginWithPopup() {
   }
 }
 
-export async function googleLogout() {
-  signOut(auth)
-    .then(() => {
-      console.log('Google logged out');
-      // Sign-out successful.
-    })
-    .catch((error) => {
-      console.log('Google logged out failed');
-      // An error happened.
-    });
-}
+export { signOut, auth };

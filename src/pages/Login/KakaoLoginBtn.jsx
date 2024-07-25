@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 
 import KakaoLoginPNG from '../../assets/images/kakao_login_medium_narrow.png';
 import { useNavigate } from 'react-router-dom';
+import { saveLoggedInPlatform, saveLoginToken } from '../../apis/Login/localStorage';
 
 const KakaoLoginBtn = ({ onHandleLoginSuccess }) => {
   const navigate = useNavigate();
@@ -30,8 +31,10 @@ const KakaoLoginBtn = ({ onHandleLoginSuccess }) => {
     });
 
     if (!response.ok) throw new Error('Failed to create periodical donation');
-    const responseData = await response.json();
-    onHandleLoginSuccess(responseData);
+    const userData = await response.json();
+    saveLoggedInPlatform('kakao');
+    saveLoginToken(userData.id);
+    onHandleLoginSuccess(userData);
   }
 
   function hasSpecificParam() {
