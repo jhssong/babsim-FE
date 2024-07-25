@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { TextField, IconButton, Chip, Box, InputAdornment } from '@mui/material';
 import { AddOutlined, Cancel } from '@mui/icons-material';
 
-const RecipeTags = ({ recipeTags }) => {
-  const [tags, setTags] = useState(recipeTags);
+const RecipeTags = ({ tags, setTags }) => {
+
   const [tagInput, setTagInput] = useState('');
 
   const handleAddTag = () => {

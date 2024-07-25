@@ -53,7 +53,7 @@ const recipe = {
   tags: ['짱구', '도시락', '초간단'],
   allergys: ['gluten', 'peanuts', 'shellfish'],
   ingredients: [
-    { name: '방울토마토', amount: 1 },
+    { name: '방울토마토', amount: '10개' },
     { name: '계란', amount: 1 },
     { name: '양상추', amount: 1 },
     { name: '소세지', amount: 10 },
@@ -170,10 +170,13 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
   const [isCookeryModalOpen, setIsCookeryModalOpen] = useState(false);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
+  const [tags, setTags] = useState(recipeInfo.tags);
+  const [ingredients, setIngredients] = useState(recipeInfo.ingredients);
   const [imageUrls, setImageUrls] = useState(recipeInfo.imgURLs); // 수정 중인 레시피의 이미지 URL 리스트
 
   const difficultyChange = (event) => {
     setDifficulty(event.target.value);
+    setRecipeInfo({ ...recipeInfo, difficulty: event.target.value });
   };
 
   const categoryChange = (event) => {
@@ -185,6 +188,18 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
     setRecipeInfo(json);
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    console.log(recipeInfo);
+  }, [recipeInfo]);
+
+  useEffect(() => {
+    setRecipeInfo({ ...recipeInfo, ingredients: ingredients });
+  }, [ingredients]);
+
+  useEffect(() => {
+    setRecipeInfo({ ...recipeInfo, tags: tags });
+  }, [tags]);
 
   useEffect(() => {
     if (mode === 'edit' || mode === 'fork') {
@@ -374,9 +389,9 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
           </Select>
         </FormControl>
         <Divider sx={{ paddingTop: '1rem' }} />
-        <RecipeTable ingredients={recipeInfo.ingredients} />
+        <RecipeTable ingredients={ingredients} setIngredients={setIngredients} />
         <Divider sx={{ paddingTop: '1rem' }} />
-        <RecipeTags recipeTags={recipeInfo.tags} />
+        <RecipeTags recipeTags={recipeInfo.tags} tags={tags} setTags={setTags} />
         <Divider sx={{ paddingTop: '1rem' }} />
         <CookeryEdit recipe={recipeInfo} setState={setIsCookeryModalOpen} />
       </Container>
