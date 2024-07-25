@@ -11,6 +11,7 @@ import {
   TextField,
   Grid,
   Box,
+  Alert,
 } from '@mui/material';
 import { AppBarWithTitle } from '../../../components/AppBar';
 import { Cookery } from '../RecipeInfo/CookeryInfo';
@@ -19,6 +20,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Add } from '@mui/icons-material';
+import ImageCard from '../../../components/ImageCard';
 
 const CookeryWrapper = styled.div`
   padding: 1rem;
@@ -61,6 +63,8 @@ const AddButtonText = styled(Typography)`
 `;
 
 const CookeryEditModal = ({ recipe, onBackBtnClick, setRecipeState, setModalState }) => {
+  const [alert, setAlert] = useState(false);
+
   const [cookeries, setCookeries] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -71,6 +75,9 @@ const CookeryEditModal = ({ recipe, onBackBtnClick, setRecipeState, setModalStat
   const [newCookery, setNewCookery] = useState({ image: '', desc: '', timer: 0 });
   const [newMinutes, setNewMinutes] = useState(0);
   const [newSeconds, setNewSeconds] = useState(0);
+
+  const [newImageUrls, setNewImageUrls] = useState([]); // 업로드된 이미지 URL
+  const [currentImageUrls, setCurrentImageUrls] = useState([]); // 현재 이미지 URL
 
   const initCookeries = () => {
     const cookeries = [];
@@ -88,8 +95,23 @@ const CookeryEditModal = ({ recipe, onBackBtnClick, setRecipeState, setModalStat
     initCookeries();
   }, []);
 
+  useEffect(() => {
+    // `newImageUrls`가 변경되면 `setNewCookery`의 `image` 필드를 업데이트
+    if (newImageUrls.length > 0) {
+      setNewCookery((prevCookery) => ({ ...prevCookery, image: newImageUrls[0] }));
+    }
+  }, [newImageUrls]);
+
+  useEffect(() => {
+    // `newImageUrls`가 변경되면 `setNewCookery`의 `image` 필드를 업데이트
+    if (currentImageUrls.length > 0) {
+      setCurrentEditData((prevCookery) => ({ ...prevCookery, image: currentImageUrls[0] }));
+    }
+  }, [currentImageUrls]);
+
   const handleEdit = (index) => {
     setCurrentEditIndex(index);
+    setCurrentImageUrls([cookeries[index].image]);
     const currentData = cookeries[index];
     setCurrentEditData(currentData);
     setMinutes(Math.floor(currentData.timer / 60));
@@ -126,25 +148,34 @@ const CookeryEditModal = ({ recipe, onBackBtnClick, setRecipeState, setModalStat
 
   const handleEditModalSave = () => {
     const updatedCookeries = [...cookeries];
-    if (currentEditData.desc !== '') {
+    if (currentEditData.desc !== '' && currentEditData.image !== '') {
       updatedCookeries[currentEditIndex] = {
         ...currentEditData,
         timer: parseInt(minutes, 10) * 60 + parseInt(seconds, 10),
       };
+    } else {
+      setAlert(true);
+      return;
     }
     setCookeries(updatedCookeries);
+    console.log(updatedCookeries);
     setIsEditModalOpen(false);
   };
 
   const handleAddModalSave = () => {
     const newCookeries = [...cookeries];
-    if (newCookery.desc !== '') {
+    if (newCookery.desc !== '' && newCookery.image !== '') {
       newCookeries.push({
         ...newCookery,
         timer: parseInt(newMinutes, 10) * 60 + parseInt(newSeconds, 10),
       });
+    } else {
+      setAlert(true);
+      return;
     }
     setCookeries(newCookeries);
+    console.log(newCookeries);
+    setNewImageUrls([]);
     setIsAddModalOpen(false);
   };
 
@@ -258,14 +289,10 @@ const CookeryEditModal = ({ recipe, onBackBtnClick, setRecipeState, setModalStat
         <Dialog open={isEditModalOpen} onClose={handleEditModalClose}>
           <DialogTitle>요리법 수정</DialogTitle>
           <DialogContent>
-            <TextField
-              margin="dense"
-              label="이미지 URL"
-              type="text"
-              fullWidth
-              name="image"
-              value={currentEditData.image}
-              onChange={handleEditInputChange}
+            <ImageCard
+              imageUrls={currentImageUrls}
+              setImageUrls={setCurrentImageUrls}
+              maxImageCount={1}
             />
             <TextField
               margin="dense"
@@ -314,18 +341,10 @@ const CookeryEditModal = ({ recipe, onBackBtnClick, setRecipeState, setModalStat
           </DialogActions>
         </Dialog>
 
-        <Dialog open={isAddModalOpen} onClose={handleAddModalClose}>
+        <Dialog fullScreen open={isAddModalOpen} onClose={handleAddModalClose}>
           <DialogTitle>요리법 추가</DialogTitle>
           <DialogContent>
-            <TextField
-              margin="dense"
-              label="이미지 URL"
-              type="text"
-              fullWidth
-              name="image"
-              value={newCookery.image}
-              onChange={handleAddInputChange}
-            />
+            <ImageCard imageUrls={newImageUrls} setImageUrls={setNewImageUrls} maxImageCount={1} />
             <TextField
               margin="dense"
               label="설명"
@@ -363,6 +382,11 @@ const CookeryEditModal = ({ recipe, onBackBtnClick, setRecipeState, setModalStat
               </Grid>
             </Grid>
           </DialogContent>
+          {alert ? (
+            <Alert sx={{ width: '100%' }} severity="error">
+              입력되지 않은 항목이 있어요!
+            </Alert>
+          ) : null}
           <DialogActions>
             <Button onClick={handleAddModalClose} color="primary">
               취소
