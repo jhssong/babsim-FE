@@ -64,7 +64,7 @@ const UserAllergySetting = () => {
     };
 
     const loggedInUserData = await createMember(newUserData);
-    console.log(loggedInUserData);
+    console.log('logged in userData: ', loggedInUserData);
     setUserData(loggedInUserData);
     setIsTryingToLogin(false);
     setIsLoggedIn(true);
