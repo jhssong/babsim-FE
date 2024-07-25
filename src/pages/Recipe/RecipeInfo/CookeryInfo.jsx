@@ -47,9 +47,9 @@ export const Cookery = ({ image, desc, timer, order }) => {
   return (
     <StyledHeader>
       {image === null ? (
-        <img src={image} alt="Cookery" />
-      ) : (
         <Skeleton animation="wave" variant="rectangular" width={210} height={118} />
+      ) : (
+        <img src={image} alt="Cookery" width={210} height={118}/>
       )}
       <Container>
         <TextContainer>
