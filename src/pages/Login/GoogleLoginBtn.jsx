@@ -1,5 +1,5 @@
 import { googleLoginWithPopup } from '../../apis/firebase/authLogin';
-import { saveLoggedInPlatform } from '../../apis/Login/localStorage';
+import { saveLoggedInPlatform, saveLoginToken } from '../../apis/Login/localStorage';
 
 const GoogleLoginBtn = ({ onHandleLoginSuccess, setIsLoading }) => {
   const styles = {
@@ -102,10 +102,14 @@ const GoogleLoginBtn = ({ onHandleLoginSuccess, setIsLoading }) => {
   async function loginToGoogle() {
     setIsLoading(true);
     const userData = await googleLoginWithPopup();
+    console.log(userData);
     if (userData != null) {
       setIsLoading(false);
       saveLoggedInPlatform('google');
+      saveLoginToken(userData.id);
       onHandleLoginSuccess(userData);
+    } else {
+      setIsLoading(false);
     }
   }
 

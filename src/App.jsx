@@ -50,7 +50,7 @@ function App() {
     if (getLoggedInPlatform() == 'google' && isTryingToLogin == false) {
       try {
         console.log('Tyring to find google user data');
-        const userData = await getMember('google&' + currentUser.uid);
+        const userData = await getMember(getLoginToken());
         setUserData(userData);
         setIsLoggedIn(true);
         navigate('/');
