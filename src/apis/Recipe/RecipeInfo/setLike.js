@@ -1,8 +1,9 @@
-export default async function setLike(recipeId, memberID) {
-  let url = `https://localhost:8080/api/likes`;
-  const queryParams = new URLSearchParams({ recipeId, memberID });
-  url += `?${queryParams.toString()}`;
+import { baseURL } from '../../api';
 
+export default async function setLike(recipeId, memberId) {
+  let url = `${baseURL}/likes`;
+  const queryParams = new URLSearchParams({ recipeId, memberId });
+  url += `?${queryParams.toString()}`;
   const response = await fetch(url, {
     method: 'POST',
     headers: {

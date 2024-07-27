@@ -7,9 +7,8 @@ import RecommendedProduct from './RecommendedProduct';
 import RecommendedRecipe from './RecommendedRecipe';
 import { useRecoilValue } from 'recoil';
 import { isLoggedInState } from '../../recoil/atoms';
-import { getRecipe, getRecipeWeek } from '../../apis/Recipe/getRecipe';
-import { getRelatedKeywords } from '../../apis/Search/getRelatedKeywords';
-import { getPopularKeywords } from '../../apis/Search/getPopularKeywords';
+import getRecipeInfo from '../../apis/Recipe/RecipeInfo/getRecipeInfo';
+import setLike from '../../apis/Recipe/RecipeInfo/setLike';
 
 const Container = styled.div`
   display: flex;
@@ -29,7 +28,7 @@ const Home = () => {
 
   async function apiTest() {
     console.log('hello world');
-    const res = await getRecipeWeek();
+    const res = await setLike(1, 1);
     console.log(res);
   }
 
@@ -46,11 +45,11 @@ const Home = () => {
         }}>
         CLICK TO TEST API CONNECTION
       </div>
-      <Container>
+      {/* <Container>
         <WeeklyRecipe />
         <RecommendedProduct />
         {isLoggined && <RecommendedRecipe />}
-      </Container>
+      </Container> */}
 
       <NavBar page="home" />
     </>
