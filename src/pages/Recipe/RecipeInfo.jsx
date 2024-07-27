@@ -13,6 +13,7 @@ import styled from '@emotion/styled';
 import RecipeReviews from './RecipeReviews';
 import RecipeEdit from './RecipeEdit';
 import getRecipeInfo from '../../apis/Recipe/RecipeInfo/getRecipeInfo';
+import Cook from './Cook';
 
 // dummy data
 const recipe = {
@@ -113,6 +114,7 @@ const RecipeInfo = () => {
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isForkOpen, setIsForkOpen] = useState(false);
   const [recipeInfo, setRecipeInfo] = useState([]);
+  const [cook, setCook] = useState(false);
 
   const fetchRecipeInfo = async () => {
     const json = getRecipeInfo(recipeId);
@@ -130,6 +132,14 @@ const RecipeInfo = () => {
 
   if (isForkOpen) {
     return <RecipeEdit mode="fork" onBackBtnClick={setIsForkOpen} />;
+  }
+
+  const handleCook = () => {
+    setCook(true);
+  };
+
+  if (cook) {
+    return <Cook />;
   }
 
   return (
@@ -191,7 +201,8 @@ const RecipeInfo = () => {
             />
           }
           variant="contained"
-          color="primary">
+          color="primary"
+          onClick={handleCook}>
           <Typography variant="button" fontWeight="bold">
             요리하기
           </Typography>
