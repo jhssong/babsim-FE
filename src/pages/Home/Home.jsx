@@ -7,6 +7,9 @@ import RecommendedProduct from './RecommendedProduct';
 import RecommendedRecipe from './RecommendedRecipe';
 import { useRecoilValue } from 'recoil';
 import { isLoggedInState } from '../../recoil/atoms';
+import { getRecipe, getRecipeWeek } from '../../apis/Recipe/getRecipe';
+import { getRelatedKeywords } from '../../apis/Search/getRelatedKeywords';
+import { getPopularKeywords } from '../../apis/Search/getPopularKeywords';
 
 const Container = styled.div`
   display: flex;
@@ -24,8 +27,10 @@ const Container = styled.div`
 const Home = () => {
   const isLoggined = useRecoilValue(isLoggedInState);
 
-  function apiTest() {
+  async function apiTest() {
     console.log('hello world');
+    const res = await getRecipeWeek();
+    console.log(res);
   }
 
   return (
