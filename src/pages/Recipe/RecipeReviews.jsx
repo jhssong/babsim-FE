@@ -19,7 +19,7 @@ import {
 } from '@mui/material';
 import { Review } from './RecipeInfo/ReviewInfo';
 import { useParams } from 'react-router-dom';
-import { Fullscreen, Reviews, Star } from '@mui/icons-material';
+import { Reviews, Star } from '@mui/icons-material';
 import { loginState } from '../../recoil/atoms';
 import { useRecoilValue } from 'recoil';
 import getForkedRecipes from '../../apis/Reviews/getForkedRecipes';
@@ -102,7 +102,7 @@ const RecipeReviews = ({ onBackBtnClick }) => {
     <div>
       <AppBarWithTitle onBackBtnClick={onBackBtnClick} />
 
-      <Dialog fullScreen={Fullscreen} open={isReviewModalOpen} onClose={handleIsModalClose}>
+      <Dialog fullScreen open={isReviewModalOpen} onClose={handleIsModalClose}>
         <DialogTitle>리뷰 작성하기</DialogTitle>
         <DialogContent>
           <Box
@@ -157,11 +157,17 @@ const RecipeReviews = ({ onBackBtnClick }) => {
               onChange={(e) => setSelectedForkedRecipe(e.target.value)}
               label="레시피 추가"
               sx={{ width: '100%' }}>
-              {forkedRecipes.map((recipe) => (
-                <MenuItem key={recipe.id} value={recipe.id}>
-                  {recipe.name}
+              {forkedRecipes.length === 0 ? (
+                <MenuItem disabled value="">
+                  레시피 없음
                 </MenuItem>
-              ))}
+              ) : (
+                forkedRecipes.map((recipe) => (
+                  <MenuItem key={recipe.id} value={recipe.id}>
+                    {recipe.name}
+                  </MenuItem>
+                ))
+              )}
             </Select>
           </FormControl>
         </DialogContent>

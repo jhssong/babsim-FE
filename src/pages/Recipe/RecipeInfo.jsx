@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { AppBarWithTitle } from '../../components/AppBar';
 import { Box, Button, Divider, Typography } from '@mui/material';
 import RecipeInformation, { RecipeInfoImage } from './RecipeInfo/RecipeInformation';
@@ -13,82 +13,7 @@ import styled from '@emotion/styled';
 import RecipeReviews from './RecipeReviews';
 import RecipeEdit from './RecipeEdit';
 import getRecipeInfo from '../../apis/Recipe/RecipeInfo/getRecipeInfo';
-
-// dummy data
-const recipe = {
-  id: '12345',
-  imgURLs: [
-    'https://d2v80xjmx68n4w.cloudfront.net/gigs/fPoZ31584321311.jpg?w=652',
-    'https://d2v80xjmx68n4w.cloudfront.net/gigs/5s8Hq1584287799.jpg?w=652',
-  ],
-  name: '짱구 도시락',
-  description: '짱구가 어디갈 때 먹는 도시락',
-  rate: 4,
-  difficulty: '초급',
-  cookingTime: 10,
-  tags: ['짱구', '도시락', '초간단'],
-  allergys: [1, 2, 3, 4, 5, 6],
-  ingredients: [
-    { name: '방울토마토', amount: '12개' },
-    { name: '계란', amount: '반개' },
-    { name: '양상추', amount: '20g' },
-    { name: '소세지', amount: 10 },
-  ],
-  reviews: [
-    {
-      name: 'User1',
-      rating: 5,
-      registerDate: '24.01.10',
-      comment:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      forkedRecipe: null,
-    },
-    {
-      name: 'User2',
-      rating: 4,
-      registerDate: '24.09.30',
-      comment:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      forkedRecipe: 123456,
-    },
-    {
-      name: 'User3',
-      rating: 4.5,
-      registerDate: '24.03.12',
-      comment: 'Loved it, will make again.',
-      forkedRecipe: 999999,
-    },
-    {
-      name: 'User1',
-      rating: 5,
-      registerDate: '24.01.10',
-      comment:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      forkedRecipe: null,
-    },
-    {
-      name: 'User2',
-      rating: 4,
-      registerDate: '24.09.30',
-      comment:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      forkedRecipe: 123456,
-    },
-    {
-      name: 'User3',
-      rating: 4.5,
-      registerDate: '24.03.12',
-      comment: 'Loved it, will make again.',
-      forkedRecipe: 999999,
-    },
-  ],
-  recipeImgs: ['https://example.com/step1.jpg', 'https://example.com/step2.jpg'],
-  recipeDescs: [
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    'Cook the vegetables in a pan.',
-  ],
-  recipeTimers: [10, 120],
-};
+import getReviews from '../../apis/Reviews/getReviews';
 
 const BottomContainer = styled.div`
   display: flex;
@@ -105,24 +30,30 @@ const BottomContainer = styled.div`
 `;
 
 const RecipeInfo = () => {
-  const navigate = useNavigate();
-
   const { recipeId } = useParams();
-  const [isLoading, setIsLoading] = useState(false); // Backend API 구현 후 true로 변경
+  const [isLoading, setIsLoading] = useState(true); // Backend API 구현 후 true로 변경
   const [isReviewMore, setIsReviewMore] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isForkOpen, setIsForkOpen] = useState(false);
   const [recipeInfo, setRecipeInfo] = useState([]);
 
   const fetchRecipeInfo = async () => {
-    const json = getRecipeInfo(recipeId);
+    const json = await getRecipeInfo(recipeId, 1);
     setRecipeInfo(json);
-    isLoading(false);
+    setIsLoading(false);
   };
 
   useEffect(() => {
     fetchRecipeInfo();
+  }, []);
+
+  useEffect(() => {
+    fetchRecipeInfo();
   }, [isReviewMore, isForkOpen]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   if (isReviewMore) {
     return <RecipeReviews onBackBtnClick={setIsReviewMore} />;
@@ -135,25 +66,25 @@ const RecipeInfo = () => {
   return (
     <>
       <AppBarWithTitle title="" rightIcon="share" />
-      <RecipeInfoImage imgs={recipe.imgURLs} isLoading={isLoading} />
-      <RecipeInformation recipeInfo={recipe} isLoading={isLoading} />
+      <RecipeInfoImage imgs={recipeInfo.recipeImgs} isLoading={isLoading} />
+      <RecipeInformation recipeInfo={recipeInfo} isLoading={isLoading} />
       <Divider />
-      <AllergyInfo allergys={recipe.allergys} />
+      <AllergyInfo allergies={recipeInfo.allergies} />
       <Divider />
       <NutritionInfo />
       <Divider />
-      <IngredientInfo ingredients={recipe.ingredients} />
+      <IngredientInfo ingredients={recipeInfo.ingredients} />
       <Divider />
       <Typography variant="h5" sx={{ padding: '1rem' }}>
         레시피
       </Typography>
       <CookeryInfo
-        images={recipe.recipeImgs}
-        descs={recipe.recipeDescs}
-        timers={recipe.recipeTimers}
+        images={recipeInfo.recipeDetailImgs}
+        descs={recipeInfo.recipeContents}
+        timers={recipeInfo.recipeTimers}
       />
       <Divider />
-      <ReviewInfo reviews={recipe.reviews} />
+      <ReviewInfo reviews={recipeInfo.reviews} />
       <Box sx={{ display: 'flex', justifyContent: 'center', paddingBottom: '1rem' }}>
         <Button onClick={() => setIsReviewMore(true)}>리뷰 더보기</Button>
       </Box>

@@ -58,7 +58,7 @@ const WeeklyRecipe = () => {
   const recipesData = {
     list: [
       {
-        id: '0',
+        id: '1',
         img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
         name: 'Spaghetti Carbonara',
         tags: ['Italian', 'Pasta', 'Creamy'],

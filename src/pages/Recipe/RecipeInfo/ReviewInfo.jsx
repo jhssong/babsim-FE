@@ -73,6 +73,13 @@ const ReviewInfo = ({ reviews, setState }) => {
   return (
     <Container>
       <Typography variant="h5">리뷰</Typography>
+      {reviews.length === 0 ? (
+        <Typography
+          variant="body2"
+          sx={{ display: 'flex', justifyContent: 'center', padding: '3rem' }}>
+          이 레시피에는 아직 작성된 리뷰가 없어요... 😢
+        </Typography>
+      ) : null}
       {reviews.slice(0, 5).map((review, index) => (
         <Review
           onClick={handleClick}
