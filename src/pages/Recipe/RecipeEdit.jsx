@@ -174,8 +174,8 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
       />
       <Container>
         <ImageSize>
-          {recipeInfo.recipeImgs[0] ? (
-            <Image src={recipeInfo.recipeImgs[0]} />
+          {imageUrls[0] ? (
+            <Image src={imageUrls[0]} />
           ) : (
             <div style={{ width: '100%', height: '100%', backgroundColor: '#e0e0e0' }} />
           )}
