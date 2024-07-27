@@ -20,6 +20,5 @@ export default async function getRecipeInfo(recipeId, memberId) {
   });
   if (!response.ok) throw new Error('Failed to get recipe info');
   const responseData = await response.json();
-  console.log(responseData);
   return responseData;
 }

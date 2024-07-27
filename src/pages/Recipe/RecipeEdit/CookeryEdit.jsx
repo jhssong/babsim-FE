@@ -43,7 +43,7 @@ const CookeryEdit = ({ recipe, setState }) => {
 
   return (
     <Container theme={theme}>
-      {recipe.recipeDescs.length === 0 ? (
+      {recipe.recipeContents.length === 0 ? (
         <Button variant="text" onClick={onClick}>
           <Typography variant="h6">요리법 추가하기</Typography>
         </Button>
@@ -53,8 +53,8 @@ const CookeryEdit = ({ recipe, setState }) => {
         </EditButton>
       )}
       <CookeryInfo
-        images={recipe.recipeImgs}
-        descs={recipe.recipeDescs}
+        images={recipe.recipeDetailImgs}
+        descs={recipe.recipeContents}
         timers={recipe.recipeTimers}
       />
     </Container>

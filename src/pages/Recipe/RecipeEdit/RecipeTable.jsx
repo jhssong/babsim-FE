@@ -107,15 +107,7 @@ const RecipeTable = ({ ingredients, setIngredients }) => {
     setIsDialogOpen(true);
   };
 
-  useEffect(() => {
-    // API 연결시 코드 수정하기
-    setIngredients([
-      { id: 1, name: '방울토마토', quantity: '10개', selected: false },
-      { id: 2, name: '계란', quantity: '반개', selected: false },
-      { id: 3, name: '양상추', quantity: '한조각', selected: false },
-      { id: 4, name: '소세지', quantity: '백개', selected: false },
-    ]);
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <div>

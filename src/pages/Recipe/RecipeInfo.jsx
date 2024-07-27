@@ -37,6 +37,7 @@ const RecipeInfo = () => {
   const [isForkOpen, setIsForkOpen] = useState(false);
   const [recipeInfo, setRecipeInfo] = useState([]);
 
+  // 레시피 정보 GET 요청
   const fetchRecipeInfo = async () => {
     const json = await getRecipeInfo(recipeId, 1);
     setRecipeInfo(json);
