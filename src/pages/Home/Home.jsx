@@ -24,9 +24,23 @@ const Container = styled.div`
 const Home = () => {
   const isLoggined = useRecoilValue(isLoggedInState);
 
+  function apiTest() {
+    console.log('hello world');
+  }
+
   return (
     <>
       <AppBarWithLogo />
+      <div
+        onClick={apiTest}
+        style={{
+          backgroundColor: '#50C878',
+          margin: '1rem',
+          padding: '1rem',
+          borderRadius: '0.5rem',
+        }}>
+        CLICK TO TEST API CONNECTION
+      </div>
       <Container>
         <WeeklyRecipe />
         <RecommendedProduct />
