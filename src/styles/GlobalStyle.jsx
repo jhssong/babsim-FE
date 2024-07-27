@@ -7,9 +7,13 @@ const globalStyles = css`
     margin: 0;
     padding: 0;
   }
+  html {
+    background-color: #f5f5f5;
+  }
   body {
-    max-width: 750px;
+    max-width: 500px;
     background-color: #ffffff;
+    margin: 0 auto;
   }
   ::-webkit-scrollbar {
     display: none;

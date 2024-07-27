@@ -1,5 +1,4 @@
 import { ThemeProvider } from '@emotion/react';
-import { CssBaseline } from '@mui/material';
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { isLoggedInState, isTryingToLoginState, userDataState } from './recoil/atoms';
@@ -81,7 +80,6 @@ function App() {
     <>
       <GlobalStyle />
       <ThemeProvider theme={theme}>
-        <CssBaseline />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />

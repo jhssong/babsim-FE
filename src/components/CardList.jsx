@@ -38,7 +38,7 @@ const RollCardWrapper = styled.div`
   & > * {
     // 모든 자식 요소에 적용
     flex: 1 0 auto; // 모든 아이템이 같은 비율로 공간을 차지하도록 설정
-    max-width: 45vw; // 최소 너비 설정
+    max-width: 40%; // 최소 너비 설정
   }
 `;
 
