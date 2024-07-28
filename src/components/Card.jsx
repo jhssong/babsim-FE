@@ -19,8 +19,8 @@ const Recipe = styled.div`
 `;
 
 const RecipeImage = styled.img`
-  width: 29vw;
-  height: 29vw;
+  width: 30%;
+  aspect-ratio: 1/1;
   object-fit: cover;
   border-radius: 0.25rem;
 `;
@@ -117,14 +117,14 @@ const ProdcutContainer = styled.div`
 
 const ProductImage = styled.img`
   width: 100%;
-  height: 25vw; /* 화면 너비의 75% (4:3 비율 유지) */
+  aspect-ratio: 4/3;
   object-fit: cover;
   border-radius: 0.25rem;
 `;
 
 const ProductInfo = styled.div`
   display: flex;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.5rem;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;

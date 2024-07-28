@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-
 import { AppBarWithLogo } from '../../components/AppBar';
 import NavBar from '../../components/NavBar';
 import WeeklyRecipe from './WeeklyRecipe';
@@ -60,7 +59,6 @@ const Home = () => {
         <RecommendedProduct />
         {isLoggined && <RecommendedRecipe />}
       </Container>
-
       <NavBar page="home" />
     </>
   );

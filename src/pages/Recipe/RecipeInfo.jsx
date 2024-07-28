@@ -36,6 +36,7 @@ const RecipeInfo = () => {
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isForkOpen, setIsForkOpen] = useState(false);
   const [recipeInfo, setRecipeInfo] = useState([]);
+  const [cook, setCook] = useState(false);
 
   // 레시피 정보 GET 요청
   const fetchRecipeInfo = async () => {
@@ -62,6 +63,14 @@ const RecipeInfo = () => {
 
   if (isForkOpen) {
     return <RecipeEdit mode="fork" onBackBtnClick={setIsForkOpen} />;
+  }
+
+  const handleCook = () => {
+    setCook(true);
+  };
+
+  if (cook) {
+    return <Cook />;
   }
 
   return (
@@ -123,7 +132,8 @@ const RecipeInfo = () => {
             />
           }
           variant="contained"
-          color="primary">
+          color="primary"
+          onClick={handleCook}>
           <Typography variant="button" fontWeight="bold">
             요리하기
           </Typography>

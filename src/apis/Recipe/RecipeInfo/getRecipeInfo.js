@@ -1,11 +1,12 @@
+import { baseURL } from '../../api';
+
 /*
 레시피 조회 API
 {path} : recipeId
 @memberID (nullable) (String)
 */
-export default async function getRecipeInfo(recipeId) {
-  let url = 'http://localhost:8080/api/recipes/' + recipeId;
-  // // Query Parameter를 추가 (memberID가 있는 경우에만)
+export default async function getRecipeInfo(recipeId, memberID) {
+  let url = `${baseURL}/recipes/` + recipeId;
 
   let memberId = 4;
   if (memberId) {

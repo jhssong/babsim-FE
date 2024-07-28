@@ -1,10 +1,11 @@
-export default async function setLike(recipeId) {
-  let url = 'http://localhost:8080/api/likes';
-  let memberId = 4;
-  const queryParams = new URLSearchParams({ recipeId, memberId }); // 임시로 1
+import { baseURL } from '../../api';
+
+export default async function setLike(recipeId, memberId) {
+  let url = `${baseURL}/likes`;
+  let memberId = 4; // 임시로 4
+  const queryParams = new URLSearchParams({ recipeId, memberId });
   url += `?${queryParams.toString()}`;
 
-  console.log(`${url} and working`);
   const response = await fetch(url, {
     method: 'POST',
     headers: {

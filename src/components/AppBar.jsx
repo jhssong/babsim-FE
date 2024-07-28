@@ -6,6 +6,7 @@ import {
   DoneOutlined,
   ArrowBackIosOutlined,
   ArrowForwardOutlined,
+  MenuOutlined,
 } from '@mui/icons-material';
 import { Snackbar, Typography } from '@mui/material';
 import logo from '../assets/images/logo.svg';
@@ -93,6 +94,12 @@ export function AppBarWithTitle({ title, rightIcon, onRightIconClick, onBackBtnC
         return (
           <IconWrapper onClick={handleShareClick}>
             <ShareOutlined />
+          </IconWrapper>
+        );
+      case 'list':
+        return (
+          <IconWrapper onClick={() => navigate('/list')}>
+            <MenuOutlined />
           </IconWrapper>
         );
       case 'done':
