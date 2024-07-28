@@ -1,4 +1,3 @@
-import React from 'react';
 import { Typography } from '@mui/material';
 import styled from '@emotion/styled';
 import allergyList from '../../../assets/constants/allergyList';
@@ -24,22 +23,26 @@ const ImageItem = styled.div`
   align-items: center;
 `;
 
-const AllergyInfo = ({ allergys }) => {
+const AllergyInfo = ({ allergies }) => {
   return (
     <Container>
       <Typography variant="h5">알레르기 정보</Typography>
-      <ImageContainer>
-        {allergys.map((allergy, index) => (
-          <ImageItem key={index}>
-            <img
-              src={`/assets/images/allergies/${allergyList[allergy - 1].imgURL}.png`}
-              alt={allergyList[allergy - 1].name}
-              style={{ width: '3rem', height: '3rem', objectFit: 'contain' }}
-            />
-            <Typography variant="body2">{allergyList[allergy - 1].name}</Typography>
-          </ImageItem>
-        ))}
-      </ImageContainer>
+      {allergies.length === 0 ? (
+        <Typography variant="body2">이 레시피에는 알레르기 정보가 없어요.</Typography>
+      ) : (
+        <ImageContainer>
+          {allergies.map((allergy, index) => (
+            <ImageItem key={index}>
+              <img
+                src={`/assets/images/allergies/${allergyList[allergy - 1].imgURL}.png`}
+                alt={allergyList[allergy - 1].name}
+                style={{ width: '3rem', height: '3rem', objectFit: 'contain' }}
+              />
+              <Typography variant="body2">{allergyList[allergy - 1].name}</Typography>
+            </ImageItem>
+          ))}
+        </ImageContainer>
+      )}
     </Container>
   );
 };

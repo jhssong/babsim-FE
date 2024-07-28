@@ -3,15 +3,18 @@
 {path} : recipeId
 */
 export default async function getReviews(recipeId) {
-  const url = `https://localhost:8080/api/reviews/${recipeId}`;
+  const url = 'http://localhost:8080/api/reviews/' + recipeId;
 
+  console.log(`getReviews : ${url} and working`);
   const response = await fetch(url, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
     },
   });
+
   if (!response.ok) throw new Error('Failed to get reviews');
   const responseData = await response.json();
+  console.log(responseData);
   return responseData;
 }
