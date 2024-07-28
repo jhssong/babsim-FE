@@ -21,7 +21,6 @@ import RecipeEdit from './pages/Recipe/RecipeEdit';
 import UserInfoSetting from './pages/Login/UserInfoSetting';
 import UserAllergySetting from './pages/Login/UserAllergySetting';
 import { useEffect } from 'react';
-import { auth, onAuthStateChanged } from './apis/firebase/firebase';
 import getMember from './apis/Login/getMember';
 import { getLoggedInPlatform, getLoginToken } from './apis/Login/localStorage';
 

@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-
 import { AppBarWithLogo } from '../../components/AppBar';
 import NavBar from '../../components/NavBar';
 import WeeklyRecipe from './WeeklyRecipe';
@@ -7,8 +6,6 @@ import RecommendedProduct from './RecommendedProduct';
 import RecommendedRecipe from './RecommendedRecipe';
 import { useRecoilValue } from 'recoil';
 import { isLoggedInState } from '../../recoil/atoms';
-import getRecipeInfo from '../../apis/Recipe/RecipeInfo/getRecipeInfo';
-import setLike from '../../apis/Recipe/RecipeInfo/setLike';
 
 const Container = styled.div`
   display: flex;
@@ -26,31 +23,14 @@ const Container = styled.div`
 const Home = () => {
   const isLoggined = useRecoilValue(isLoggedInState);
 
-  async function apiTest() {
-    console.log('hello world');
-    const res = await setLike(1, 1);
-    console.log(res);
-  }
-
   return (
     <>
       <AppBarWithLogo />
-      <div
-        onClick={apiTest}
-        style={{
-          backgroundColor: '#50C878',
-          margin: '1rem',
-          padding: '1rem',
-          borderRadius: '0.5rem',
-        }}>
-        CLICK TO TEST API CONNECTION
-      </div>
-      {/* <Container>
+      <Container>
         <WeeklyRecipe />
         <RecommendedProduct />
         {isLoggined && <RecommendedRecipe />}
-      </Container> */}
-
+      </Container>
       <NavBar page="home" />
     </>
   );
