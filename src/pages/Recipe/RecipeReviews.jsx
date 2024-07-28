@@ -19,10 +19,12 @@ import {
 } from '@mui/material';
 import { Review } from './RecipeInfo/ReviewInfo';
 import { useParams } from 'react-router-dom';
-import { Fullscreen, Reviews, Star } from '@mui/icons-material';
-import { loginState } from '../../recoil/atoms';
+import { Reviews, Star } from '@mui/icons-material';
+import { userDataState } from '../../recoil/atoms';
 import { useRecoilValue } from 'recoil';
 import getForkedRecipes from '../../apis/Reviews/getForkedRecipes';
+import getReviews from '../../apis/Reviews/getReviews';
+import postReview from '../../apis/Reviews/postReview';
 
 const labels = {
   1: '😥 별로예요',
@@ -35,36 +37,42 @@ const labels = {
 const RecipeReviews = ({ onBackBtnClick }) => {
   const { recipeId } = useParams();
   const [reviews, setReviews] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [ratingValue, setRatingValue] = useState(5);
   const [reviewText, setReviewText] = useState('');
   const [forkedRecipes, setForkedRecipes] = useState([]);
-  const [selectedForkedRecipe, setSelectedForkedRecipe] = useState('');
+  const [selectedForkedRecipe, setSelectedForkedRecipe] = useState(null);
   const [alert, setAlert] = useState(false);
 
-  const loginInfo = useRecoilValue(loginState);
-  const userId = loginInfo.user.id; // 현재 로그인된 유저 아이디
+  const userData = useRecoilValue(userDataState);
+  const userId = userData.id; // 현재 로그인된 유저 아이디
 
-  const getReviews = async () => {
-    const response = await fetch(`http://localhost:5173/recipes/api/reviews/${recipeId}`);
-    const data = await response.json();
-    setReviews(data);
-  };
-
-  // 리뷰 가져오기
   useEffect(() => {
-    getReviews();
-  }, []);
+    // 모든 리뷰 가져오기
+    const fetchReviews = async () => {
+      const json = await getReviews(recipeId);
+      setReviews(json);
+    };
+    fetchReviews();
 
-  // 포크된 레시피 가져오기
-  useEffect(() => {
+    // 포크된 레시피 가져오기
     const fetchForkedRecipes = async () => {
-      const recipes = await getForkedRecipes(userId, recipeId);
+      const recipes = await getForkedRecipes(userId, 1); // 임시로 1번 유저로 설정
       setForkedRecipes(recipes);
     };
-
     fetchForkedRecipes();
-  }, [userId, recipeId]);
+    setIsLoading(false);
+  }, []);
+
+  useEffect(() => {
+    // 리뷰 작성 후 리뷰 다시 불러오기
+    const fetchReviews = async () => {
+      const json = await getReviews(recipeId);
+      setReviews(json);
+    };
+    fetchReviews();
+  }, [isReviewModalOpen]);
 
   const [page, setPage] = useState(1);
   const reviewsPerPage = 5;
@@ -91,8 +99,19 @@ const RecipeReviews = ({ onBackBtnClick }) => {
     console.log(reviewText);
     // save review
     if (ratingValue !== null && reviewText.trim() !== '') {
+      console.log(
+        `recipe id: ${recipeId}, rating: ${ratingValue}, review: ${reviewText}, selectedForkedRecipe : ${selectedForkedRecipe}`
+      );
+      if (selectedForkedRecipe === undefined) {
+        setSelectedForkedRecipe(null);
+      }
+      postReview({
+        recipeId: recipeId,
+        rating: ratingValue,
+        comment: reviewText,
+        forkedRecipeId: selectedForkedRecipe,
+      });
       setIsReviewModalOpen(false);
-      // 리뷰 POST 요청
     } else {
       setAlert(true);
     }
@@ -102,7 +121,7 @@ const RecipeReviews = ({ onBackBtnClick }) => {
     <div>
       <AppBarWithTitle onBackBtnClick={onBackBtnClick} />
 
-      <Dialog fullScreen={Fullscreen} open={isReviewModalOpen} onClose={handleIsModalClose}>
+      <Dialog fullScreen open={isReviewModalOpen} onClose={handleIsModalClose}>
         <DialogTitle>리뷰 작성하기</DialogTitle>
         <DialogContent>
           <Box
@@ -157,11 +176,17 @@ const RecipeReviews = ({ onBackBtnClick }) => {
               onChange={(e) => setSelectedForkedRecipe(e.target.value)}
               label="레시피 추가"
               sx={{ width: '100%' }}>
-              {forkedRecipes.map((recipe) => (
-                <MenuItem key={recipe.id} value={recipe.id}>
-                  {recipe.name}
+              {forkedRecipes.length === 0 ? (
+                <MenuItem disabled value={null}>
+                  레시피 없음
                 </MenuItem>
-              ))}
+              ) : (
+                forkedRecipes.map((recipe) => (
+                  <MenuItem key={recipe.id} value={recipe.id}>
+                    {recipe.name}
+                  </MenuItem>
+                ))
+              )}
             </Select>
           </FormControl>
         </DialogContent>
@@ -202,7 +227,15 @@ const RecipeReviews = ({ onBackBtnClick }) => {
       ) : (
         <>
           {paginatedReviews.map((review) => (
-            <Review key={review.memberID} {...review} />
+            <Review
+              key={review.memberID}
+              name={review.memberName}
+              img={review.memberImg}
+              rating={review.rating}
+              comment={review.comment}
+              registerDate={review.registerDate}
+              forkedRecipe={review.forkedRecipeId}
+            />
           ))}
           <Pagination
             count={Math.ceil(reviews.length / reviewsPerPage)}

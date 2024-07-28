@@ -18,6 +18,10 @@ const ReviewContainer = styled.div`
 `;
 
 export const Review = ({ memberID, name, img, rating, comment, registerDate, forkedRecipe }) => {
+  if (forkedRecipe === undefined) {
+    forkedRecipe = null;
+  }
+  console.log(`forkedRecipe is ${forkedRecipe}`);
   return (
     <ReviewCard>
       <CardContent>
@@ -73,17 +77,24 @@ const ReviewInfo = ({ reviews, setState }) => {
   return (
     <Container>
       <Typography variant="h5">리뷰</Typography>
+      {reviews.length === 0 ? (
+        <Typography
+          variant="body2"
+          sx={{ display: 'flex', justifyContent: 'center', padding: '3rem' }}>
+          이 레시피에는 아직 작성된 리뷰가 없어요... 😢
+        </Typography>
+      ) : null}
       {reviews.slice(0, 5).map((review, index) => (
         <Review
           onClick={handleClick}
           key={index}
           memberId={review.memberId}
-          name={review.name}
-          img={review.img}
+          name={review.memberName}
+          img={review.memberImg}
           rating={review.rating}
           comment={review.comment}
           registerDate={review.registerDate}
-          forkedRecipe={review.forkedRecipe}
+          forkedRecipe={review.forkedRecipeId}
         />
       ))}
     </Container>

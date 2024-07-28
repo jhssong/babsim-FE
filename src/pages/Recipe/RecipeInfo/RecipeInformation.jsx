@@ -4,6 +4,8 @@ import LikeButton from './LikeButton';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { useEffect, useState } from 'react';
+import { getImageFromStorage } from '../../../apis/firebase/storage';
 
 // 슬라이드 스타일 정의
 const Slide = styled.div`
@@ -34,6 +36,8 @@ const RecipeImageContainer = styled.div`
 
 // RecipeInfoImage 컴포넌트
 export const RecipeInfoImage = ({ imgs, isLoading }) => {
+  const [images, setImages] = useState([]);
+
   const settings = {
     dots: true,
     infinite: true,
@@ -42,15 +46,27 @@ export const RecipeInfoImage = ({ imgs, isLoading }) => {
     slidesToScroll: 1,
   };
 
+  useEffect(() => {
+    const loadImages = async () => {
+      const imageUrls = await Promise.all(
+        imgs.map(async (imgId) => {
+          return await getImageFromStorage(imgId);
+        })
+      );
+      setImages(imageUrls);
+    };
+    loadImages();
+  }, [imgs]);
+
   return (
     <RecipeImageContainer>
       {isLoading ? (
         <Skeleton variant="rectangular" sx={{ width: '100%', height: '100%' }} />
       ) : (
         <Slider {...settings}>
-          {imgs.map((img, idx) => (
+          {images.map((image, idx) => (
             <Slide key={idx}>
-              <img src={img} alt={`Recipe image ${idx + 1}`} />
+              <img src={image} alt={`Recipe image ${idx + 1}`} />
             </Slide>
           ))}
         </Slider>
@@ -89,6 +105,20 @@ const RatingLine = styled.div`
 
 // RecipeInformation 컴포넌트
 const RecipeInformation = ({ recipeInfo, isLoading }) => {
+
+  const getDifficultyLabel = (difficulty) => {
+    switch (difficulty) {
+      case 'EASY':
+        return '초급';
+      case 'MEDIUM':
+        return '중급';
+      case 'HARD':
+        return '고급';
+      default:
+        return difficulty;
+    }
+  };
+
   return (
     <Container>
       <TitleLine>
@@ -97,12 +127,14 @@ const RecipeInformation = ({ recipeInfo, isLoading }) => {
         ) : (
           <Typography variant="h5">{recipeInfo.name}</Typography>
         )}
-        <LikeButton />
+        <LikeButton liked={recipeInfo.liked} recipeId={recipeInfo.id} />
       </TitleLine>
       {isLoading ? (
         <Skeleton variant="text" width="100%" height={20} />
       ) : (
-        <Typography variant="body1">{recipeInfo.description}</Typography>
+        <Typography variant="body1" width="80%">
+          {recipeInfo.description}
+        </Typography>
       )}
       <RatingLine>
         {isLoading ? (
@@ -114,14 +146,14 @@ const RecipeInformation = ({ recipeInfo, isLoading }) => {
         ) : (
           <>
             <Rating name="read-only" value={recipeInfo.rate} size="small" readOnly />
-            <Typography variant="caption">{recipeInfo.difficulty}</Typography>
-            <Typography variant="caption">요리 시간 {recipeInfo.cookingTime}분</Typography>
+            <Typography variant="caption">{getDifficultyLabel(recipeInfo.difficulty)}</Typography>
+            <Typography variant="caption">요리 시간 {recipeInfo.cookingTime / 60}분</Typography>
           </>
         )}
       </RatingLine>
       {isLoading ? (
         <Skeleton variant="text" width="100%" height={20} />
-      ) : (
+      ) : recipeInfo.tags === null ? null : (
         recipeInfo.tags.map((tag) => (
           <Typography
             variant="caption"

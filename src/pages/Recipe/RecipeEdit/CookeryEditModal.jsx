@@ -81,10 +81,10 @@ const CookeryEditModal = ({ recipe, onBackBtnClick, setRecipeState, setModalStat
 
   const initCookeries = () => {
     const cookeries = [];
-    for (let i = 0; i < recipe.recipeImgs.length; i++) {
+    for (let i = 0; i < recipe.recipeContents.length; i++) {
       cookeries.push({
-        image: recipe.recipeImgs[i],
-        desc: recipe.recipeDescs[i],
+        image: recipe.recipeDetailImgs[i],
+        desc: recipe.recipeContents[i],
         timer: recipe.recipeTimers[i],
       });
     }
@@ -95,15 +95,15 @@ const CookeryEditModal = ({ recipe, onBackBtnClick, setRecipeState, setModalStat
     initCookeries();
   }, []);
 
+  // newImageUrls가 업데이트되면 newCookery의 image를 업데이트
   useEffect(() => {
-    // `newImageUrls`가 변경되면 `setNewCookery`의 `image` 필드를 업데이트
     if (newImageUrls.length > 0) {
       setNewCookery((prevCookery) => ({ ...prevCookery, image: newImageUrls[0] }));
     }
   }, [newImageUrls]);
 
+  // currentImageUrls가 업데이트되면 currentEditData의 image를 업데이트
   useEffect(() => {
-    // `newImageUrls`가 변경되면 `setNewCookery`의 `image` 필드를 업데이트
     if (currentImageUrls.length > 0) {
       setCurrentEditData((prevCookery) => ({ ...prevCookery, image: currentImageUrls[0] }));
     }
@@ -208,8 +208,8 @@ const CookeryEditModal = ({ recipe, onBackBtnClick, setRecipeState, setModalStat
   const handleSave = () => {
     const updatedRecipe = {
       ...recipe,
-      recipeImgs: cookeries.map((cookery) => cookery.image),
-      recipeDescs: cookeries.map((cookery) => cookery.desc),
+      recipeDetailImgs: cookeries.map((cookery) => cookery.image),
+      recipeContents: cookeries.map((cookery) => cookery.desc),
       recipeTimers: cookeries.map((cookery) => cookery.timer),
     };
     setRecipeState(updatedRecipe);

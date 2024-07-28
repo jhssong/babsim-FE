@@ -13,15 +13,16 @@ import {
 import { Edit } from '@mui/icons-material';
 import styled from '@emotion/styled';
 import { useRecoilValue } from 'recoil';
-import { loginState } from '../../recoil/atoms';
+import { userDataState } from '../../recoil/atoms';
 import RecipeTable from './RecipeEdit/RecipeTable';
 import RecipeTags from './RecipeEdit/RecipeTags';
 import CookeryEdit from './RecipeEdit/CookeryEdit';
 import CookeryEditModal from './RecipeEdit/CookeryEditModal';
 import ScrollToTop from '../../components/ScrollToTop';
 import ImageCard from '../../components/ImageCard';
+import getRecipeInfo from '../../apis/Recipe/RecipeInfo/getRecipeInfo';
 
-// dummy data
+// 초기 레시피 데이터 설정
 const initialRecipe = {
   id: '',
   imgURLs: [null],
@@ -31,87 +32,12 @@ const initialRecipe = {
   difficulty: '',
   cookingTime: 0,
   tags: [],
-  allergys: [],
+  allergies: [],
   ingredients: [],
   reviews: [],
   recipeImgs: [],
   recipeDescs: [],
   recipeTimers: [],
-};
-
-const recipe = {
-  id: '12345',
-  imgURLs: [
-    'https://d2v80xjmx68n4w.cloudfront.net/gigs/fPoZ31584321311.jpg?w=652',
-    'https://d2v80xjmx68n4w.cloudfront.net/gigs/5s8Hq1584287799.jpg?w=652',
-  ],
-  name: '짱구 도시락',
-  description: '짱구가 어디갈 때 먹는 도시락',
-  rate: 4,
-  difficulty: '초급',
-  cookingTime: 10,
-  tags: ['짱구', '도시락', '초간단'],
-  allergys: ['gluten', 'peanuts', 'shellfish'],
-  ingredients: [
-    { name: '방울토마토', amount: '10개' },
-    { name: '계란', amount: 1 },
-    { name: '양상추', amount: 1 },
-    { name: '소세지', amount: 10 },
-  ],
-  reviews: [
-    {
-      name: 'User1',
-      rating: 5,
-      registerDate: '24.01.10',
-      comment:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      forkedRecipe: null,
-    },
-    {
-      name: 'User2',
-      rating: 4,
-      registerDate: '24.09.30',
-      comment:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      forkedRecipe: 123456,
-    },
-    {
-      name: 'User3',
-      rating: 4.5,
-      registerDate: '24.03.12',
-      comment: 'Loved it, will make again.',
-      forkedRecipe: 999999,
-    },
-    {
-      name: 'User1',
-      rating: 5,
-      registerDate: '24.01.10',
-      comment:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      forkedRecipe: null,
-    },
-    {
-      name: 'User2',
-      rating: 4,
-      registerDate: '24.09.30',
-      comment:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      forkedRecipe: 123456,
-    },
-    {
-      name: 'User3',
-      rating: 4.5,
-      registerDate: '24.03.12',
-      comment: 'Loved it, will make again.',
-      forkedRecipe: 999999,
-    },
-  ],
-  recipeImgs: ['https://example.com/step1.jpg', 'https://example.com/step2.jpg'],
-  recipeDescs: [
-    'Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    'Cook the vegetables in a pan.',
-  ],
-  recipeTimers: [10, 120],
 };
 
 const Container = styled.div`
@@ -158,58 +84,37 @@ const EditIcon = styled(Edit)`
 `;
 
 const RecipeEdit = ({ mode, onBackBtnClick }) => {
-  const isLoggined = useRecoilValue(loginState).isLoggedIn;
-
+  const userData = useRecoilValue(userDataState);
   const { recipeId } = useParams();
-  const [isLoading, setIsLoading] = useState(false);
-  const [isDone, setDone] = useState(false);
+
   const [recipeInfo, setRecipeInfo] = useState(initialRecipe);
-  const [difficulty, setDifficulty] = useState('');
   const [category, setCategory] = useState('');
   const [timeError, setTimeError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isDone, setDone] = useState(false);
   const [isCookeryModalOpen, setIsCookeryModalOpen] = useState(false);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [imageUrls, setImageUrls] = useState([]); // 수정 중인 레시피의 이미지 URL 리스트
 
-  const [tags, setTags] = useState(recipeInfo.tags);
-  const [ingredients, setIngredients] = useState(recipeInfo.ingredients);
-  const [imageUrls, setImageUrls] = useState(recipeInfo.imgURLs); // 수정 중인 레시피의 이미지 URL 리스트
-
-  const difficultyChange = (event) => {
-    setDifficulty(event.target.value);
-    setRecipeInfo({ ...recipeInfo, difficulty: event.target.value });
+  // 레시피 정보 GET 요청
+  const fetchRecipeInfo = async () => {
+    try {
+      const json = await getRecipeInfo(recipeId, userData.id);
+      setRecipeInfo(json);
+      setIsLoading(false); // 로딩 상태 해제
+    } catch (error) {
+      console.error('Failed to fetch recipe info:', error);
+    }
   };
-
-  const categoryChange = (event) => {
-    setCategory(event.target.value);
-  };
-
-  const getRecipeInfo = async () => {
-    const json = await (await fetch(`http://localhost:5173/api/recipe/${recipeId}`)).json();
-    setRecipeInfo(json);
-    setIsLoading(false);
-  };
-
-  useEffect(() => {
-    console.log(recipeInfo);
-  }, [recipeInfo]);
-
-  useEffect(() => {
-    setRecipeInfo({ ...recipeInfo, ingredients: ingredients });
-  }, [ingredients]);
-
-  useEffect(() => {
-    setRecipeInfo({ ...recipeInfo, tags: tags });
-  }, [tags]);
 
   useEffect(() => {
     if (mode === 'edit' || mode === 'fork') {
-      getRecipeInfo();
-      setRecipeInfo(recipe); // test
+      fetchRecipeInfo();
     } else if (mode === 'write') {
-      setRecipeInfo(initialRecipe); // test
-      setIsLoading(false);
+      setRecipeInfo(initialRecipe);
+      setIsLoading(false); // 로딩 상태 해제
     }
-  }, [mode, recipeId]);
+  }, [mode, recipeId, userData.id]);
 
   useEffect(() => {
     // POST 요청
@@ -218,7 +123,7 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
 
   // 조건부 렌더링
   if (isLoading) {
-    return null;
+    return <div>Loading...</div>;
   }
 
   if (isImageModalOpen) {
@@ -265,8 +170,8 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
       />
       <Container>
         <ImageSize>
-          {recipeInfo.imgURLs[0] ? (
-            <Image src={recipeInfo.imgURLs[0]} />
+          {imageUrls[0] ? (
+            <Image src={imageUrls[0]} />
           ) : (
             <div style={{ width: '100%', height: '100%', backgroundColor: '#e0e0e0' }} />
           )}
@@ -306,13 +211,15 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
           <Select
             labelId="difficulty"
             id="difficulty"
-            value={difficulty}
+            value={recipeInfo.difficulty}
             label="recipeDifficulty"
-            onChange={difficultyChange}
+            onChange={(e) => {
+              setRecipeInfo({ ...recipeInfo, difficulty: e.target.value });
+            }}
             sx={{ width: '45%', marginTop: '1rem' }}>
-            <MenuItem value={'초급'}>초급</MenuItem>
-            <MenuItem value={'중급'}>중급</MenuItem>
-            <MenuItem value={'고급'}>고급</MenuItem>
+            <MenuItem value={'EASY'}>초급</MenuItem>
+            <MenuItem value={'MEDIUM'}>중급</MenuItem>
+            <MenuItem value={'HARD'}>고급</MenuItem>
           </Select>
           <TextField
             id="recipeMinute"
@@ -374,24 +281,37 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
           <Select
             labelId="category"
             id="category"
-            value={category}
+            value={recipeInfo.categoryName}
             label="recipeCategory"
-            onChange={categoryChange}
+            onChange={(e) => {
+              setCategory(e.target.value);
+            }}
             sx={{ width: '100%', marginTop: '1rem' }}>
-            <MenuItem value={'메인요리'}>메인요리</MenuItem>
-            <MenuItem value={'간단요리'}>간단요리</MenuItem>
-            <MenuItem value={'비건요리'}>비건요리</MenuItem>
-            <MenuItem value={'안주'}>안주</MenuItem>
-            <MenuItem value={'베이킹'}>베이킹</MenuItem>
-            <MenuItem value={'다이어트'}>다이어트</MenuItem>
-            <MenuItem value={'오븐 요리'}>오븐 요리</MenuItem>
-            <MenuItem value={'키토'}>키토</MenuItem>
+            <MenuItem value={'Main Courses'}>메인요리</MenuItem>
+            <MenuItem value={'Simple'}>간단요리</MenuItem>
+            <MenuItem value={'Vegan'}>비건요리</MenuItem>
+            <MenuItem value={'Snack'}>안주</MenuItem>
+            <MenuItem value={'Baking'}>베이킹</MenuItem>
+            <MenuItem value={'Diet'}>다이어트</MenuItem>
+            <MenuItem value={'Oven'}>오븐 요리</MenuItem>
+            <MenuItem value={'Keto'}>키토</MenuItem>
           </Select>
         </FormControl>
         <Divider sx={{ paddingTop: '1rem' }} />
-        <RecipeTable ingredients={ingredients} setIngredients={setIngredients} />
+        <RecipeTable
+          ingredients={recipeInfo.ingredients}
+          setIngredients={(newIngredients) =>
+            setRecipeInfo({ ...recipeInfo, ingredients: newIngredients })
+          }
+        />
         <Divider sx={{ paddingTop: '1rem' }} />
-        <RecipeTags recipeTags={recipeInfo.tags} tags={tags} setTags={setTags} />
+        {recipeInfo.tags === null ? null : (
+          <RecipeTags
+            recipeTags={recipeInfo.tags}
+            tags={recipeInfo.tags}
+            setTags={(newTags) => setRecipeInfo({ ...recipeInfo, tags: newTags })}
+          />
+        )}
         <Divider sx={{ paddingTop: '1rem' }} />
         <CookeryEdit recipe={recipeInfo} setState={setIsCookeryModalOpen} />
       </Container>

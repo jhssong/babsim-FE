@@ -3,7 +3,7 @@
 {path} : recipeId
 */
 export default async function getForkedRecipes(memberID, recipeId) {
-  let url = `https://localhost:8080/api/forked/${recipeId}`;
+  let url = 'http://localhost:8080/api/recipes/forked/' + recipeId;
   const queryParams = new URLSearchParams({ memberID });
   url += `?${queryParams.toString()}`;
 

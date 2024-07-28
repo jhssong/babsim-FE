@@ -1,29 +1,28 @@
 import { FavoriteBorderOutlined, FavoriteOutlined } from '@mui/icons-material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import setLike from '../../../apis/Recipe/RecipeInfo/setLike';
+import { useRecoilValue } from 'recoil';
+import { userDataState } from '../../../recoil/atoms';
 
-const LikeButton = ({ liked, recipeId, memberId }) => {
+const LikeButton = ({ liked, recipeId }) => {
+  const userData = useRecoilValue(userDataState);
   const [isLiked, setIsLiked] = useState(liked);
 
   const handleLike = async () => {
-    setLike(recipeId, memberId);
+    await setLike(recipeId, userData.id);
     setIsLiked(!isLiked);
-  }
+  };
+
+  useEffect(() => {
+    setIsLiked(liked);
+  }, [liked]);
 
   return (
     <>
       {isLiked ? (
-        <FavoriteOutlined
-          color="primary"
-          sx={{ cursor: 'pointer' }}
-          onClick={handleLike}
-        />
+        <FavoriteOutlined color="primary" sx={{ cursor: 'pointer' }} onClick={handleLike} />
       ) : (
-        <FavoriteBorderOutlined
-          color="primary"
-          sx={{ cursor: 'pointer' }}
-          onClick={handleLike}
-        />
+        <FavoriteBorderOutlined color="primary" sx={{ cursor: 'pointer' }} onClick={handleLike} />
       )}
     </>
   );

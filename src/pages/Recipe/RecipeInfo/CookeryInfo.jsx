@@ -1,6 +1,8 @@
 import styled from '@emotion/styled';
 import { TimerOutlined } from '@mui/icons-material';
 import { Skeleton, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { getImageFromStorage } from '../../../apis/firebase/storage';
 
 const StyledHeader = styled.div`
   display: flex;
@@ -49,7 +51,7 @@ export const Cookery = ({ image, desc, timer, order }) => {
       {image === null ? (
         <Skeleton animation="wave" variant="rectangular" width={210} height={118} />
       ) : (
-        <img src={image} alt="Cookery" width={210} height={118}/>
+        <img src={image} alt="Cookery" width={210} height={118} />
       )}
       <Container>
         <TextContainer>
@@ -72,9 +74,35 @@ const CookeryContainer = styled.div`
 `;
 
 // CookeryInfo 컴포넌트 정의
-const CookeryInfo = ({ images, descs, timers }) => {
+const CookeryInfo = ({ imgIds, descs, timers }) => {
+  const [images, setImages] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadImages = async () => {
+      try {
+        const imageUrls = await Promise.all(
+          imgIds.map(async (imgId) => {
+            return await getImageFromStorage(imgId);
+          })
+        );
+        setImages(imageUrls);
+      } catch (error) {
+        console.error('Error loading images:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadImages();
+  }, [imgIds]);
+
+  if (isLoading) {
+    return <Skeleton animation="wave" variant="rectangular" width="100%" height="100%" />;
+  }
+
   // images, descs, timers를 하나의 배열로 묶기
-  const cookeries = images.map((image, index) => ({
+  const cookeries = descs.map((image, index) => ({
     image,
     desc: descs[index],
     timer: timers[index],
@@ -83,7 +111,6 @@ const CookeryInfo = ({ images, descs, timers }) => {
 
   return (
     <CookeryContainer>
-
       {cookeries.map((cookery, index) => (
         <Cookery
           key={index}
