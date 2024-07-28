@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logout from '../../apis/Login/logout';
 import { isLoggedInState, isTryingToLoginState, userDataState } from '../../recoil/atoms';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 
 const Container = styled.div`
   display: flex;
