@@ -48,12 +48,10 @@ async function getRecipeInfo(recipeId, memberId) {
 
 const Home = () => {
   const isLoggined = useRecoilValue(isLoggedInState);
-  const userData = useRecoilValue(userDataState);
 
   return (
     <>
       <AppBarWithLogo />
-      <div onClick={() => getRecipeInfo(1, userData.id)}>hihi</div>
       <Container>
         <WeeklyRecipe />
         <RecommendedProduct />

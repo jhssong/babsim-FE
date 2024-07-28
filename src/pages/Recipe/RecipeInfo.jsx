@@ -13,7 +13,6 @@ import styled from '@emotion/styled';
 import RecipeReviews from './RecipeReviews';
 import RecipeEdit from './RecipeEdit';
 import getRecipeInfo from '../../apis/Recipe/RecipeInfo/getRecipeInfo';
-import getReviews from '../../apis/Reviews/getReviews';
 import Cook from './Cook';
 
 const BottomContainer = styled.div`

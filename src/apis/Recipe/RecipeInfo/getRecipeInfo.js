@@ -5,7 +5,7 @@ import { baseURL } from '../../api';
 {path} : recipeId
 @memberID (nullable) (String)
 */
-export default async function getRecipeInfo(recipeId, memberID) {
+export default async function getRecipeInfo(recipeId) {
   let url = `${baseURL}/recipes/` + recipeId;
 
   let memberId = 4;
