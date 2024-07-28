@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { AppBarWithTitle } from '../../components/AppBar';
+import { VCard } from '../../components/Card';
 
 const Cook = () => {
   return (
@@ -13,9 +14,7 @@ const Cook = () => {
         height: '100vh',
       }}>
       <AppBarWithTitle title="Cook" rightIcon="list" />
-      <Typography variant="h6" color="primary">
-        cook
-      </Typography>
+      <VCard />
     </Box>
   );
 };
