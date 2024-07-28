@@ -14,7 +14,6 @@ const Cook = () => {
         height: '100vh',
       }}>
       <AppBarWithTitle title="Cook" rightIcon="list" />
-      <VCard />
     </Box>
   );
 };
