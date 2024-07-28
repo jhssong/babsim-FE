@@ -46,7 +46,7 @@ const RecipeInfo = () => {
 
   useEffect(() => {
     fetchRecipeInfo();
-  }, []);
+  }, [recipeId]);
 
   useEffect(() => {
     fetchRecipeInfo();

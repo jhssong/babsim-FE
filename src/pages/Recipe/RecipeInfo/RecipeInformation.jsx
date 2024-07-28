@@ -105,7 +105,20 @@ const RatingLine = styled.div`
 
 // RecipeInformation 컴포넌트
 const RecipeInformation = ({ recipeInfo, isLoading }) => {
-  console.log(recipeInfo);
+
+  const getDifficultyLabel = (difficulty) => {
+    switch (difficulty) {
+      case 'EASY':
+        return '초급';
+      case 'MEDIUM':
+        return '중급';
+      case 'HARD':
+        return '고급';
+      default:
+        return difficulty;
+    }
+  };
+
   return (
     <Container>
       <TitleLine>
@@ -133,7 +146,7 @@ const RecipeInformation = ({ recipeInfo, isLoading }) => {
         ) : (
           <>
             <Rating name="read-only" value={recipeInfo.rate} size="small" readOnly />
-            <Typography variant="caption">{recipeInfo.difficulty}</Typography>
+            <Typography variant="caption">{getDifficultyLabel(recipeInfo.difficulty)}</Typography>
             <Typography variant="caption">요리 시간 {recipeInfo.cookingTime / 60}분</Typography>
           </>
         )}

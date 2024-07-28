@@ -3,10 +3,13 @@
 @recipeId(Long)
 @memberId(String)
 */
-export default async function postReview({ recipeId, memberID, rating, comment, forkedRecipeId }) {
-  let url = `https://localhost:8080/api/reviews`;
-  const queryParams = new URLSearchParams({ recipeId, memberID });
+export default async function postReview({ recipeId, rating, comment, forkedRecipeId }) {
+  let url = `http://localhost:8080/api/reviews`;
+  let memberId = 4;
+  const queryParams = new URLSearchParams({ recipeId, memberId });
   url += `?${queryParams.toString()}`;
+
+  console.log(`forkedRecipeId is ${forkedRecipeId}`);
 
   const response = await fetch(url, {
     method: 'POST',

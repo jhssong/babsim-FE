@@ -1,6 +1,7 @@
-export default async function setLike(recipeId, memberID) {
-  let url = `https://localhost:8080/api/likes`;
-  const queryParams = new URLSearchParams({ recipeId, memberID });
+export default async function setLike(recipeId) {
+  let url = 'http://localhost:8080/api/likes';
+  let memberId = 4;
+  const queryParams = new URLSearchParams({ recipeId, memberId }); // 임시로 1
   url += `?${queryParams.toString()}`;
 
   console.log(`${url} and working`);

@@ -3,7 +3,7 @@
 {path} : recipeId
 */
 export default async function getReviews(recipeId) {
-  const url = `/api/reviews/` + recipeId;
+  const url = 'http://localhost:8080/api/reviews/' + recipeId;
 
   console.log(`getReviews : ${url} and working`);
   const response = await fetch(url, {

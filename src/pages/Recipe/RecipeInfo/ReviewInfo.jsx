@@ -18,6 +18,10 @@ const ReviewContainer = styled.div`
 `;
 
 export const Review = ({ memberID, name, img, rating, comment, registerDate, forkedRecipe }) => {
+  if (forkedRecipe === undefined) {
+    forkedRecipe = null;
+  }
+  console.log(`forkedRecipe is ${forkedRecipe}`);
   return (
     <ReviewCard>
       <CardContent>
@@ -85,12 +89,12 @@ const ReviewInfo = ({ reviews, setState }) => {
           onClick={handleClick}
           key={index}
           memberId={review.memberId}
-          name={review.name}
-          img={review.img}
+          name={review.memberName}
+          img={review.memberImg}
           rating={review.rating}
           comment={review.comment}
           registerDate={review.registerDate}
-          forkedRecipe={review.forkedRecipe}
+          forkedRecipe={review.forkedRecipeId}
         />
       ))}
     </Container>

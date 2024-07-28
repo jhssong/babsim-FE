@@ -53,7 +53,7 @@ const IngredientInfo = ({ ingredients }) => {
     <Container>
       <Typography variant="h5">재료</Typography>
       {ingredients.map((ingredient, index) => (
-        <Ingredient key={index} name={ingredient.name} amount={ingredient.amount} />
+        <Ingredient key={index} name={ingredient.name} amount={ingredient.quantity} />
       ))}
     </Container>
   );

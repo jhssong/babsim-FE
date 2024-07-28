@@ -3,9 +3,11 @@
 {path} : recipeId
 @memberID (nullable) (String)
 */
-export default async function getRecipeInfo(recipeId, memberId) {
+export default async function getRecipeInfo(recipeId) {
   let url = 'http://localhost:8080/api/recipes/' + recipeId;
   // // Query Parameter를 추가 (memberID가 있는 경우에만)
+
+  let memberId = 4;
   if (memberId) {
     const queryParams = new URLSearchParams({ memberId });
     url += '?' + queryParams.toString();

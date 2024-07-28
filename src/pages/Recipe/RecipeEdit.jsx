@@ -116,10 +116,6 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
     }
   }, [mode, recipeId, userData.id]);
 
-  const categoryChange = (event) => {
-    setCategory(event.target.value);
-  };
-
   useEffect(() => {
     // POST 요청
     // 이전 페이지로 돌아가서? 성공 메세지 출력
@@ -287,7 +283,9 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
             id="category"
             value={recipeInfo.categoryName}
             label="recipeCategory"
-            onChange={categoryChange}
+            onChange={(e) => {
+              setCategory(e.target.value);
+            }}
             sx={{ width: '100%', marginTop: '1rem' }}>
             <MenuItem value={'Main Courses'}>메인요리</MenuItem>
             <MenuItem value={'Simple'}>간단요리</MenuItem>

@@ -1,5 +1,5 @@
 import { FavoriteBorderOutlined, FavoriteOutlined } from '@mui/icons-material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import setLike from '../../../apis/Recipe/RecipeInfo/setLike';
 import { useRecoilValue } from 'recoil';
 import { userDataState } from '../../../recoil/atoms';
@@ -12,6 +12,10 @@ const LikeButton = ({ liked, recipeId }) => {
     await setLike(recipeId, userData.id);
     setIsLiked(!isLiked);
   };
+
+  useEffect(() => {
+    setIsLiked(liked);
+  }, [liked]);
 
   return (
     <>
