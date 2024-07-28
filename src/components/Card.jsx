@@ -80,7 +80,7 @@ export const HCard = ({ recipe, index, onClick }) => {
     <RecipeContiner>
       <Typography variant="h6">{index + 1}</Typography>
       <Recipe onClick={onClick}>
-        <RecipeImage src={recipe.img} alt={recipe.name} />
+        <RecipeImage src={recipe.img} alt={recipe.recipeName} />
         <RecipeInfo>
           <HashTags>
             {recipe.tags.map((tag, idx) => (
@@ -89,7 +89,7 @@ export const HCard = ({ recipe, index, onClick }) => {
               </Typography>
             ))}
           </HashTags>
-          <Typography variant="body1">{recipe.name}</Typography>
+          <Typography variant="body1">{recipe.recipeName}</Typography>
           <TimeAndRating>
             <Time>
               <AccessTime />
@@ -147,7 +147,9 @@ export const VCard = ({ type, product, index, style, onClick }) => {
         ) : (
           <></>
         )}
-        <Typography variant="body1">{product.name}</Typography>
+        <Typography variant="body1">
+          {type === 'recipe' ? product.recipeName : product.name}
+        </Typography>
         {type !== 'recipe' ? <Typography variant="body2">{product.price}</Typography> : <></>}
         {type !== 'nft' ? (
           <Rating>

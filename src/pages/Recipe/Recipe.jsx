@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 
 import { useRecoilValue } from 'recoil';
-import { loginState } from '../../recoil/atoms';
+import { isLoggedInState, userDataState } from '../../recoil/atoms';
 import { useEffect, useRef, useState } from 'react';
 import { Button, Chip, Stack, Switch, Typography } from '@mui/material';
 import { GridCardList } from '../../components/CardList';
@@ -14,7 +14,6 @@ import NavBar from '../../components/NavBar';
 import RecipeEdit from './RecipeEdit';
 import { getRecipeCateoreis } from '../../apis/Recipe/getRecipe';
 import Loading from '../../components/Loading';
-import { all } from 'axios';
 
 const Container = styled.div`
   display: flex;
@@ -28,17 +27,17 @@ const Container = styled.div`
 `;
 
 const Recipe = () => {
-  const isLoggined = useRecoilValue(loginState).isLoggedIn;
-  const user = useRecoilValue(loginState).user;
+  const isLoggined = useRecoilValue(isLoggedInState);
+  const userData = useRecoilValue(userDataState);
   const [category, setCategory] = useState('모든요리');
   const [allergy, setAllergy] = useState(true);
   const containerRef = useRef(null);
   const [showButton, setShowButton] = useState(true);
   const [writeRecipe, setWriteRecipe] = useState(false);
 
-  // const [recipesData, setRecipetData] = useState({});
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState(null);
+  const [recipesData, setRecipesData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   let navigate = useNavigate();
 
   const categories = [
@@ -53,141 +52,6 @@ const Recipe = () => {
     '키토',
   ];
 
-  const recipesData = {
-    모든요리: [
-      {
-        id: '0',
-        img: 'https://i.namu.wiki/i/U_nuVL__0tNfEPk8Eb9PXISEad-qOs4aOEI0u-Zclq928dHx835CxJjMk3HKzg4ieprrKff_42Th2Tao7yezAg.webp',
-        name: 'Kimchi',
-        tags: ['Korean', 'Spicy', 'Fermented'],
-        cookingTime: 7200,
-        rate: 4.8,
-        allergies: ['fish'],
-      },
-      {
-        id: '0',
-        img: 'https://i.namu.wiki/i/U_nuVL__0tNfEPk8Eb9PXISEad-qOs4aOEI0u-Zclq928dHx835CxJjMk3HKzg4ieprrKff_42Th2Tao7yezAg.webp',
-        name: 'Kimchi',
-        tags: ['Korean', 'Spicy', 'Fermented'],
-        cookingTime: 7200,
-        rate: 4.8,
-        allergies: ['fish'],
-      },
-      {
-        id: '0',
-        img: 'https://i.namu.wiki/i/U_nuVL__0tNfEPk8Eb9PXISEad-qOs4aOEI0u-Zclq928dHx835CxJjMk3HKzg4ieprrKff_42Th2Tao7yezAg.webp',
-        name: 'Kimchi',
-        tags: ['Korean', 'Spicy', 'Fermented'],
-        cookingTime: 7200,
-        rate: 4.8,
-        allergies: ['fish'],
-      },
-      {
-        id: '0',
-        img: 'https://i.namu.wiki/i/U_nuVL__0tNfEPk8Eb9PXISEad-qOs4aOEI0u-Zclq928dHx835CxJjMk3HKzg4ieprrKff_42Th2Tao7yezAg.webp',
-        name: 'Kimchi',
-        tags: ['Korean', 'Spicy', 'Fermented'],
-        cookingTime: 7200,
-        rate: 4.8,
-        allergies: ['fish'],
-      },
-      {
-        id: '0',
-        img: 'https://i.namu.wiki/i/U_nuVL__0tNfEPk8Eb9PXISEad-qOs4aOEI0u-Zclq928dHx835CxJjMk3HKzg4ieprrKff_42Th2Tao7yezAg.webp',
-        name: 'Kimchi',
-        tags: ['Korean', 'Spicy', 'Fermented'],
-        cookingTime: 7200,
-        rate: 4.8,
-        allergies: ['fish'],
-      },
-      {
-        id: '0',
-        img: 'https://i.namu.wiki/i/U_nuVL__0tNfEPk8Eb9PXISEad-qOs4aOEI0u-Zclq928dHx835CxJjMk3HKzg4ieprrKff_42Th2Tao7yezAg.webp',
-        name: 'Kimchi',
-        tags: ['Korean', 'Spicy', 'Fermented'],
-        cookingTime: 7200,
-        rate: 4.8,
-        allergies: ['fish'],
-      },
-      {
-        id: '0',
-        img: 'https://i.namu.wiki/i/U_nuVL__0tNfEPk8Eb9PXISEad-qOs4aOEI0u-Zclq928dHx835CxJjMk3HKzg4ieprrKff_42Th2Tao7yezAg.webp',
-        name: 'Kimchi',
-        tags: ['Korean', 'Spicy', 'Fermented'],
-        cookingTime: 7200,
-        rate: 4.8,
-        allergies: ['fish'],
-      },
-      {
-        id: '0',
-        img: 'https://i.namu.wiki/i/U_nuVL__0tNfEPk8Eb9PXISEad-qOs4aOEI0u-Zclq928dHx835CxJjMk3HKzg4ieprrKff_42Th2Tao7yezAg.webp',
-        name: 'Kimchi',
-        tags: ['Korean', 'Spicy', 'Fermented'],
-        cookingTime: 7200,
-        rate: 4.8,
-        allergies: ['fish'],
-      },
-      {
-        id: '0',
-        img: 'https://i.namu.wiki/i/U_nuVL__0tNfEPk8Eb9PXISEad-qOs4aOEI0u-Zclq928dHx835CxJjMk3HKzg4ieprrKff_42Th2Tao7yezAg.webp',
-        name: 'Kimchi',
-        tags: ['Korean', 'Spicy', 'Fermented'],
-        cookingTime: 7200,
-        rate: 4.8,
-        allergies: ['fish'],
-      },
-      {
-        id: '0',
-        img: 'https://i.namu.wiki/i/U_nuVL__0tNfEPk8Eb9PXISEad-qOs4aOEI0u-Zclq928dHx835CxJjMk3HKzg4ieprrKff_42Th2Tao7yezAg.webp',
-        name: 'Potato Salad',
-        tags: ['American', 'Vegetarian', 'Creamy'],
-        cookingTime: 1200,
-        rate: 4.6,
-        allergies: ['dairy', 'egg'],
-      },
-    ],
-    메인요리: [
-      {
-        id: '0',
-        img: 'https://dimg.donga.com/wps/SPORTS/IMAGE/2022/01/27/111487381.1.jpg',
-        name: 'Spaghetti Carbonara',
-        tags: ['Italian', 'Pasta', 'Creamy'],
-        cookingTime: 1800,
-        rate: 4.5,
-        allergies: ['dairy', 'egg'],
-      },
-      {
-        id: '0',
-        img: 'https://dimg.donga.com/wps/SPORTS/IMAGE/2022/01/27/111487381.1.jpg',
-        name: 'Chicken Curry',
-        tags: ['Indian', 'Spicy', 'Chicken'],
-        cookingTime: 2400,
-        rate: 4.7,
-        allergies: ['nut'],
-      },
-    ],
-    간단요리: [
-      {
-        id: '0',
-        img: 'https://isplus.com/data/isp/image/2024/04/24/isp20240424000098.800x.0.jpg',
-        name: 'Kimchi',
-        tags: ['Korean', 'Spicy', 'Fermented'],
-        cookingTime: 7200,
-        rate: 4.8,
-        allergies: ['fish'],
-      },
-      {
-        id: '0',
-        img: 'https://isplus.com/data/isp/image/2024/04/24/isp20240424000098.800x.0.jpg',
-        name: 'Potato Salad',
-        tags: ['American', 'Vegetarian', 'Creamy'],
-        cookingTime: 1200,
-        rate: 4.6,
-        allergies: ['dairy', 'egg'],
-      },
-    ],
-  };
-
   useEffect(() => {
     const handleScroll = () => {
       if (containerRef.current) {
@@ -196,43 +60,55 @@ const Recipe = () => {
       }
     };
 
-    // 참조된 컴포넌트에 스크롤 이벤트 리스너 등록
-    const containerElement = containerRef.current;
-    containerElement.addEventListener('scroll', handleScroll);
+    const fetchRecipeCategory = async (categoryId) => {
+      try {
+        const data = await getRecipeCateoreis(categoryId);
+        setRecipesData((prevData) => ({
+          ...prevData,
+          [category]: data,
+        }));
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    };
 
-    // const fetchRecipeCategory = async (categoryId) => {
-    //   try {
-    //     const data = await getRecipeCateoreis(categoryId);
-    //     setRecipesData((prevData) => ({
-    //       ...prevData,
-    //       categoryId: data.list,
-    //     }));
-    //     setLoading(false);
-    //   } catch (error) {
-    //     setError(error);
-    //     setLoading(false);
-    //   }
-    // };
-    // if (recipesData[category] === undefined) {
-    //   fetchRecipeCategory(categories.indexOf(category) + 1);
-    // }
-    // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    const registerScrollListener = () => {
+      const containerElement = containerRef.current;
+      if (containerElement) {
+        containerElement.addEventListener('scroll', handleScroll);
+      } else {
+        console.error('containerElement is null, retrying...');
+        setTimeout(registerScrollListener, 100); // 100ms 후에 다시 시도
+      }
+    };
+
+    registerScrollListener();
+
+    if (!recipesData[category] || recipesData[category].length === 0) {
+      fetchRecipeCategory(categories.indexOf(category));
+    }
     return () => {
-      containerElement.removeEventListener('scroll', handleScroll);
+      const containerElement = containerRef.current;
+      if (containerElement) {
+        containerElement.removeEventListener('scroll', handleScroll);
+      }
     };
   }, [category]);
 
-  // if (loading) return <Loading />;
-  // if (error) return <div>Error: {error.message}</div>;
-
   const filteredRecipes = (recipesData[category] || []).filter((recipe) => {
-    if (!allergy) return true;
-    return !recipe.allergies.some((allergyItem) => user.allergy.includes(allergyItem));
+    if (!allergy) return true; // 알레르기 필터링을 사용하지 않는 경우
+    if (!recipe.allergies) return true; // allergies 속성이 없는 경우 필터에서 제외하지 않음
+    return !recipe.allergies.some((allergy) => userData.allergies.includes(allergy));
   });
 
   const writeHandClick = () => {
     return isLoggined ? setWriteRecipe(true) : navigate('/login');
   };
+
+  if (loading) return <Loading />;
+  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <>

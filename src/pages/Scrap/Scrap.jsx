@@ -2,13 +2,15 @@ import styled from '@emotion/styled';
 
 import { AppBarWithLogo } from '../../components/AppBar';
 import NavBar from '../../components/NavBar';
-import { Box, Tab, Tabs } from '@mui/material';
+import { Box, Tab, Tabs, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { GridCardList } from '../../components/CardList';
 import { VCard } from '../../components/Card';
 import { useNavigate } from 'react-router-dom';
 import { getRecipeForked, getRecipeLikes, getRecipeOwn } from '../../apis/Recipe/getRecipe';
 import Loading from '../../components/Loading';
+import { useRecoilValue } from 'recoil';
+import { userDataState } from '../../recoil/atoms';
 
 const Container = styled.div`
   display: flex;
@@ -22,208 +24,98 @@ const Container = styled.div`
 `;
 
 const Scrap = () => {
-  const [value, setValue] = useState('fork');
   let navigate = useNavigate();
+  const [value, setValue] = useState('fork');
+  const userData = useRecoilValue(userDataState);
 
-  // const [recipeData, setRecipeData] = useState({ fork: [], like: [], my: [] });
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState(null);
-  // useEffect(() => {
-  //   const fetchScrap = async () => {
-  //     try {
-  //       const like = await getRecipeLikes();
-  //       const fork = await getRecipeForked();
-  //       const own = await getRecipeOwn();
-  //       const data = {
-  //         like: like,
-  //         fork: fork,
-  //         my: own,
-  //       };
-  //       setRecipeData(data);
-  //       setLoading(false);
-  //     } catch (error) {
-  //       setError(error);
-  //       setLoading(false);
-  //     }
-  //   };
+  const [recipesData, setRecipesData] = useState({ fork: [], like: [], my: [] });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  useEffect(() => {
+    const fetchScrap = async (memberId) => {
+      try {
+        const like = await getRecipeLikes(memberId);
+        const fork = await getRecipeForked(memberId);
+        const own = await getRecipeOwn(memberId);
+        const data = {
+          like: like,
+          fork: fork,
+          my: own,
+        };
+        setRecipesData(data);
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    };
 
-  //   fetchScrap();
-  // }, []);
+    fetchScrap(1);
+    // fetchScrap(userData.id);
+  }, []);
 
-  // if (loading) return <Loading />;
-  // if (error) return <div>Error: {error.message}</div>;
-
-  const recipeData = {
-    fork: {
-      list: [
-        {
-          id: '0',
-          img: 'https://i.namu.wiki/i/R0AhIJhNi8fkU2Al72pglkrT8QenAaCJd1as-d_iY6MC8nub1iI5VzIqzJlLa-1uzZm--TkB-KHFiT-P-t7bEg.webp',
-          name: 'Spaghetti Carbonara',
-          tags: ['Italian', 'Pasta', 'Creamy'],
-          cookingTime: 1800,
-          rate: 4.5,
-          allergies: ['dairy', 'egg'],
-        },
-        {
-          id: '0',
-          img: 'https://i.namu.wiki/i/R0AhIJhNi8fkU2Al72pglkrT8QenAaCJd1as-d_iY6MC8nub1iI5VzIqzJlLa-1uzZm--TkB-KHFiT-P-t7bEg.webp',
-          name: 'Chicken Curry',
-          tags: ['Indian', 'Spicy', 'Chicken'],
-          cookingTime: 2400,
-          rate: 4.7,
-          allergies: ['nut'],
-        },
-        {
-          id: '0',
-          img: 'https://i.namu.wiki/i/R0AhIJhNi8fkU2Al72pglkrT8QenAaCJd1as-d_iY6MC8nub1iI5VzIqzJlLa-1uzZm--TkB-KHFiT-P-t7bEg.webp',
-          name: '조재용의 특제 시부야 초록라멘 국물이 아주 끝내줘요 아주 그냥 ',
-          tags: ['Vegan', 'Healthy', 'Bowl', 'Bowl', 'Bowl', 'Bowl', 'Bowl', 'Bowl'],
-          cookingTime: 1500,
-          rate: 4.9,
-          allergies: ['soy', 'sesame'],
-        },
-        {
-          id: '0',
-          img: 'https://i.namu.wiki/i/R0AhIJhNi8fkU2Al72pglkrT8QenAaCJd1as-d_iY6MC8nub1iI5VzIqzJlLa-1uzZm--TkB-KHFiT-P-t7bEg.webp',
-          name: 'Beef Tacos',
-          tags: ['Mexican', 'Beef', 'Spicy'],
-          cookingTime: 1200,
-          rate: 4.3,
-          allergies: ['gluten'],
-        },
-        {
-          id: '0',
-          img: 'https://i.namu.wiki/i/R0AhIJhNi8fkU2Al72pglkrT8QenAaCJd1as-d_iY6MC8nub1iI5VzIqzJlLa-1uzZm--TkB-KHFiT-P-t7bEg.webp',
-          name: 'Beef Tacos',
-          tags: ['Mexican', 'Beef', 'Spicy'],
-          cookingTime: 1200,
-          rate: 4.3,
-          allergies: ['gluten'],
-        },
-      ],
-    },
-    like: {
-      list: [
-        {
-          id: '0',
-          img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
-          name: 'Spaghetti Carbonara',
-          tags: ['Italian', 'Pasta', 'Creamy'],
-          cookingTime: 1800,
-          rate: 4.5,
-          allergies: ['dairy', 'egg'],
-        },
-        {
-          id: '0',
-          img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
-          name: 'Chicken Curry',
-          tags: ['Indian', 'Spicy', 'Chicken'],
-          cookingTime: 2400,
-          rate: 4.7,
-          allergies: ['nut'],
-        },
-        {
-          id: '0',
-          img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
-          name: '조재용의 특제 시부야 초록라멘 국물이 아주 끝내줘요 아주 그냥 ',
-          tags: ['Vegan', 'Healthy', 'Bowl', 'Bowl', 'Bowl', 'Bowl', 'Bowl', 'Bowl'],
-          cookingTime: 1500,
-          rate: 4.9,
-          allergies: ['soy', 'sesame'],
-        },
-        {
-          id: '0',
-          img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
-          name: 'Beef Tacos',
-          tags: ['Mexican', 'Beef', 'Spicy'],
-          cookingTime: 1200,
-          rate: 4.3,
-          allergies: ['gluten'],
-        },
-        {
-          id: '0',
-          img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
-          name: 'Beef Tacos',
-          tags: ['Mexican', 'Beef', 'Spicy'],
-          cookingTime: 1200,
-          rate: 4.3,
-          allergies: ['gluten'],
-        },
-      ],
-    },
-    my: {
-      list: [
-        {
-          id: '0',
-          img: 'https://dimg.donga.com/wps/SPORTS/IMAGE/2022/01/27/111487381.1.jpg',
-          name: 'Spaghetti Carbonara',
-          tags: ['Italian', 'Pasta', 'Creamy'],
-          cookingTime: 1800,
-          rate: 4.5,
-          allergies: ['dairy', 'egg'],
-        },
-        {
-          id: '0',
-          img: 'https://dimg.donga.com/wps/SPORTS/IMAGE/2022/01/27/111487381.1.jpg',
-          name: 'Chicken Curry',
-          tags: ['Indian', 'Spicy', 'Chicken'],
-          cookingTime: 2400,
-          rate: 4.7,
-          allergies: ['nut'],
-        },
-        {
-          id: '0',
-          img: 'https://dimg.donga.com/wps/SPORTS/IMAGE/2022/01/27/111487381.1.jpg',
-          name: '조재용의 특제 시부야 초록라멘 국물이 아주 끝내줘요 아주 그냥 ',
-          tags: ['Vegan', 'Healthy', 'Bowl', 'Bowl', 'Bowl', 'Bowl', 'Bowl', 'Bowl'],
-          cookingTime: 1500,
-          rate: 4.9,
-          allergies: ['soy', 'sesame'],
-        },
-        {
-          id: '0',
-          img: 'https://dimg.donga.com/wps/SPORTS/IMAGE/2022/01/27/111487381.1.jpg',
-          name: 'Beef Tacos',
-          tags: ['Mexican', 'Beef', 'Spicy'],
-          cookingTime: 1200,
-          rate: 4.3,
-          allergies: ['gluten'],
-        },
-        {
-          id: '0',
-          img: 'https://dimg.donga.com/wps/SPORTS/IMAGE/2022/01/27/111487381.1.jpg',
-          name: 'Beef Tacos',
-          tags: ['Mexican', 'Beef', 'Spicy'],
-          cookingTime: 1200,
-          rate: 4.3,
-          allergies: ['gluten'],
-        },
-      ],
-    },
+  const renderMessage = (value) => {
+    switch (value) {
+      case 'like':
+        return '찜한 레시피가 존재하지 않습니다.';
+      case 'fork':
+        return 'fork한 레시피가 존재하지 않습니다.';
+      case 'my':
+        return '나의 레시피가 존재하지 않습니다.';
+      default:
+        return 'Error: value is not valid';
+    }
   };
+
+  const getRecipes = (value) => {
+    switch (value) {
+      case 'like':
+        return recipesData.like;
+      case 'fork':
+        return recipesData.fork;
+      case 'my':
+        return recipesData.my;
+      default:
+        return [];
+    }
+  };
+
+  const recipes = getRecipes(value);
+
+  if (loading) return <Loading />;
+  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <>
       <AppBarWithLogo />
       <Container>
         <CostomTabs value={value} setValue={setValue} />
-        <GridCardList>
-          {(value === 'like'
-            ? recipeData.like
-            : value === 'fork'
-              ? recipeData.fork
-              : recipeData.my
-          ).list.map((recipe, index) => (
-            <VCard
-              key={recipe.id}
-              product={recipe}
-              index={index}
-              type="recipe"
-              onClick={() => navigate(`/recipe/${recipe.id}`)}
-            />
-          ))}
-        </GridCardList>
+        {recipes.length === 0 ? (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100%',
+              width: '100%',
+            }}>
+            <Typography variant="body1" color="primary">
+              {renderMessage(value)}
+            </Typography>
+          </Box>
+        ) : (
+          <GridCardList>
+            {recipes.map((recipe, index) => (
+              <VCard
+                key={recipe.id}
+                product={recipe}
+                index={index}
+                type="recipe"
+                onClick={() => navigate(`/recipe/${recipe.id}`)}
+              />
+            ))}
+          </GridCardList>
+        )}
       </Container>
 
       <NavBar page="scrap" />

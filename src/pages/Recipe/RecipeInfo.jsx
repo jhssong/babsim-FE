@@ -14,6 +14,7 @@ import RecipeReviews from './RecipeReviews';
 import RecipeEdit from './RecipeEdit';
 import getRecipeInfo from '../../apis/Recipe/RecipeInfo/getRecipeInfo';
 import getReviews from '../../apis/Reviews/getReviews';
+import Cook from './Cook';
 
 const BottomContainer = styled.div`
   display: flex;
@@ -47,11 +48,16 @@ const RecipeInfo = () => {
 
   useEffect(() => {
     fetchRecipeInfo();
+    console.log('recipeInfo에 왔다.');
   }, [recipeId]);
 
   useEffect(() => {
     fetchRecipeInfo();
   }, [isReviewMore, isForkOpen]);
+
+  const handleCook = () => {
+    setCook(true);
+  };
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -64,10 +70,6 @@ const RecipeInfo = () => {
   if (isForkOpen) {
     return <RecipeEdit mode="fork" onBackBtnClick={setIsForkOpen} />;
   }
-
-  const handleCook = () => {
-    setCook(true);
-  };
 
   if (cook) {
     return <Cook />;

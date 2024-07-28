@@ -7,6 +7,7 @@ import { useSwipeable } from 'react-swipeable';
 import { HCard } from '../../components/Card';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../../components/Loading';
+import { getRecipeWeek } from '../../apis/Recipe/getRecipe';
 
 const WeeklyRecipeContainer = styled.div`
   display: flex;
@@ -35,75 +36,23 @@ const WeeklyRecipeContents = styled.div`
 `;
 
 const WeeklyRecipe = () => {
-  // const [recipesData, setRecipetData] = useState([]);
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState(null);
-  // useEffect(() => {
-  //   const fetchWeeklyRecipe = async () => {
-  //     try {
-  //       const data = await getRecipeWeek();
-  //       setRecipetData(data);
-  //       setLoading(false);
-  //     } catch (error) {
-  //       setError(error);
-  //       setLoading(false);
-  //     }
-  //   };
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [recipesToShow, setRecipesToShow] = useState([]);
+  useEffect(() => {
+    const fetchWeeklyRecipe = async () => {
+      try {
+        const data = await getRecipeWeek();
+        setLoading(false);
+        setRecipesToShow(data.slice(pageIndex * 3, pageIndex * 3 + 3));
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    };
 
-  //   fetchWeeklyRecipe();
-  // }, []);
-  // if (loading) return <Loading />;
-  // if (error) return <div>Error: {error.message}</div>;
-
-  const recipesData = {
-    list: [
-      {
-        id: '1',
-        img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
-        name: 'Spaghetti Carbonara',
-        tags: ['Italian', 'Pasta', 'Creamy'],
-        cookingTime: 1800,
-        rate: 4.5,
-        allergies: ['dairy', 'egg'],
-      },
-      {
-        id: '2',
-        img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
-        name: 'Chicken Curry',
-        tags: ['Indian', 'Spicy', 'Chicken'],
-        cookingTime: 2400,
-        rate: 4.7,
-        allergies: ['nut'],
-      },
-      {
-        id: '0',
-        img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
-        name: '조재용의 특제 시부야 초록라멘 국물이 아주 끝내줘요 아주 그냥 ',
-        tags: ['Vegan', 'Healthy', 'Bowl', 'Bowl', 'Bowl', 'Bowl', 'Bowl', 'Bowl'],
-        cookingTime: 1500,
-        rate: 4.9,
-        allergies: ['soy', 'sesame'],
-      },
-      {
-        id: '0',
-        img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
-        name: 'Beef Tacos',
-        tags: ['Mexican', 'Beef', 'Spicy'],
-        cookingTime: 1200,
-        rate: 4.3,
-        allergies: ['gluten'],
-      },
-      {
-        id: '0',
-        img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
-        name: 'Beef Tacos',
-        tags: ['Mexican', 'Beef', 'Spicy'],
-        cookingTime: 1200,
-        rate: 4.3,
-        allergies: ['gluten'],
-      },
-    ],
-  };
+    fetchWeeklyRecipe();
+  }, []);
 
   const today = new Date();
   const formattedDate = format(today, 'yyyy.MM.dd');
@@ -116,7 +65,8 @@ const WeeklyRecipe = () => {
     onSwipedRight: () => setPageIndex((prevIndex) => Math.max(prevIndex - 1, 0)),
   });
 
-  const recipesToShow = recipesData.list.slice(pageIndex * 3, pageIndex * 3 + 3);
+  if (loading) return <Loading />;
+  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <>
