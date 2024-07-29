@@ -90,7 +90,7 @@ const RecipeInfo = () => {
         레시피
       </Typography>
       <CookeryInfo
-        images={recipeInfo.recipeDetailImgs}
+        imgIds={recipeInfo.recipeDetailImgs}
         descs={recipeInfo.recipeContents}
         timers={recipeInfo.recipeTimers}
       />

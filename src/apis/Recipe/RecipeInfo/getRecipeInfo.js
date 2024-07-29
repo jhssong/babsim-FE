@@ -14,7 +14,6 @@ export default async function getRecipeInfo(recipeId) {
     url += '?' + queryParams.toString();
   }
 
-  console.log(`${url} and working`);
   const response = await fetch(url, {
     method: 'GET',
     headers: {
@@ -23,5 +22,6 @@ export default async function getRecipeInfo(recipeId) {
   });
   if (!response.ok) throw new Error('Failed to get recipe info');
   const responseData = await response.json();
+  console.log(responseData);
   return responseData;
 }
