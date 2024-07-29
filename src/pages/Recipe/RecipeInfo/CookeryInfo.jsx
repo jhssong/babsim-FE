@@ -8,6 +8,12 @@ const StyledHeader = styled.div`
   display: flex;
   flex-direction: row;
   padding: 0.5rem;
+
+  img {
+    width: 210px;
+    height: 118px;
+    object-fit: contain;
+  }
 `;
 
 const Container = styled.div`
@@ -51,7 +57,7 @@ export const Cookery = ({ image, desc, timer, order }) => {
       {image === null ? (
         <Skeleton animation="wave" variant="rectangular" width={210} height={118} />
       ) : (
-        <img src={image} alt="Cookery" width={210} height={118} />
+        <img src={image} alt="Cookery" />
       )}
       <Container>
         <TextContainer>
@@ -102,7 +108,7 @@ const CookeryInfo = ({ imgIds, descs, timers }) => {
   }
 
   // images, descs, timers를 하나의 배열로 묶기
-  const cookeries = descs.map((image, index) => ({
+  const cookeries = images.map((image, index) => ({
     image,
     desc: descs[index],
     timer: timers[index],
