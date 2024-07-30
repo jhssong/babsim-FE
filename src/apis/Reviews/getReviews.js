@@ -1,9 +1,11 @@
+import { baseURL } from '../api';
+
 /*
 레시피 리뷰 조회 API
 {path} : recipeId
 */
 export default async function getReviews(recipeId) {
-  const url = 'http://localhost:8080/api/reviews/' + recipeId;
+  const url = `${baseURL}/api/reviews/` + recipeId;
 
   console.log(`getReviews : ${url} and working`);
   const response = await fetch(url, {
