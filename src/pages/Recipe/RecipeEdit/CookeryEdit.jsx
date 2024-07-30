@@ -12,6 +12,7 @@ const Container = styled.div`
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding-top: 30px; // Space for the edit button
+  padding-bottom: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;f

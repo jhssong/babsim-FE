@@ -96,8 +96,8 @@ function App() {
           <Route path="/recipe" element={<Recipe />} />
           <Route path="/recipe/:recipeId" element={<RecipeInfo />} />
           {/* 로그인 때문에 잠시 주석 처리 <Route path="/recipe/edit/:recipeId" element={<ProtectedRoute path={<RecipeEdit />} />} /> */}
-          <Route path="/recipe/edit/:recipeId" element={<RecipeEdit />} />
-          <Route path="/recipe/fork/:recipeId" element={<RecipeEdit />} />{' '}
+          <Route path="/recipe/edit/:recipeId" element={<RecipeEdit mode="edit" />} />
+          <Route path="/recipe/fork/:recipeId" element={<RecipeEdit mode="fork" />} />
           {/* 작업 완료 후 forkPage도 Protected 필요 */}
           <Route path="/mypage" element={<ProtectedRoute path={<MyPage />} />} />
           <Route path="/scrap" element={<ProtectedRoute path={<Scrap />} />} />
