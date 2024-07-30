@@ -24,19 +24,20 @@ import getRecipeInfo from '../../apis/Recipe/RecipeInfo/getRecipeInfo';
 
 // 초기 레시피 데이터 설정
 const initialRecipe = {
-  id: '',
-  imgURLs: [null],
+  id: null,
+  recipeImgs: [null],
   name: '',
   description: '',
   rate: 0,
-  difficulty: '',
+  difficulty: 'EASY',
   cookingTime: 0,
+  categoryName: 'Main Courses',
   tags: [],
   allergies: [],
   ingredients: [],
   reviews: [],
-  recipeImgs: [],
-  recipeDescs: [],
+  recipeDetailImgs: [],
+  recipeContents: [],
   recipeTimers: [],
 };
 
@@ -101,6 +102,7 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
     try {
       const json = await getRecipeInfo(recipeId, userData.id);
       setRecipeInfo(json);
+      setImageUrls(json.recipeImgs);
       setIsLoading(false); // 로딩 상태 해제
     } catch (error) {
       console.error('Failed to fetch recipe info:', error);
@@ -113,6 +115,7 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
     } else if (mode === 'write') {
       setRecipeInfo(initialRecipe);
       setIsLoading(false); // 로딩 상태 해제
+      console.log(recipeInfo);
     }
   }, [mode, recipeId, userData.id]);
 

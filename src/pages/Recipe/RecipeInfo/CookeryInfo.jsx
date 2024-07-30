@@ -100,7 +100,7 @@ const CookeryInfo = ({ imgIds, descs, timers }) => {
       }
     };
 
-    loadImages();
+    if (imgIds !== undefined) loadImages();
   }, [imgIds]);
 
   if (isLoading) {
