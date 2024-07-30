@@ -1,12 +1,9 @@
-import { baseURL } from '../api';
-
 /*
-리뷰 작성 API
-@recipeId(Long)
-@memberId(String)
+레시피 작성 API
+@memberId(String) 작성자 ID
 */
-export default async function postReview({ recipeId, rating, comment, forkedRecipeId }) {
-  let url = `${baseURL}/reviews`;
+export default async function postRecipeWrite({ recipeInfo, memberId }) {
+  let url = `http://localhost:8080/api/recipes`;
   let memberId = 4;
   const queryParams = new URLSearchParams({ recipeId, memberId });
   url += `?${queryParams.toString()}`;
