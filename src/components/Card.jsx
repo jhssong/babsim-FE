@@ -2,6 +2,9 @@ import styled from '@emotion/styled';
 
 import { Star, AccessTime } from '@mui/icons-material';
 import { Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { getImageFromStorage } from '../apis/firebase/storage';
+import Loading from './Loading';
 
 const RecipeContiner = styled.div`
   display: flex;
@@ -65,6 +68,10 @@ const Rating = styled.div`
 `;
 
 export const HCard = ({ recipe, index, onClick }) => {
+  const [imgUrl, setImgUrl] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const formatCookingTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
@@ -76,11 +83,29 @@ export const HCard = ({ recipe, index, onClick }) => {
     return `${remainingMinutes}분`;
   };
 
+  useEffect(() => {
+    const fetchImg = async (imgId) => {
+      try {
+        const imgUrl = await getImageFromStorage(imgId);
+        setImgUrl(imgUrl);
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    };
+
+    fetchImg(recipe.recipeImg);
+  }, []);
+
+  if (loading) return <Loading />;
+  if (error) return <div>Error: {error.message}</div>;
+
   return (
     <RecipeContiner>
       <Typography variant="h6">{index + 1}</Typography>
       <Recipe onClick={onClick}>
-        <RecipeImage src={recipe.img} alt={recipe.recipeName} />
+        <RecipeImage src={imgUrl} alt={recipe.recipeName} />
         <RecipeInfo>
           <HashTags>
             {recipe.tags.map((tag, idx) => (
@@ -132,9 +157,31 @@ const ProductInfo = styled.div`
   width: 100%;
 `;
 export const VCard = ({ type, product, index, style, onClick }) => {
+  const [imgUrl, setImgUrl] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchImg = async (imgId) => {
+      try {
+        const imgUrl = await getImageFromStorage(imgId);
+        setImgUrl(imgUrl);
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    };
+
+    fetchImg(type === 'recipe' ? product.recipeImg : product.img);
+  }, []);
+
+  if (loading) return <Loading />;
+  if (error) return <div>Error: {error.message}</div>;
+
   return (
     <ProdcutContainer style={style} onClick={onClick}>
-      <ProductImage src={product.img} alt={product.name} />
+      <ProductImage src={imgUrl} alt={product.name} />
       <ProductInfo>
         {type === 'recipe' ? (
           <HashTags>
