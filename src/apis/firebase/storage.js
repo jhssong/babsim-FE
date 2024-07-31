@@ -6,6 +6,6 @@ export async function getImageFromStorage(imgId) {
     return url;
   } catch (error) {
     console.error('Error getting download URL:', error);
-    return 'undefined';
+    return null;
   }
 }

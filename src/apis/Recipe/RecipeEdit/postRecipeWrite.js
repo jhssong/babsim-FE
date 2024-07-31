@@ -1,14 +1,35 @@
+import { baseURL } from '../../api';
+
 /*
 레시피 작성 API
 @memberId(String) 작성자 ID
 */
-export default async function postRecipeWrite({ recipeInfo, memberId }) {
-  let url = `http://localhost:8080/api/recipes`;
-  let memberId = 4;
-  const queryParams = new URLSearchParams({ recipeId, memberId });
+export default async function postRecipeWrite({ recipeInfo }) {
+  let url = `${baseURL}/recipes`;
+  let creatorId = 4; // 임시로 4로 설정, 나중엔 props로 받아와야 함
+  const queryParams = new URLSearchParams({ creatorId });
   url += `?${queryParams.toString()}`;
 
-  console.log(`forkedRecipeId is ${forkedRecipeId}`);
+  // 카테고리 ID 매핑
+  const categoryMapping = {
+    'Main Courses': 1,
+    Simple: 2,
+    Vegan: 3,
+    Snack: 4,
+    Baking: 5,
+    Diet: 6,
+    Oven: 7,
+    Keto: 8,
+  };
+  const categoryId = categoryMapping[recipeInfo.categoryName] || 1;
+
+  // 재료 정보 매핑
+  const ingredients = recipeInfo.ingredients.map((ingredient) => {
+    return {
+      name: ingredient.name,
+      amount: ingredient.quantity,
+    };
+  });
 
   const response = await fetch(url, {
     method: 'POST',
@@ -16,12 +37,20 @@ export default async function postRecipeWrite({ recipeInfo, memberId }) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      rating: rating,
-      comment: comment,
-      forkedRecipeId: forkedRecipeId,
+      recipeImgs: recipeInfo.recipeImgs,
+      name: recipeInfo.name,
+      description: recipeInfo.description,
+      difficulty: recipeInfo.difficulty,
+      cookingTime: recipeInfo.cookingTime,
+      categoryId: categoryId,
+      tags: recipeInfo.tags,
+      ingredients: ingredients,
+      recipeContents: recipeInfo.recipeContents,
+      recipeDetailImgs: recipeInfo.recipeDetailImgs,
+      timers: recipeInfo.recipeTimers,
     }),
   });
-  if (!response.ok) throw new Error('Failed to post review');
+  if (!response.ok) throw new Error('Failed to post new recipe');
   const responseData = await response.json();
   return responseData;
 }

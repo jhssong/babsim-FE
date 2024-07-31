@@ -52,6 +52,7 @@ const formatTime = (timer) => {
 
 // Cookery 컴포넌트 정의
 export const Cookery = ({ image, desc, timer, order }) => {
+  
   return (
     <StyledHeader>
       {image === null ? (
@@ -80,7 +81,7 @@ const CookeryContainer = styled.div`
 `;
 
 // CookeryInfo 컴포넌트 정의
-const CookeryInfo = ({ imgIds, descs, timers }) => {
+const CookeryInfo = ({ imgIds, descs, timers, setRecipeState }) => {
   const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -93,6 +94,7 @@ const CookeryInfo = ({ imgIds, descs, timers }) => {
           })
         );
         setImages(imageUrls);
+        setRecipeState((prev) => ({ ...prev, images: imageUrls }));
       } catch (error) {
         console.error('Error loading images:', error);
       } finally {

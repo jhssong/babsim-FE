@@ -1,14 +1,12 @@
 import styled from '@emotion/styled';
-
 import { useRecoilValue } from 'recoil';
 import { isLoggedInState, userDataState } from '../../recoil/atoms';
 import { useEffect, useRef, useState } from 'react';
-import { Button, Chip, Stack, Switch, Typography } from '@mui/material';
+import { Button, Chip, Snackbar, Stack, Switch, Typography, Alert } from '@mui/material';
 import { GridCardList } from '../../components/CardList';
 import { VCard } from '../../components/Card';
 import { useNavigate } from 'react-router-dom';
 import { Edit } from '@mui/icons-material';
-
 import { AppBarWithLogo } from '../../components/AppBar';
 import NavBar from '../../components/NavBar';
 import RecipeEdit from './RecipeEdit';
@@ -38,6 +36,9 @@ const Recipe = () => {
   const [recipesData, setRecipesData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [writeComplete, setWriteComplete] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
   let navigate = useNavigate();
 
   const categories = [
@@ -55,7 +56,7 @@ const Recipe = () => {
   useEffect(() => {
     const handleScroll = () => {
       if (containerRef.current) {
-        // 여기서 '200'은 스크롤 허용 범위를 설정하는 값
+        // 여기서 '150'은 스크롤 허용 범위를 설정하는 값
         setShowButton(containerRef.current.scrollTop < 150);
       }
     };
@@ -107,17 +108,41 @@ const Recipe = () => {
     return isLoggined ? setWriteRecipe(true) : navigate('/login');
   };
 
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
+
   if (loading) return <Loading />;
   if (error) return <div>Error: {error.message}</div>;
 
   return (
     <>
       {writeRecipe ? (
-        <RecipeEdit mode={'write'} onBackBtnClick={setWriteRecipe} />
+        <RecipeEdit
+          mode={'write'}
+          onBackBtnClick={setWriteRecipe}
+          onComplete={() => {
+            setWriteComplete(true);
+            setSnackbarOpen(true);
+          }}
+          setState={setWriteRecipe}
+        />
       ) : (
         <>
           <AppBarWithLogo />
           <Container ref={containerRef}>
+            <Snackbar
+              open={snackbarOpen}
+              autoHideDuration={2000} // 2초 후 자동으로 닫힘
+              onClose={handleSnackbarClose}
+              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+              <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+                레시피 등록에 성공했어요!
+              </Alert>
+            </Snackbar>
             <Categories setCategory={setCategory} categories={categories} />
             {isLoggined ? <AllergyFilter allergy={allergy} setAllergy={setAllergy} /> : <></>}
             <GridCardList>

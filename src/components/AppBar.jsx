@@ -122,7 +122,7 @@ export function AppBarWithTitle({ title, rightIcon, onRightIconClick, onBackBtnC
         );
       case 'doneInRecipeWrite': // 포크 페이지에서 눌렸을 때는 POST 요청
         return (
-          <IconWrapper onClick={() => set(true)}>
+          <IconWrapper onClick={onRightIconClick}>
             <DoneOutlined />
           </IconWrapper>
         );

@@ -35,7 +35,7 @@ const EditButton = styled(IconButton)`
 `;
 
 // CookeryEdit 컴포넌트 정의
-const CookeryEdit = ({ recipe, setState }) => {
+const CookeryEdit = ({ recipe, setState, setRecipeState }) => {
   const theme = useTheme();
 
   const onClick = () => {
@@ -54,9 +54,10 @@ const CookeryEdit = ({ recipe, setState }) => {
         </EditButton>
       )}
       <CookeryInfo
-        images={recipe.recipeDetailImgs}
+        imgIds={recipe.recipeDetailImgs}
         descs={recipe.recipeContents}
         timers={recipe.recipeTimers}
+        setRecipeState={setRecipeState}
       />
     </Container>
   );
