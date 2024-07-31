@@ -21,6 +21,8 @@ import CookeryEditModal from './RecipeEdit/CookeryEditModal';
 import ScrollToTop from '../../components/ScrollToTop';
 import ImageCard from '../../components/ImageCard';
 import getRecipeInfo from '../../apis/Recipe/RecipeInfo/getRecipeInfo';
+import postRecipeWrite from '../../apis/Recipe/RecipeEdit/postRecipeWrite';
+import { getImageFromStorage } from '../../apis/firebase/storage';
 
 // 초기 레시피 데이터 설정
 const initialRecipe = {
@@ -28,7 +30,6 @@ const initialRecipe = {
   recipeImgs: [null],
   name: '',
   description: '',
-  rate: 0,
   difficulty: 'EASY',
   cookingTime: 0,
   categoryName: 'Main Courses',
@@ -84,7 +85,7 @@ const EditIcon = styled(Edit)`
   height: 32px;
 `;
 
-const RecipeEdit = ({ mode, onBackBtnClick }) => {
+const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
   const userData = useRecoilValue(userDataState);
   const { recipeId } = useParams();
 
@@ -96,6 +97,7 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
   const [isCookeryModalOpen, setIsCookeryModalOpen] = useState(false);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [imageUrls, setImageUrls] = useState([]); // 수정 중인 레시피의 이미지 URL 리스트
+  const [imageIds, setImageIds] = useState([]); // 수정 중인 레시피의 이미지 ID 리스트
 
   // 레시피 정보 GET 요청
   const fetchRecipeInfo = async () => {
@@ -103,9 +105,21 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
       const json = await getRecipeInfo(recipeId, userData.id);
       setRecipeInfo(json);
       setImageUrls(json.recipeImgs);
+      setImageIds(json.recipeImgs);
       setIsLoading(false); // 로딩 상태 해제
     } catch (error) {
       console.error('Failed to fetch recipe info:', error);
+    }
+  };
+
+  // 레시피 정보 POST 요청
+  const postNewRecipe = async () => {
+    try {
+      const response = postRecipeWrite({ recipeInfo });
+      console.log(response);
+      setDone(true);
+    } catch (error) {
+      console.error('Failed to post recipe info:', error);
     }
   };
 
@@ -117,11 +131,32 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
       setIsLoading(false); // 로딩 상태 해제
       console.log(recipeInfo);
     }
-  }, [mode, recipeId, userData.id]);
+  }, []);
 
   useEffect(() => {
-    // POST 요청
-    // 이전 페이지로 돌아가서? 성공 메세지 출력
+    const loadImages = async () => {
+      const imageUrls = await Promise.all(
+        imageIds.map(async (imgId) => {
+          console.log(imgId);
+          return await getImageFromStorage(imgId);
+        })
+      );
+      setImageUrls(imageUrls);
+      console.log(imageUrls);
+    };
+    loadImages();
+  }, [imageIds]);
+
+  useEffect(() => {
+    console.log(recipeInfo);
+  }, [recipeInfo]);
+
+  useEffect(() => {
+    if (isDone === true) {
+      setState(false);
+      onComplete(true);
+      setDone(false);
+    }
   }, [isDone]);
 
   // 조건부 렌더링
@@ -133,19 +168,23 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
     const handleCancel = () => {
       setIsImageModalOpen(false);
     };
-    const handleDone = () => {
-      setRecipeInfo({ ...recipeInfo, imgURLs: imageUrls });
+
+    const handleDone = (localImageUrls, localImageIds) => {
+      setImageUrls(localImageUrls);
+      setImageIds(localImageIds);
+      setRecipeInfo({ ...recipeInfo, recipeImgs: localImageIds });
       setIsImageModalOpen(false);
     };
     return (
       <>
-        <ImageCard imageUrls={imageUrls} setImageUrls={setImageUrls} maxImageCount={3} />
-        <Button onClick={handleCancel} color="primary">
-          취소
-        </Button>
-        <Button onClick={handleDone} color="primary">
-          확인
-        </Button>
+        <ImageCard
+          mode={'indirect'}
+          initialImageUrls={imageUrls} // 수정: 초기 이미지 URL 리스트
+          initialImageIds={imageIds} // 수정: 초기 이미지 ID 리스트
+          maxImageCount={3}
+          onCancel={handleCancel} // 수정: 취소 버튼 핸들러
+          onDone={handleDone} // 수정: 확인 버튼 핸들러
+        />
       </>
     );
   }
@@ -166,10 +205,21 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
       <ScrollToTop />
       <AppBarWithTitle
         title=""
-        rightIcon="done"
-        set={setDone}
+        rightIcon={
+          mode === 'edit'
+            ? 'doneInRecipeEdit'
+            : mode === 'fork'
+              ? 'doneInRecipeFork'
+              : 'doneInRecipeWrite'
+        }
         onBackBtnClick={onBackBtnClick}
-        onRightIconClick={() => console.log('Save clicked')}
+        onRightIconClick={
+          mode === 'edit'
+            ? 'doneInRecipeEdit'
+            : mode === 'fork'
+              ? 'doneInRecipeFork'
+              : postNewRecipe
+        }
       />
       <Container>
         <ImageSize>
@@ -191,7 +241,7 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
           label="레시피 이름"
           sx={{ width: '100%' }}
           value={recipeInfo.name}
-          inputProps={{ maxLength: 20 }}
+          inputProps={{ maxLength: 30 }}
           onChange={(e) => setRecipeInfo({ ...recipeInfo, name: e.target.value })}
         />
         <Divider />
@@ -287,7 +337,7 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
             value={recipeInfo.categoryName}
             label="recipeCategory"
             onChange={(e) => {
-              setCategory(e.target.value);
+              setRecipeInfo({ ...recipeInfo, categoryName: e.target.value });
             }}
             sx={{ width: '100%', marginTop: '1rem' }}>
             <MenuItem value={'Main Courses'}>메인요리</MenuItem>
@@ -316,7 +366,11 @@ const RecipeEdit = ({ mode, onBackBtnClick }) => {
           />
         )}
         <Divider sx={{ paddingTop: '1rem' }} />
-        <CookeryEdit recipe={recipeInfo} setState={setIsCookeryModalOpen} />
+        <CookeryEdit
+          recipe={recipeInfo}
+          setState={setIsCookeryModalOpen}
+          setRecipeState={setRecipeInfo}
+        />
       </Container>
     </>
   );

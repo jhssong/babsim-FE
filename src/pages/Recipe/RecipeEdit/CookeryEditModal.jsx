@@ -21,6 +21,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Add } from '@mui/icons-material';
 import ImageCard from '../../../components/ImageCard';
+import { set } from 'date-fns';
 
 const CookeryWrapper = styled.div`
   padding: 1rem;
@@ -68,21 +69,30 @@ const CookeryEditModal = ({ recipe, onBackBtnClick, setRecipeState, setModalStat
   const [cookeries, setCookeries] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [currentEditIndex, setCurrentEditIndex] = useState(null);
-  const [currentEditData, setCurrentEditData] = useState({ image: '', desc: '', timer: 0 });
+  const [currentEditData, setCurrentEditData] = useState({
+    imageUrl: '',
+    image: '',
+    desc: '',
+    timer: 0,
+  });
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
-  const [newCookery, setNewCookery] = useState({ image: '', desc: '', timer: 0 });
+  const [newCookery, setNewCookery] = useState({ imaegUrl: '', image: '', desc: '', timer: 0 });
   const [newMinutes, setNewMinutes] = useState(0);
   const [newSeconds, setNewSeconds] = useState(0);
 
   const [newImageUrls, setNewImageUrls] = useState([]); // 업로드된 이미지 URL
   const [currentImageUrls, setCurrentImageUrls] = useState([]); // 현재 이미지 URL
+  const [newImageIds, setNewImageIds] = useState([]); // 업로드된 이미지 ID
+  const [currentImageIds, setCurrentImageIds] = useState([]); // 현재 이미지 ID
 
   const initCookeries = () => {
     const cookeries = [];
     for (let i = 0; i < recipe.recipeContents.length; i++) {
       cookeries.push({
+        imageUrl: recipe.images[i],
         image: recipe.recipeDetailImgs[i],
         desc: recipe.recipeContents[i],
         timer: recipe.recipeTimers[i],
@@ -97,21 +107,30 @@ const CookeryEditModal = ({ recipe, onBackBtnClick, setRecipeState, setModalStat
 
   // newImageUrls가 업데이트되면 newCookery의 image를 업데이트
   useEffect(() => {
-    if (newImageUrls.length > 0) {
-      setNewCookery((prevCookery) => ({ ...prevCookery, image: newImageUrls[0] }));
+    if (newImageIds.length > 0) {
+      setNewCookery((prevCookery) => ({
+        ...prevCookery,
+        image: newImageIds[0],
+        imageUrl: newImageUrls[0],
+      }));
     }
-  }, [newImageUrls]);
+  }, [newImageIds]);
 
   // currentImageUrls가 업데이트되면 currentEditData의 image를 업데이트
   useEffect(() => {
-    if (currentImageUrls.length > 0) {
-      setCurrentEditData((prevCookery) => ({ ...prevCookery, image: currentImageUrls[0] }));
+    if (currentImageIds.length > 0) {
+      setCurrentEditData((prevCookery) => ({
+        ...prevCookery,
+        image: currentImageIds[0],
+        imageUrl: currentImageUrls[0],
+      }));
     }
-  }, [currentImageUrls]);
+  }, [currentImageIds]);
 
   const handleEdit = (index) => {
     setCurrentEditIndex(index);
-    setCurrentImageUrls([cookeries[index].image]);
+    setCurrentImageIds([cookeries[index].image]);
+    setCurrentImageUrls([cookeries[index].imageUrl]);
     const currentData = cookeries[index];
     setCurrentEditData(currentData);
     setMinutes(Math.floor(currentData.timer / 60));
@@ -153,6 +172,7 @@ const CookeryEditModal = ({ recipe, onBackBtnClick, setRecipeState, setModalStat
         ...currentEditData,
         timer: parseInt(minutes, 10) * 60 + parseInt(seconds, 10),
       };
+      setAlert(false);
     } else {
       setAlert(true);
       return;
@@ -164,7 +184,7 @@ const CookeryEditModal = ({ recipe, onBackBtnClick, setRecipeState, setModalStat
 
   const handleAddModalSave = () => {
     const newCookeries = [...cookeries];
-    if (newCookery.desc !== '' && newCookery.image !== '') {
+    if (newCookery.desc !== '' && newCookery.image !== undefined && newCookery.image !== '') {
       newCookeries.push({
         ...newCookery,
         timer: parseInt(newMinutes, 10) * 60 + parseInt(newSeconds, 10),
@@ -176,6 +196,7 @@ const CookeryEditModal = ({ recipe, onBackBtnClick, setRecipeState, setModalStat
     setCookeries(newCookeries);
     console.log(newCookeries);
     setNewImageUrls([]);
+    setNewImageIds([]);
     setIsAddModalOpen(false);
   };
 
@@ -202,7 +223,9 @@ const CookeryEditModal = ({ recipe, onBackBtnClick, setRecipeState, setModalStat
       setNewSeconds(value > 59 ? 59 : value);
     } else {
       setNewCookery((prevData) => ({ ...prevData, [name]: value }));
+      setCurrentEditData((prevData) => ({ ...prevData, [name]: value }));
     }
+    console.log(value);
   };
 
   const handleSave = () => {
@@ -214,6 +237,40 @@ const CookeryEditModal = ({ recipe, onBackBtnClick, setRecipeState, setModalStat
     };
     setRecipeState(updatedRecipe);
     setModalState(false);
+  };
+
+  const handleImageCardClick = (index, mode) => {
+    setCurrentEditIndex(index);
+    if (mode === 'edit') {
+      setCurrentImageUrls([cookeries[index].imageUrl]);
+      setCurrentImageIds([cookeries[index].image]);
+      setIsImageModalOpen(true);
+    } else {
+      setNewImageUrls([]);
+      setNewImageIds([]);
+      setIsImageModalOpen(true);
+    }
+  };
+
+  const handleImageModalClose = () => {
+    setIsImageModalOpen(false);
+  };
+
+  const handleImageModalSave = () => {
+    setIsImageModalOpen(false);
+  };
+
+  const handleDone = (localImageUrls, localImageIds) => {
+    setCurrentImageUrls(localImageUrls);
+    setCurrentImageIds(localImageIds);
+    if (currentImageUrls !== undefined) {
+      setNewCookery((prevCookery) => ({
+        ...prevCookery,
+        image: localImageIds[0],
+        imageUrl: localImageUrls[0],
+      }));
+    }
+    console.log(currentEditData);
   };
 
   return (
@@ -265,10 +322,11 @@ const CookeryEditModal = ({ recipe, onBackBtnClick, setRecipeState, setModalStat
                           </StyledIconButton>
                         </ButtonContainer>
                         <Cookery
-                          image={cookery.image}
+                          image={cookery.imageUrl}
                           desc={cookery.desc}
                           timer={cookery.timer}
                           order={idx + 1}
+                          onClick={() => handleImageCardClick(idx, 'edit')}
                         />
                       </CookeryWrapper>
                     )}
@@ -290,9 +348,14 @@ const CookeryEditModal = ({ recipe, onBackBtnClick, setRecipeState, setModalStat
           <DialogTitle>요리법 수정</DialogTitle>
           <DialogContent>
             <ImageCard
-              imageUrls={currentImageUrls}
+              mode="cookery"
+              initialImageUrls={currentImageUrls}
+              initialImageIds={currentImageIds}
               setImageUrls={setCurrentImageUrls}
+              setImageIds={setCurrentImageIds}
               maxImageCount={1}
+              onClick={() => handleImageCardClick(currentEditIndex, 'edit')}
+              onDone={handleDone}
             />
             <TextField
               margin="dense"
@@ -344,7 +407,16 @@ const CookeryEditModal = ({ recipe, onBackBtnClick, setRecipeState, setModalStat
         <Dialog fullScreen open={isAddModalOpen} onClose={handleAddModalClose}>
           <DialogTitle>요리법 추가</DialogTitle>
           <DialogContent>
-            <ImageCard imageUrls={newImageUrls} setImageUrls={setNewImageUrls} maxImageCount={1} />
+            <ImageCard
+              mode="cookery"
+              initialImageUrls={newImageUrls}
+              initialImageIds={newImageIds}
+              setImageUrls={setNewImageUrls}
+              setImageIds={setNewImageIds}
+              maxImageCount={1}
+              onClick={() => handleImageCardClick(null, 'add')}
+              onDone={handleDone}
+            />
             <TextField
               margin="dense"
               label="설명"
