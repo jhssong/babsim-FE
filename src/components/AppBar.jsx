@@ -116,7 +116,7 @@ export function AppBarWithTitle({ title, rightIcon, onRightIconClick, onBackBtnC
         );
       case 'doneInRecipeEdit': // 포크 페이지에서 눌렸을 때는 PUT 요청
         return (
-          <IconWrapper onClick={() => set(true)}>
+          <IconWrapper onClick={onRightIconClick}>
             <DoneOutlined />
           </IconWrapper>
         );

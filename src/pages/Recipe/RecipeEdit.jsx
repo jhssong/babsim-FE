@@ -1,15 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AppBarWithTitle } from '../../components/AppBar';
-import {
-  Button,
-  Divider,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-} from '@mui/material';
+import { Divider, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { Edit } from '@mui/icons-material';
 import styled from '@emotion/styled';
 import { useRecoilValue } from 'recoil';
@@ -23,6 +15,7 @@ import ImageCard from '../../components/ImageCard';
 import getRecipeInfo from '../../apis/Recipe/RecipeInfo/getRecipeInfo';
 import postRecipeWrite from '../../apis/Recipe/RecipeEdit/postRecipeWrite';
 import { getImageFromStorage } from '../../apis/firebase/storage';
+import putRecipeEdit from '../../apis/Recipe/RecipeEdit/putRecipeEdit';
 
 // 초기 레시피 데이터 설정
 const initialRecipe = {
@@ -98,11 +91,12 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [imageUrls, setImageUrls] = useState([]); // 수정 중인 레시피의 이미지 URL 리스트
   const [imageIds, setImageIds] = useState([]); // 수정 중인 레시피의 이미지 ID 리스트
+  const [recipeIdExist, setRecipeIdExist] = useState(false);
 
   // 레시피 정보 GET 요청
   const fetchRecipeInfo = async () => {
     try {
-      const json = await getRecipeInfo(recipeId, userData.id);
+      const json = await getRecipeInfo(recipeId);
       setRecipeInfo(json);
       setImageUrls(json.recipeImgs);
       setImageIds(json.recipeImgs);
@@ -120,6 +114,17 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
       setDone(true);
     } catch (error) {
       console.error('Failed to post recipe info:', error);
+    }
+  };
+
+  // 수정한 레시피 정보 PUT 요청
+  const putEdittedRecipe = async () => {
+    try {
+      const response = putRecipeEdit({ recipeInfo, recipeId });
+      console.log(response);
+      setDone(true);
+    } catch (error) {
+      console.error('Failed to put editted recipe:', error);
     }
   };
 
@@ -214,11 +219,7 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
         }
         onBackBtnClick={onBackBtnClick}
         onRightIconClick={
-          mode === 'edit'
-            ? 'doneInRecipeEdit'
-            : mode === 'fork'
-              ? 'doneInRecipeFork'
-              : postNewRecipe
+          mode === 'edit' ? putEdittedRecipe : mode === 'fork' ? 'doneInRecipeFork' : postNewRecipe
         }
       />
       <Container>
