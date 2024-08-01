@@ -1,7 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AppBarWithTitle } from '../../components/AppBar';
-import { Divider, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import {
+  Divider,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Snackbar,
+  Alert,
+} from '@mui/material';
 import { Edit } from '@mui/icons-material';
 import styled from '@emotion/styled';
 import { useRecoilValue } from 'recoil';
@@ -61,7 +70,7 @@ const EditIconContainer = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: ${({ theme }) => theme.palette.primary.main};
-  color: white; // Button icon color
+  color: white;
   &:hover {
     background-color: ${({ theme }) => theme.palette.primary.dark};
   }
@@ -87,21 +96,22 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
   const [category, setCategory] = useState('');
   const [timeError, setTimeError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isValid, setIsValid] = useState(true);
   const [isDone, setDone] = useState(false);
   const [isCookeryModalOpen, setIsCookeryModalOpen] = useState(false);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
-  const [imageUrls, setImageUrls] = useState([]); // 수정 중인 레시피의 이미지 URL 리스트
-  const [imageIds, setImageIds] = useState([]); // 수정 중인 레시피의 이미지 ID 리스트
-  const [recipeIdExist, setRecipeIdExist] = useState(false);
+  const [imageUrls, setImageUrls] = useState([]);
+  const [imageIds, setImageIds] = useState([]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
-  // 레시피 정보 GET 요청
   const fetchRecipeInfo = async () => {
     try {
       const json = await getRecipeInfo(recipeId);
       setRecipeInfo(json);
       setImageUrls(json.recipeImgs);
       setImageIds(json.recipeImgs);
-      setIsLoading(false); // 로딩 상태 해제
+      setIsLoading(false);
     } catch (error) {
       console.error('Failed to fetch recipe info:', error);
     }
@@ -145,7 +155,7 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
       fetchRecipeInfo();
     } else if (mode === 'write') {
       setRecipeInfo(initialRecipe);
-      setIsLoading(false); // 로딩 상태 해제
+      setIsLoading(false);
       console.log(recipeInfo);
     }
   }, []);
@@ -159,12 +169,25 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
         })
       );
       setImageUrls(imageUrls);
-      console.log(imageUrls);
     };
     loadImages();
   }, [imageIds]);
 
   useEffect(() => {
+    if (
+      recipeInfo.recipeImgs.length === 0 ||
+      recipeInfo.recipeContents.length === 0 ||
+      recipeInfo.recipeDetailImgs.length === 0 ||
+      recipeInfo.name === '' ||
+      recipeInfo.description === '' ||
+      recipeInfo.cookingTime === 0 ||
+      recipeInfo.ingredients.length === 0
+    ) {
+      setIsValid(false);
+    } else {
+      setIsValid(true);
+    }
+    console.log(isValid);
     console.log(recipeInfo);
   }, [recipeInfo]);
 
@@ -176,7 +199,23 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
     }
   }, [isDone]);
 
-  // 조건부 렌더링
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  const handleSaveClick = () => {
+    if (isValid) {
+      if (mode === 'edit') {
+        putEdittedRecipe();
+      } else if (mode === 'write') {
+        postNewRecipe();
+      }
+    } else {
+      setSnackbarMessage('입력되지 않은 항목이 있어요!');
+      setSnackbarOpen(true);
+    }
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -196,11 +235,11 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
       <>
         <ImageCard
           mode={'indirect'}
-          initialImageUrls={imageUrls} // 수정: 초기 이미지 URL 리스트
-          initialImageIds={imageIds} // 수정: 초기 이미지 ID 리스트
+          initialImageUrls={imageUrls}
+          initialImageIds={imageIds}
           maxImageCount={3}
-          onCancel={handleCancel} // 수정: 취소 버튼 핸들러
-          onDone={handleDone} // 수정: 확인 버튼 핸들러
+          onCancel={handleCancel}
+          onDone={handleDone}
         />
       </>
     );
@@ -230,9 +269,7 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
               : 'doneInRecipeWrite'
         }
         onBackBtnClick={onBackBtnClick}
-        onRightIconClick={
-          mode === 'edit' ? putEdittedRecipe : mode === 'fork' ? postForkedRecipe : postNewRecipe
-        }
+        onRightIconClick={handleSaveClick}
       />
       <Container>
         <ImageSize>
@@ -385,6 +422,15 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
           setRecipeState={setRecipeInfo}
         />
       </Container>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+        <Alert onClose={handleSnackbarClose} severity="warning" sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 };
