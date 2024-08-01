@@ -13,6 +13,7 @@ import getNfts from '../../apis/Market/getNfts';
 import { getProductHot } from '../../apis/Market/getProduct';
 import { avatarClasses } from '@mui/material';
 import Loading from '../../components/Loading';
+import ComingSoonModal from '../../components/ComingSoonModal';
 
 const Container = styled.div`
   display: flex;
@@ -31,6 +32,17 @@ const Market = () => {
     { url: '/assets/banners/chip.webp', alt: '감자칩 요리 공모전' },
     { url: '/assets/banners/gyoza.webp', alt: '왕교자 요리 공보전' },
   ];
+
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+    setTimeout(() => {
+      setOpen(false);
+    }, 1500); // 2000 milliseconds = 2 seconds
+  };
+
+  const handleClose = () => setOpen(false);
 
   // const [productData, setProductData] = useState({});
   // const [nftDatas, setNftDatas] = useState({});
@@ -146,6 +158,8 @@ const Market = () => {
 
   return (
     <>
+      <ComingSoonModal open={open} onClose={handleClose} />
+
       <AppBarWithLogo />
       <Container>
         <Banner images={bannerImages} />
@@ -164,7 +178,13 @@ const Market = () => {
         </RollCardList>
         <GridCardList title="핫한 상품">
           {productData.list.map((product, index) => (
-            <VCard key={product.id} type="product" product={product} index={index} />
+            <VCard
+              key={product.id}
+              type="product"
+              product={product}
+              index={index}
+              onClick={handleOpen}
+            />
           ))}
         </GridCardList>
       </Container>
