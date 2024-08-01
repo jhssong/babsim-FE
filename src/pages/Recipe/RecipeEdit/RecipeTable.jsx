@@ -15,6 +15,8 @@ import {
   DialogTitle,
   Toolbar,
   Typography,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import { Edit, Delete, Add } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
@@ -23,6 +25,8 @@ const RecipeTable = ({ ingredients, setIngredients }) => {
   const [selectedCount, setSelectedCount] = useState(0);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingIngredient, setEditingIngredient] = useState(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const renumberIngredients = (ingredients) => {
     return ingredients.map((ingredient, index) => ({
@@ -72,6 +76,12 @@ const RecipeTable = ({ ingredients, setIngredients }) => {
   };
 
   const handleDialogSave = () => {
+    if (!editingIngredient.name || !editingIngredient.quantity) {
+      setSnackbarMessage('재료 이름과 개수를 입력해주세요!');
+      setSnackbarOpen(true);
+      return;
+    }
+
     if (editingIngredient.id) {
       // Update existing ingredient
       const updatedIngredients = ingredients.map((ingredient) =>
@@ -107,6 +117,10 @@ const RecipeTable = ({ ingredients, setIngredients }) => {
     setIsDialogOpen(true);
   };
 
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
   useEffect(() => {}, []);
 
   return (
@@ -115,7 +129,7 @@ const RecipeTable = ({ ingredients, setIngredients }) => {
         {selectedCount === 0 ? (
           <Typography variant="h6">재료</Typography>
         ) : (
-          <Typography variant="body" fontWeight="bold">
+          <Typography variant="body1" fontWeight="bold">
             {selectedCount}개가 선택됨
           </Typography>
         )}
@@ -200,6 +214,16 @@ const RecipeTable = ({ ingredients, setIngredients }) => {
           <Button onClick={handleDialogSave}>저장</Button>
         </DialogActions>
       </Dialog>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+        <Alert onClose={handleSnackbarClose} severity="warning" sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
