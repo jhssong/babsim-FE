@@ -98,7 +98,7 @@ export function AppBarWithTitle({ title, rightIcon, onRightIconClick, onBackBtnC
         );
       case 'list':
         return (
-          <IconWrapper onClick={() => navigate('/list')}>
+          <IconWrapper onClick={onRightIconClick}>
             <MenuOutlined />
           </IconWrapper>
         );
