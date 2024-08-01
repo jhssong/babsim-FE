@@ -1,13 +1,12 @@
 import styled from '@emotion/styled';
-
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
-import { useSwipeable } from 'react-swipeable';
 import { HCard } from '../../components/Card';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../../components/Loading';
 import { getRecipeWeek } from '../../apis/Recipe/getRecipe';
+import Slider from 'react-slick';
 
 const WeeklyRecipeContainer = styled.div`
   display: flex;
@@ -15,6 +14,7 @@ const WeeklyRecipeContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
   align-self: stretch;
+  height: 100%;
 `;
 
 const WeeklyRecipeHeader = styled.div`
@@ -23,28 +23,37 @@ const WeeklyRecipeHeader = styled.div`
   justify-content: space-between;
   align-items: flex-end;
   align-self: stretch;
+  margin-bottom: 1rem;
 `;
 
 const WeeklyRecipeContents = styled.div`
   display: flex;
-  padding: 0.5rem var(--none, 0rem);
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
-  gap: 1rem;
+  align-items: center;
   align-self: stretch;
+  width: 100%;
+  height: 100%;
+`;
+
+const SlideBox = styled(Box)`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 `;
 
 const WeeklyRecipe = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [recipesToShow, setRecipesToShow] = useState([]);
+  const [recipesData, setRecipesData] = useState([]);
+
   useEffect(() => {
     const fetchWeeklyRecipe = async () => {
       try {
         const data = await getRecipeWeek();
+        setRecipesData(data);
         setLoading(false);
-        setRecipesToShow(data.slice(pageIndex * 3, pageIndex * 3 + 3));
       } catch (error) {
         setError(error);
         setLoading(false);
@@ -57,41 +66,52 @@ const WeeklyRecipe = () => {
   const today = new Date();
   const formattedDate = format(today, 'yyyy.MM.dd');
 
-  const [pageIndex, setPageIndex] = useState(0); //페이지를 나타내는 변수
   let navigate = useNavigate();
-
-  const handlers = useSwipeable({
-    onSwipedLeft: () => setPageIndex((prevIndex) => Math.min(prevIndex + 1, 4)), // 최대 페이지 인덱스는 4 (0부터 시작해서 5페이지)
-    onSwipedRight: () => setPageIndex((prevIndex) => Math.max(prevIndex - 1, 0)),
-  });
 
   if (loading) return <Loading />;
   if (error) return <div>Error: {error.message}</div>;
 
-  return (
-    <>
-      <WeeklyRecipeContainer>
-        <WeeklyRecipeHeader>
-          <Typography variant="h5" color="subbackground">
-            이번주 레시피
-          </Typography>
-          <Typography variant="caption" color="subbackground">
-            {formattedDate} 기준
-          </Typography>
-        </WeeklyRecipeHeader>
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
 
-        <WeeklyRecipeContents {...handlers}>
-          {recipesToShow.map((recipe, index) => (
-            <HCard
-              key={recipe.id}
-              recipe={recipe}
-              index={pageIndex * 3 + index}
-              onClick={() => navigate(`/recipe/${recipe.id}`)}
-            />
+  const groupedRecipes = [];
+  for (let i = 0; i < recipesData.length; i += 3) {
+    groupedRecipes.push(recipesData.slice(i, i + 3));
+  }
+
+  return (
+    <WeeklyRecipeContainer>
+      <WeeklyRecipeHeader>
+        <Typography variant="h5" color="subbackground">
+          이번주 레시피
+        </Typography>
+        <Typography variant="caption" color="subbackground">
+          {formattedDate} 기준
+        </Typography>
+      </WeeklyRecipeHeader>
+
+      <WeeklyRecipeContents>
+        <Slider {...settings} style={{ width: '100%', height: '100%' }}>
+          {groupedRecipes.map((recipeGroup, groupIndex) => (
+            <SlideBox key={groupIndex}>
+              {recipeGroup.map((recipe, index) => (
+                <HCard
+                  key={recipe.id}
+                  recipe={recipe}
+                  index={groupIndex * 3 + index}
+                  onClick={() => navigate(`/recipe/${recipe.id}`)}
+                />
+              ))}
+            </SlideBox>
           ))}
-        </WeeklyRecipeContents>
-      </WeeklyRecipeContainer>
-    </>
+        </Slider>
+      </WeeklyRecipeContents>
+    </WeeklyRecipeContainer>
   );
 };
 
