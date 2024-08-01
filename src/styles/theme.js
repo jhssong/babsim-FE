@@ -9,6 +9,7 @@ const theme = createTheme({
     },
     seperator: {
       main: orange[100],
+      light: grey[200],
     },
     subbackground: {
       main: grey[400],

@@ -91,13 +91,13 @@ const MyPage = () => {
           <Info title="이름" body={userData.name} />
           <Info title="이메일" body={userData.email} />
           <Info title="직업" body={getJobEnum(userData.job)} />
-          <Info title="잔고" body={userData.point} />
+          <Info title="잔고" body={`${userData.point ? userData.point : 0} tc`} />
         </Box>
         <Box
           sx={{
             width: '100%',
             height: '1rem',
-            backgroundColor: 'seperator.main',
+            backgroundColor: 'seperator.light',
           }}
         />
         <Box
@@ -116,7 +116,7 @@ const MyPage = () => {
           sx={{
             width: '100%',
             height: '1rem',
-            backgroundColor: 'seperator.main',
+            backgroundColor: 'seperator.light',
           }}
         />
         <Box
