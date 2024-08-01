@@ -25,6 +25,7 @@ import getRecipeInfo from '../../apis/Recipe/RecipeInfo/getRecipeInfo';
 import postRecipeWrite from '../../apis/Recipe/RecipeEdit/postRecipeWrite';
 import { getImageFromStorage } from '../../apis/firebase/storage';
 import putRecipeEdit from '../../apis/Recipe/RecipeEdit/putRecipeEdit';
+import postRecipeFork from '../../apis/Recipe/RecipeEdit/postRecipeFork';
 
 // 초기 레시피 데이터 설정
 const initialRecipe = {
@@ -116,6 +117,7 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
     }
   };
 
+  // 새로운 레시피 POST 요청
   const postNewRecipe = async () => {
     try {
       const response = postRecipeWrite({ recipeInfo });
@@ -126,6 +128,7 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
     }
   };
 
+  // 수정한 레시피 PUT 요청
   const putEdittedRecipe = async () => {
     try {
       const response = putRecipeEdit({ recipeInfo, recipeId });
@@ -133,6 +136,17 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
       setDone(true);
     } catch (error) {
       console.error('Failed to put editted recipe:', error);
+    }
+  };
+
+  // 포크한 레시피 POST 요청
+  const postForkedRecipe = async () => {
+    try {
+      const response = postRecipeFork({ recipeInfo, forkedRecipeId: recipeId });
+      console.log(response);
+      setDone(true);
+    } catch (error) {
+      console.error('Failed to post forked recipe:', error);
     }
   };
 
@@ -179,7 +193,7 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
 
   useEffect(() => {
     if (isDone === true) {
-      setState(false);
+      setState(false);  // 모달 닫기
       onComplete(true);
       setDone(false);
     }
