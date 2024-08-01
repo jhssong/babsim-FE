@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AppBarWithTitle } from '../../components/AppBar';
-import { Box, Button, Divider, Typography } from '@mui/material';
+import { Alert, Box, Button, Divider, Snackbar, Typography } from '@mui/material';
 import RecipeInformation, { RecipeInfoImage } from './RecipeInfo/RecipeInformation';
 import AllergyInfo from './RecipeInfo/AllergyInfo';
 import NutritionInfo from './RecipeInfo/NutritionInfo';
@@ -37,6 +37,7 @@ const RecipeInfo = () => {
   const [isForkOpen, setIsForkOpen] = useState(false);
   const [recipeInfo, setRecipeInfo] = useState([]);
   const [cook, setCook] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   // 레시피 정보 GET 요청
   const fetchRecipeInfo = async () => {
@@ -58,6 +59,13 @@ const RecipeInfo = () => {
     setCook(true);
   };
 
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -67,7 +75,14 @@ const RecipeInfo = () => {
   }
 
   if (isForkOpen) {
-    return <RecipeEdit mode="fork" onBackBtnClick={setIsForkOpen} />;
+    return (
+      <RecipeEdit
+        mode="fork"
+        onBackBtnClick={setIsForkOpen}
+        setState={setIsForkOpen}
+        onComplete={setSnackbarOpen}
+      />
+    );
   }
 
   if (cook) {
@@ -77,6 +92,15 @@ const RecipeInfo = () => {
   return (
     <>
       <AppBarWithTitle title="" rightIcon="share" />
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={5000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+        <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+          레시피 포크를 완료했어요!
+        </Alert>
+      </Snackbar>
       <RecipeInfoImage imgs={recipeInfo.recipeImgs} isLoading={isLoading} />
       <RecipeInformation recipeInfo={recipeInfo} isLoading={isLoading} />
       <Divider />

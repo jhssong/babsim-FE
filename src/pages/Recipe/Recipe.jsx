@@ -136,9 +136,9 @@ const Recipe = () => {
           <Container ref={containerRef}>
             <Snackbar
               open={snackbarOpen}
-              autoHideDuration={2000} // 2초 후 자동으로 닫힘
+              autoHideDuration={5000}
               onClose={handleSnackbarClose}
-              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
               <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
                 레시피 등록에 성공했어요!
               </Alert>
