@@ -6,18 +6,20 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logout from '../../apis/Login/logout';
 import { isLoggedInState, isTryingToLoginState, userDataState } from '../../recoil/atoms';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { ArrowForwardIosOutlined } from '@mui/icons-material';
 
 const Container = styled.div`
   display: flex;
   padding: 1rem 0rem;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: calc(100vh - 7rem);
+  justify-content: flex-start;
+  height: calc(100vh - 3rem);
 `;
 
 const MyPage = () => {
+  const userData = useRecoilValue(userDataState);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
   let navigate = useNavigate();
@@ -53,42 +55,94 @@ const MyPage = () => {
     setOpen(true);
   };
 
+  const getJobEnum = (job) => {
+    switch (job) {
+      case 0:
+        return 'STUDENT';
+      case 1:
+        return 'WORKER';
+      case 2:
+        return 'HOUSEWIFE';
+      case 3:
+        return 'SENIOR';
+      default:
+        return 'UNKNOWN';
+    }
+  };
+
   return (
     <>
       <AppBarWithTitle />
       <Container>
+        <img
+          style={{
+            borderRadius: '50%',
+          }}
+          src={userData.img}
+        />
         <Box
           sx={{
             display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
             width: '100%',
             padding: '1rem',
+          }}>
+          <Info title="이름" body={userData.name} />
+          <Info title="이메일" body={userData.email} />
+          <Info title="직업" body={getJobEnum(userData.job)} />
+          <Info title="잔고" body={userData.point} />
+        </Box>
+        <Box
+          sx={{
+            width: '100%',
+            height: '1rem',
+            backgroundColor: 'seperator.main',
+          }}
+        />
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            width: '100%',
+            padding: '1rem',
+          }}>
+          <Typography variant="h6">거래 내역</Typography>
+          <ArrowForwardIosOutlined />
+        </Box>
+        <Box
+          sx={{
+            width: '100%',
+            height: '1rem',
+            backgroundColor: 'seperator.main',
+          }}
+        />
+        <Box
+          sx={{
+            width: '100%',
+            height: '100%',
+            padding: '1rem',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            justifyContent: 'flex-end',
           }}>
           <Button
             variant="contained"
             sx={{
               backgroundColor: 'primary.light',
               width: '100%',
-              height: '100%',
             }}
             onClick={handleLogout}>
             <Typography variant="body1">로그아웃</Typography>
           </Button>
-        </Box>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            width: '100%',
-
-            padding: '1rem',
-          }}>
           <Button
             variant="contained"
             sx={{
               backgroundColor: 'primary.light',
               width: '100%',
-              height: '100%',
             }}
             onClick={handleUnregister}>
             <Typography variant="body1">탈퇴하기</Typography>
@@ -103,6 +157,24 @@ const MyPage = () => {
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       />
     </>
+  );
+};
+
+const Info = ({ title, body }) => {
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        width: '100%',
+        padding: '0.5rem 0rem',
+        justifyContent: 'space-between',
+      }}>
+      <Typography variant="h6">{title}</Typography>
+      <Typography variant="h6" color="primary">
+        {body}
+      </Typography>
+    </Box>
   );
 };
 
