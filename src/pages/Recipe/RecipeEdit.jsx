@@ -209,6 +209,8 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
         putEdittedRecipe();
       } else if (mode === 'write') {
         postNewRecipe();
+      } else if (mode === 'fork') {
+        postForkedRecipe();
       }
     } else {
       setSnackbarMessage('입력되지 않은 항목이 있어요!');
