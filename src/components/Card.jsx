@@ -210,7 +210,11 @@ export const VCard = ({ type, product, index, style, onClick }) => {
           }}>
           {type === 'recipe' ? product.recipeName : product.name}
         </Typography>
-        {type !== 'recipe' ? <Typography variant="body2">{product.price}</Typography> : <></>}
+        {type !== 'recipe' ? (
+          <Typography variant="body2">{product.price.toLocaleString()}원</Typography>
+        ) : (
+          <></>
+        )}
         {type !== 'nft' ? (
           <Rating>
             <Star color="primary" fontSize="small" />

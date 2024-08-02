@@ -1,5 +1,5 @@
 import { createTheme } from '@mui/material';
-import { orange, grey } from '@mui/material/colors';
+import { orange, grey, red, blue } from '@mui/material/colors';
 
 const theme = createTheme({
   palette: {
@@ -13,6 +13,11 @@ const theme = createTheme({
     },
     subbackground: {
       main: grey[400],
+    },
+    transaction: {
+      date: grey[600],
+      plus: red['A700'],
+      minus: blue['A700'],
     },
   },
 });
