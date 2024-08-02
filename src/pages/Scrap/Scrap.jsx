@@ -42,6 +42,7 @@ const Scrap = () => {
           fork: fork,
           my: own,
         };
+        console.log(data);
         setRecipesData(data);
         setLoading(false);
       } catch (error) {
@@ -50,8 +51,8 @@ const Scrap = () => {
       }
     };
 
-    fetchScrap(1);
-    // fetchScrap(userData.id);
+    // fetchScrap(1);
+    fetchScrap(userData.id);
   }, []);
 
   const renderMessage = (value) => {
