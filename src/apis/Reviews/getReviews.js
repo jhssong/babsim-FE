@@ -5,7 +5,7 @@ import { baseURL } from '../api';
 {path} : recipeId
 */
 export default async function getReviews(recipeId) {
-  const url = `${baseURL}/api/reviews/` + recipeId;
+  const url = `${baseURL}/reviews/` + recipeId;
 
   console.log(`getReviews : ${url} and working`);
   const response = await fetch(url, {
