@@ -174,7 +174,12 @@ export const VCard = ({ type, product, index, style, onClick }) => {
       }
     };
 
-    fetchImg(type === 'recipe' ? product.recipeImg : product.img);
+    if (type === 'recipe') {
+      fetchImg(product.recipeImg);
+    } else {
+      setImgUrl(product.img);
+      setLoading(false);
+    }
   }, []);
 
   if (loading) return <Loading />;
@@ -195,7 +200,14 @@ export const VCard = ({ type, product, index, style, onClick }) => {
         ) : (
           <></>
         )}
-        <Typography variant="body1">
+        <Typography
+          variant="body1"
+          sx={{
+            wordBreak: 'break-word',
+            whiteSpace: 'normal',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}>
           {type === 'recipe' ? product.recipeName : product.name}
         </Typography>
         {type !== 'recipe' ? <Typography variant="body2">{product.price}</Typography> : <></>}
