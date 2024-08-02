@@ -8,6 +8,7 @@ import logout from '../../apis/Login/logout';
 import { isLoggedInState, isTryingToLoginState, userDataState } from '../../recoil/atoms';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { ArrowForwardIosOutlined } from '@mui/icons-material';
+import TransactionHis from './TransactionHis';
 
 const Container = styled.div`
   display: flex;
@@ -22,6 +23,7 @@ const MyPage = () => {
   const userData = useRecoilValue(userDataState);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
+  const [transaction, setTransaction] = useState(false);
   let navigate = useNavigate();
   const setIsTryingToLogin = useSetRecoilState(isTryingToLoginState);
   const setUserData = useSetRecoilState(userDataState);
@@ -70,6 +72,10 @@ const MyPage = () => {
     }
   };
 
+  if (transaction) {
+    return <TransactionHis setTransaction={setTransaction} />;
+  }
+
   return (
     <>
       <AppBarWithTitle />
@@ -108,7 +114,8 @@ const MyPage = () => {
             justifyContent: 'space-between',
             width: '100%',
             padding: '1rem',
-          }}>
+          }}
+          onClick={() => setTransaction(true)}>
           <Typography variant="h6">거래 내역</Typography>
           <ArrowForwardIosOutlined />
         </Box>
