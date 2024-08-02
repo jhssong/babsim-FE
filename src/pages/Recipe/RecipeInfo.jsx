@@ -48,7 +48,6 @@ const RecipeInfo = () => {
 
   useEffect(() => {
     fetchRecipeInfo();
-    console.log('recipeInfo에 왔다.');
   }, [recipeId]);
 
   useEffect(() => {

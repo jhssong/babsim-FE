@@ -31,7 +31,7 @@ const RollCardWrapper = styled.div`
   white-space: nowrap;
 
   padding: 0.5rem 0;
-  align-items: center;
+  align-items: flex-start;
   gap: 1rem;
   align-self: stretch;
 
