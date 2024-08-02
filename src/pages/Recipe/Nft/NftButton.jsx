@@ -26,9 +26,21 @@ const NftButton = ({ recipeInfo }) => {
       const response = await postNftCreate({ recipeId: recipeInfo.id, price: price });
       console.log(response);
       setIsCreated(true);
-      setIsOnSale(true);
     } catch (error) {
       console.error('NFT 생성 실패:', error);
+    } finally {
+      setIsLoading(false);
+      handleClose();
+    }
+  };
+
+  // NFT 판매 요청
+  const sellNft = async () => {
+    setIsLoading(true);
+    try {
+      const response = await postNftSaleRegister({ nftId: recipeInfo.id, price: price });
+    } catch (error) {
+      console.error('NFT 판매 실패:', error);
     } finally {
       setIsLoading(false);
       handleClose();
@@ -84,7 +96,7 @@ const NftButton = ({ recipeInfo }) => {
           <Typography variant="body1" gutterBottom>
             {modalMessage}
           </Typography>
-          {!isCreated || !isOnSale ? (
+          {isCreated && !isOnSale ? (
             <TextField
               autoFocus
               margin="dense"
@@ -104,7 +116,7 @@ const NftButton = ({ recipeInfo }) => {
           <Button
             onClick={handleConfirm}
             color="primary"
-            disabled={(!isCreated && !price) || isLoading}>
+            disabled={isLoading}>
             {isLoading ? '생성 중...' : '확인'}
           </Button>
         </DialogActions>
