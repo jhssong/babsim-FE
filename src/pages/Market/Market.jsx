@@ -44,44 +44,49 @@ const Market = () => {
 
   const handleClose = () => setOpen(false);
 
-  // const [productData, setProductData] = useState({});
-  // const [nftDatas, setNftDatas] = useState({});
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState(null);
-  // useEffect(() => {
-  //   const fetchNfts = async () => {
-  //     try {
-  //       const data = await getNfts();
-  //       setNftDatas(data);
-  //     } catch (error) {
-  //       setError(error);
-  //     }
-  //   };
+  const [productData, setProductData] = useState({});
+  const [nftDatas, setNftDatas] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  useEffect(() => {
+    const fetchNfts = async () => {
+      try {
+        const data = await getNfts();
+        setNftDatas(data);
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    };
 
-  //   const fetchProducts = async () => {
-  //     try {
-  //       const data = await getProductHot();
-  //       setNftDatas(data);
-  //     } catch (error) {
-  //       setError(error);
-  //     }
-  //   };
+    const fetchProducts = async () => {
+      try {
+        const data = await getProductHot();
+        setProductData(data);
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    };
 
-  //   const fetchAll = async () => {
-  //     try {
-  //       await fetchNfts();
-  //       await fetchProducts();
-  //       setLoading(false); // setLoading은 비동기 작업이 아니므로 await가 필요 없습니다.
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error);
-  //       setLoading(false); // 에러가 발생해도 로딩 상태를 false로 설정
-  //     }
-  //   };
+    const fetchAll = async () => {
+      try {
+        await fetchNfts();
+        await fetchProducts();
+        setLoading(false); // setLoading은 비동기 작업이 아니므로 await가 필요 없습니다.
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setLoading(false); // 에러가 발생해도 로딩 상태를 false로 설정
+      }
+    };
 
-  //   fetchAll();
-  // }, []);
-  // if (loading) return <Loading />;
-  // if (error) return <div>Error: {error.message}</div>;
+    // fetchAll();
+    fetchProducts();
+  }, []);
+  if (loading) return <Loading />;
+  if (error) return <div>Error: {error.message}</div>;
 
   const nftDates = {
     list: [
@@ -123,38 +128,38 @@ const Market = () => {
     ],
   };
 
-  const productData = {
-    list: [
-      {
-        id: '1',
-        img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
-        name: '시부야 초록 라멘',
-        price: '4,300원',
-        rate: 3.5,
-      },
-      {
-        id: '2',
-        img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
-        name: '도쿄 소유 라멘',
-        price: '5,200원',
-        rate: 4.2,
-      },
-      {
-        id: '3',
-        img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
-        name: '오사카 돈코츠 라멘',
-        price: '5,800원',
-        rate: 4.7,
-      },
-      {
-        id: '4',
-        img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
-        name: '나고야 미소 라멘',
-        price: '4,800원',
-        rate: 4.0,
-      },
-    ],
-  };
+  // const productData = {
+  //   list: [
+  //     {
+  //       id: '1',
+  //       img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
+  //       name: '시부야 초록 라멘',
+  //       price: '4,300원',
+  //       rate: 3.5,
+  //     },
+  //     {
+  //       id: '2',
+  //       img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
+  //       name: '도쿄 소유 라멘',
+  //       price: '5,200원',
+  //       rate: 4.2,
+  //     },
+  //     {
+  //       id: '3',
+  //       img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
+  //       name: '오사카 돈코츠 라멘',
+  //       price: '5,800원',
+  //       rate: 4.7,
+  //     },
+  //     {
+  //       id: '4',
+  //       img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
+  //       name: '나고야 미소 라멘',
+  //       price: '4,800원',
+  //       rate: 4.0,
+  //     },
+  //   ],
+  // };
 
   return (
     <>
@@ -177,7 +182,7 @@ const Market = () => {
           ))}
         </RollCardList>
         <GridCardList title="핫한 상품">
-          {productData.list.map((product, index) => (
+          {productData.map((product, index) => (
             <VCard
               key={product.id}
               type="product"
