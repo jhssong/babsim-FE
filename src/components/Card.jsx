@@ -12,6 +12,7 @@ const RecipeContiner = styled.div`
   gap: 1rem;
   align-self: stretch;
   flex: 1;
+  margin: 0.5rem 0rem;
 `;
 
 const Recipe = styled.div`

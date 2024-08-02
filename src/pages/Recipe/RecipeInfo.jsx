@@ -54,10 +54,6 @@ const RecipeInfo = () => {
     fetchRecipeInfo();
   }, [isReviewMore, isForkOpen]);
 
-  const handleCook = () => {
-    setCook(true);
-  };
-
   const handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -85,7 +81,7 @@ const RecipeInfo = () => {
   }
 
   if (cook) {
-    return <Cook />;
+    return <Cook recipe={recipeInfo} handleBack={() => setCook(false)} />;
   }
 
   return (
@@ -157,7 +153,7 @@ const RecipeInfo = () => {
           }
           variant="contained"
           color="primary"
-          onClick={handleCook}>
+          onClick={() => setCook(true)}>
           <Typography variant="button" fontWeight="bold">
             요리하기
           </Typography>
