@@ -1,4 +1,4 @@
-import { Rating, Typography, Skeleton } from '@mui/material';
+import { Rating, Typography, Skeleton, Box } from '@mui/material';
 import styled from '@emotion/styled';
 import LikeButton from './LikeButton';
 import Slider from 'react-slick';
@@ -6,6 +6,9 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { useEffect, useState } from 'react';
 import { getImageFromStorage } from '../../../apis/firebase/storage';
+import { useRecoilValue } from 'recoil';
+import { userDataState } from '../../../recoil/atoms';
+import NftButton from '../Nft/NftButton';
 
 // 슬라이드 스타일 정의
 const Slide = styled.div`
@@ -22,6 +25,7 @@ const RecipeImageContainer = styled.div`
   width: 100%;
   height: 20%;
   overflow: hidden;
+  position: relative; /* Added to enable absolute positioning within it */
 
   .slick-slide {
     height: 100%;
@@ -63,13 +67,15 @@ export const RecipeInfoImage = ({ imgs, isLoading }) => {
       {isLoading ? (
         <Skeleton variant="rectangular" sx={{ width: '100%', height: '100%' }} />
       ) : (
-        <Slider {...settings}>
-          {images.map((image, idx) => (
-            <Slide key={idx}>
-              <img src={image} alt={`Recipe image ${idx + 1}`} />
-            </Slide>
-          ))}
-        </Slider>
+        <>
+          <Slider {...settings}>
+            {images.map((image, idx) => (
+              <Slide key={idx}>
+                <img src={image} alt={`Recipe image ${idx + 1}`} />
+              </Slide>
+            ))}
+          </Slider>
+        </>
       )}
     </RecipeImageContainer>
   );
@@ -105,6 +111,7 @@ const RatingLine = styled.div`
 
 // RecipeInformation 컴포넌트
 const RecipeInformation = ({ recipeInfo, isLoading }) => {
+  const userData = useRecoilValue(userDataState);
 
   const getDifficultyLabel = (difficulty) => {
     switch (difficulty) {
@@ -148,6 +155,11 @@ const RecipeInformation = ({ recipeInfo, isLoading }) => {
             <Rating name="read-only" value={recipeInfo.rate} size="small" readOnly />
             <Typography variant="caption">{getDifficultyLabel(recipeInfo.difficulty)}</Typography>
             <Typography variant="caption">요리 시간 {recipeInfo.cookingTime / 60}분</Typography>
+            {/* {recipeInfo.creatorId == userData.id ? ( */}
+            <Box sx={{ ml: 'auto' }}>
+              <NftButton id="nftBtn" recipeInfo={recipeInfo} createdNft={true} />
+            </Box>
+            {/* ) : null} */}
           </>
         )}
       </RatingLine>
@@ -155,13 +167,15 @@ const RecipeInformation = ({ recipeInfo, isLoading }) => {
         <Skeleton variant="text" width="100%" height={20} />
       ) : recipeInfo.tags === null ? null : (
         recipeInfo.tags.map((tag) => (
-          <Typography
-            variant="caption"
-            color="textSecondary"
-            key={tag}
-            sx={{ paddingRight: '0.25rem' }}>
-            #{tag}
-          </Typography>
+          <>
+            <Typography
+              variant="caption"
+              color="textSecondary"
+              key={tag}
+              sx={{ paddingRight: '0.25rem' }}>
+              #{tag}
+            </Typography>
+          </>
         ))
       )}
     </Container>
