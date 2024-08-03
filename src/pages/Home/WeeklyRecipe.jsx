@@ -14,7 +14,6 @@ const WeeklyRecipeContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
   align-self: stretch;
-  height: 100%;
 `;
 
 const WeeklyRecipeHeader = styled.div`

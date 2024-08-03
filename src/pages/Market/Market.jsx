@@ -11,9 +11,9 @@ import { VCard } from '../../components/Card';
 import { useEffect, useState } from 'react';
 import getNfts from '../../apis/Market/getNfts';
 import { getProductHot } from '../../apis/Market/getProduct';
-import { avatarClasses } from '@mui/material';
 import Loading from '../../components/Loading';
 import ComingSoonModal from '../../components/ComingSoonModal';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   display: flex;
@@ -34,6 +34,7 @@ const Market = () => {
   ];
 
   const [open, setOpen] = useState(false);
+  let navigate = useNavigate();
 
   const handleOpen = () => {
     setOpen(true);
@@ -45,20 +46,20 @@ const Market = () => {
   const handleClose = () => setOpen(false);
 
   const [productData, setProductData] = useState({});
-  const [nftDatas, setNftDatas] = useState({});
+  // const [nftDatas, setNftDatas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   useEffect(() => {
-    const fetchNfts = async () => {
-      try {
-        const data = await getNfts();
-        setNftDatas(data);
-        setLoading(false);
-      } catch (error) {
-        setError(error);
-        setLoading(false);
-      }
-    };
+    // const fetchNfts = async () => {
+    //   try {
+    //     const data = await getNfts();
+    //     setNftDatas(data);
+    //     setLoading(false);
+    //   } catch (error) {
+    //     setError(error);
+    //     setLoading(false);
+    //   }
+    // };
 
     const fetchProducts = async () => {
       try {
@@ -71,96 +72,30 @@ const Market = () => {
       }
     };
 
-    const fetchAll = async () => {
-      try {
-        await fetchNfts();
-        await fetchProducts();
-        setLoading(false); // setLoading은 비동기 작업이 아니므로 await가 필요 없습니다.
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setLoading(false); // 에러가 발생해도 로딩 상태를 false로 설정
-      }
-    };
-
-    // fetchAll();
     fetchProducts();
+    // fetchNfts();
   }, []);
   if (loading) return <Loading />;
   if (error) return <div>Error: {error.message}</div>;
 
-  const nftDates = {
+  const nftDatas = {
     list: [
       {
-        id: 'NFT001',
-        img: 'https://img.khan.co.kr/news/2023/05/12/news-p.v1.20230512.e5fffd99806f4dcabd8426d52788f51a_P1.png',
-        recipeID: 'recipe001',
-        name: 'Delicious Spaghetti NFT',
-        price: '10.00 ETH',
+        nftId: 1,
+        uri: 'f4308714-b5d4-49f2-a575-e72212621b3b',
+        recipeId: 6,
+        recipeName: '누구나 맛있게 만들수 있는 김치볶음밥',
+        price: 1000.0,
       },
       {
-        id: 'NFT002',
-        img: 'https://img.khan.co.kr/news/2023/05/12/news-p.v1.20230512.e5fffd99806f4dcabd8426d52788f51a_P1.png',
-        recipeID: 'recipe002',
-        name: 'Tasty Burger NFT',
-        price: '12.50 ETH',
-      },
-      {
-        id: 'NFT003',
-        img: 'https://img.khan.co.kr/news/2023/05/12/news-p.v1.20230512.e5fffd99806f4dcabd8426d52788f51a_P1.png',
-        recipeID: 'recipe003',
-        name: 'Yummy Sushi NFT',
-        price: '15.00 ETH',
-      },
-      {
-        id: 'NFT004',
-        img: 'https://img.khan.co.kr/news/2023/05/12/news-p.v1.20230512.e5fffd99806f4dcabd8426d52788f51a_P1.png',
-        recipeID: 'recipe004',
-        name: 'Hearty Salad NFT',
-        price: '8.75 ETH',
-      },
-      {
-        id: 'NFT005',
-        img: 'https://img.khan.co.kr/news/2023/05/12/news-p.v1.20230512.e5fffd99806f4dcabd8426d52788f51a_P1.png',
-        recipeID: 'recipe005',
-        name: 'Sweet Dessert NFT',
-        price: '11.25 ETH',
+        nftId: 2,
+        uri: 'e7821fd7-c710-4386-84a5-c19e7dd675a9',
+        recipeId: 7,
+        recipeName: '비엔나 만두 강정',
+        price: 1000.0,
       },
     ],
   };
-
-  // const productData = {
-  //   list: [
-  //     {
-  //       id: '1',
-  //       img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
-  //       name: '시부야 초록 라멘',
-  //       price: '4,300원',
-  //       rate: 3.5,
-  //     },
-  //     {
-  //       id: '2',
-  //       img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
-  //       name: '도쿄 소유 라멘',
-  //       price: '5,200원',
-  //       rate: 4.2,
-  //     },
-  //     {
-  //       id: '3',
-  //       img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
-  //       name: '오사카 돈코츠 라멘',
-  //       price: '5,800원',
-  //       rate: 4.7,
-  //     },
-  //     {
-  //       id: '4',
-  //       img: 'https://img.japankuru.com/prg_img/thumbnail1/img2023101812515081589300.jpg',
-  //       name: '나고야 미소 라멘',
-  //       price: '4,800원',
-  //       rate: 4.0,
-  //     },
-  //   ],
-  // };
-
   return (
     <>
       <ComingSoonModal open={open} onClose={handleClose} />
@@ -169,15 +104,16 @@ const Market = () => {
       <Container>
         <Banner images={bannerImages} />
         <RollCardList title="NFT 상품">
-          {nftDates.list.map((nft, index) => (
+          {nftDatas.list.map((nft, index) => (
             <VCard
               key={nft.id}
               type="nft"
               product={nft}
               index={index}
               style={{
-                marginRight: index === nftDates.list.length - 1 ? '1rem' : '0',
+                marginRight: index === nftDatas.length - 1 ? '1rem' : '0',
               }}
+              onClick={() => navigate(`/recipe/${nft.recipeId}`)}
             />
           ))}
         </RollCardList>

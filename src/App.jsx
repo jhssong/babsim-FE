@@ -15,7 +15,6 @@ import Scrap from './pages/Scrap/Scrap';
 import Search from './pages/Search/Search';
 import RecipeInfo from './pages/Recipe/RecipeInfo';
 import Cart from './pages/Market/Cart';
-import Product from './pages/Market/Product';
 import NotFound from './pages/Error/NotFound';
 import RecipeEdit from './pages/Recipe/RecipeEdit';
 import UserInfoSetting from './pages/Login/UserInfoSetting';
@@ -92,7 +91,6 @@ function App() {
           />
           <Route path="/market" element={<Market />} />
           <Route path="/cart" element={<ProtectedRoute path={<Cart />} />} />
-          {/* <Route path="/product/:productId" element={<Product />} />  만들어놨는데, 송재훈이 몰?루 시전...*/}
           <Route path="/recipe" element={<Recipe />} />
           <Route path="/recipe/:recipeId" element={<RecipeInfo />} />
           {/* 로그인 때문에 잠시 주석 처리 <Route path="/recipe/edit/:recipeId" element={<ProtectedRoute path={<RecipeEdit />} />} /> */}
