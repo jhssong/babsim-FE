@@ -159,6 +159,11 @@ const ProductInfo = styled.div`
   align-self: stretch;
   width: 100%;
 `;
+/**
+ *
+ * @param {*} type - nft, recipe, prouct
+ * @returns
+ */
 export const VCard = ({ type, product, index, style, onClick }) => {
   const [imgUrl, setImgUrl] = useState('');
   const [loading, setLoading] = useState(true);
@@ -178,8 +183,11 @@ export const VCard = ({ type, product, index, style, onClick }) => {
 
     if (type === 'recipe') {
       fetchImg(product.recipeImg);
-    } else {
+    } else if (type === 'product') {
       setImgUrl(product.img);
+      setLoading(false);
+    } else {
+      fetchImg(product.uri);
       setLoading(false);
     }
   }, []);
@@ -213,10 +221,13 @@ export const VCard = ({ type, product, index, style, onClick }) => {
             overflow: 'hidden',
             textOverflow: 'ellipsis',
           }}>
-          {type === 'recipe' ? product.recipeName : product.name}
+          {type !== 'product' ? product.recipeName : product.name}
         </Typography>
         {type !== 'recipe' ? (
-          <Typography variant="body2">{product.price.toLocaleString()}원</Typography>
+          <Typography variant="body2">
+            {product.price.toLocaleString()}
+            {type === 'product' ? ' 원' : ' tc'}
+          </Typography>
         ) : (
           <></>
         )}

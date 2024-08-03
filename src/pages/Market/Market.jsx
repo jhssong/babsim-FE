@@ -46,22 +46,20 @@ const Market = () => {
   const handleClose = () => setOpen(false);
 
   const [productData, setProductData] = useState({});
-  const [nftDatas, setNftDatas] = useState({});
+  // const [nftDatas, setNftDatas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   useEffect(() => {
-    const fetchNfts = async () => {
-      try {
-        const data = await getNfts();
-        setNftDatas(data);
-        setLoading(false);
-        console.log('data:', data);
-      } catch (error) {
-        console.log('error nfts:', error);
-        setError(error);
-        setLoading(false);
-      }
-    };
+    // const fetchNfts = async () => {
+    //   try {
+    //     const data = await getNfts();
+    //     setNftDatas(data);
+    //     setLoading(false);
+    //   } catch (error) {
+    //     setError(error);
+    //     setLoading(false);
+    //   }
+    // };
 
     const fetchProducts = async () => {
       try {
@@ -69,58 +67,35 @@ const Market = () => {
         setProductData(data);
         setLoading(false);
       } catch (error) {
-        console.log('error product:', error);
         setError(error);
         setLoading(false);
       }
     };
 
     fetchProducts();
-    fetchNfts();
+    // fetchNfts();
   }, []);
   if (loading) return <Loading />;
   if (error) return <div>Error: {error.message}</div>;
 
-  // const nftDates = {
-  //   list: [
-  //     {
-  //       id: 'NFT001',
-  //       img: 'https://img.khan.co.kr/news/2023/05/12/news-p.v1.20230512.e5fffd99806f4dcabd8426d52788f51a_P1.png',
-  //       recipeID: 'recipe001',
-  //       name: 'Delicious Spaghetti NFT',
-  //       price: '10.00 ETH',
-  //     },
-  //     {
-  //       id: 'NFT002',
-  //       img: 'https://img.khan.co.kr/news/2023/05/12/news-p.v1.20230512.e5fffd99806f4dcabd8426d52788f51a_P1.png',
-  //       recipeID: 'recipe002',
-  //       name: 'Tasty Burger NFT',
-  //       price: '12.50 ETH',
-  //     },
-  //     {
-  //       id: 'NFT003',
-  //       img: 'https://img.khan.co.kr/news/2023/05/12/news-p.v1.20230512.e5fffd99806f4dcabd8426d52788f51a_P1.png',
-  //       recipeID: 'recipe003',
-  //       name: 'Yummy Sushi NFT',
-  //       price: '15.00 ETH',
-  //     },
-  //     {
-  //       id: 'NFT004',
-  //       img: 'https://img.khan.co.kr/news/2023/05/12/news-p.v1.20230512.e5fffd99806f4dcabd8426d52788f51a_P1.png',
-  //       recipeID: 'recipe004',
-  //       name: 'Hearty Salad NFT',
-  //       price: '8.75 ETH',
-  //     },
-  //     {
-  //       id: 'NFT005',
-  //       img: 'https://img.khan.co.kr/news/2023/05/12/news-p.v1.20230512.e5fffd99806f4dcabd8426d52788f51a_P1.png',
-  //       recipeID: 'recipe005',
-  //       name: 'Sweet Dessert NFT',
-  //       price: '11.25 ETH',
-  //     },
-  //   ],
-  // };
-
+  const nftDatas = {
+    list: [
+      {
+        nftId: 1,
+        uri: 'f4308714-b5d4-49f2-a575-e72212621b3b',
+        recipeId: 6,
+        recipeName: '누구나 맛있게 만들수 있는 김치볶음밥',
+        price: 1000.0,
+      },
+      {
+        nftId: 2,
+        uri: 'e7821fd7-c710-4386-84a5-c19e7dd675a9',
+        recipeId: 7,
+        recipeName: '비엔나 만두 강정',
+        price: 1000.0,
+      },
+    ],
+  };
   return (
     <>
       <ComingSoonModal open={open} onClose={handleClose} />
@@ -129,7 +104,7 @@ const Market = () => {
       <Container>
         <Banner images={bannerImages} />
         <RollCardList title="NFT 상품">
-          {nftDatas.map((nft, index) => (
+          {nftDatas.list.map((nft, index) => (
             <VCard
               key={nft.id}
               type="nft"
@@ -138,7 +113,7 @@ const Market = () => {
               style={{
                 marginRight: index === nftDatas.length - 1 ? '1rem' : '0',
               }}
-              onClick={() => navigate(`/recipe/:${nft.recipeId}`)}
+              onClick={() => navigate(`/recipe/${nft.recipeId}`)}
             />
           ))}
         </RollCardList>
