@@ -35,10 +35,6 @@ const RecommendedProduct = () => {
     fetchRecommendedProduct();
   }, []);
 
-  useEffect(() => {
-    console.log(productData); // productData가 업데이트될 때마다 로그
-  }, [productData]);
-
   if (loading) return <Loading />;
   if (error) return <div>Error: {error.message}</div>;
 

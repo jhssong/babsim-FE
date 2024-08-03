@@ -23,9 +23,11 @@ export function resetLoginStorage() {
 }
 
 export function setSearchHistory(history) {
-  localStorage.setItem('searchHistory', history);
+  console.log('setSearchHistory', history);
+  console.log('setSearchHistoryJSON', JSON.stringify(history));
+  localStorage.setItem('searchHistory', JSON.stringify(history));
 }
 
 export function getSearchHistory() {
-  return localStorage.getItem('searchHistory');
+  return JSON.parse(localStorage.getItem('searchHistory'));
 }
