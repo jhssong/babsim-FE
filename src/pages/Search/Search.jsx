@@ -31,7 +31,7 @@ const Search = () => {
   }, []);
 
   useEffect(() => {
-    searchValue !== '' && setSearchLog([searchValue, ...searchLog]);
+    searchValue !== '' && setSearchLog((prev) => [searchValue, ...(prev || [])]);
   }, [searchValue]);
 
   useEffect(() => {
@@ -46,9 +46,7 @@ const Search = () => {
       ) : (
         <Container>
           <SearchBar setSearchValue={setSearchValue} />
-          {searchLog.length > 0 && (
-            <SearchLog setSearchValue={setSearchValue} searchLog={searchLog} />
-          )}
+          {searchLog && <SearchLog setSearchValue={setSearchValue} searchLog={searchLog} />}
           <PopularSearch setSearchValue={setSearchValue} />
         </Container>
       )}
