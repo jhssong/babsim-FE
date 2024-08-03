@@ -101,7 +101,7 @@ const UserAllergySetting = () => {
       />
       <AllergyReqWrapper>
         <WidthFill>
-          <Typography variant="h6">알러지 정보를 선택해주세요.</Typography>
+          <Typography variant="h6">알레르기 정보를 선택해주세요.</Typography>
         </WidthFill>
         <Divider40 />
         <List dense sx={{ width: '100%', bgcolor: 'background.paper' }}>
