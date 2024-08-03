@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { AppBarWithTitle } from '../../components/AppBar';
 import {
   Divider,
@@ -10,6 +10,8 @@ import {
   TextField,
   Snackbar,
   Alert,
+  CircularProgress,
+  Backdrop,
 } from '@mui/material';
 import { Edit } from '@mui/icons-material';
 import styled from '@emotion/styled';
@@ -105,12 +107,21 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
+  const navigate = useNavigate();
+
   const fetchRecipeInfo = async (userId) => {
     try {
       const json = await getRecipeInfo({ recipeId, userId });
       setRecipeInfo(json);
       setImageUrls(json.recipeImgs);
       setImageIds(json.recipeImgs);
+
+      if (mode === 'edit' && json.creatorId !== userId.userId) {
+        alert('작성자만 수정할 수 있어요!');
+        navigate('/recipe/' + recipeId);
+        return;
+      }
+
       setIsLoading(false);
     } catch (error) {
       console.error('Failed to fetch recipe info:', error);
@@ -130,12 +141,15 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
 
   // 수정한 레시피 PUT 요청
   const putEdittedRecipe = async (userId) => {
+    setIsLoading(true);
     try {
-      const response = putRecipeEdit({ recipeInfo, creatorId: userData.id, recipeId });
+      const response = await putRecipeEdit({ recipeInfo, creatorId: userData.id, recipeId });
       console.log(response);
       setDone(true);
     } catch (error) {
       console.error('Failed to put editted recipe:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -197,9 +211,13 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
 
   useEffect(() => {
     if (isDone === true) {
-      setState(false); // 모달 닫기
-      onComplete(true);
-      setDone(false);
+      if (mode === 'edit') {
+        navigate('/recipe/' + recipeId);
+      } else {
+        setState(false); // 모달 닫기
+        onComplete(true);
+        setDone(false);
+      }
     }
   }, [isDone]);
 
@@ -223,7 +241,11 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <Backdrop open={true} sx={{ color: '#fff', zIndex: 10000 }}>
+        <CircularProgress variantcolor="primary" />
+      </Backdrop>
+    );
   }
 
   if (isImageModalOpen) {

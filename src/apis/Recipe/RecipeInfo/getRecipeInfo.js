@@ -8,6 +8,7 @@ import { baseURL } from '../../api';
 export default async function getRecipeInfo({ recipeId, memberId }) {
   let url = `${baseURL}/recipes/` + recipeId;
 
+  console.log('memberid:', memberId);
   if (memberId) {
     const queryParams = new URLSearchParams({ memberId });
     url += '?' + queryParams.toString();

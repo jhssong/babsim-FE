@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { AppBarWithTitle } from '../../components/AppBar';
-import { Alert, Box, Button, Divider, Snackbar, Typography } from '@mui/material';
+import { Alert, Backdrop, Box, Button, CircularProgress, Divider, Snackbar, Typography } from '@mui/material';
 import RecipeInformation, { RecipeInfoImage } from './RecipeInfo/RecipeInformation';
 import AllergyInfo from './RecipeInfo/AllergyInfo';
 import NutritionInfo from './RecipeInfo/NutritionInfo';
@@ -49,7 +49,7 @@ const RecipeInfo = () => {
 
   // 레시피 정보 GET 요청
   const fetchRecipeInfo = async (userId) => {
-    const json = await getRecipeInfo({ recipeId, userId });
+    const json = await getRecipeInfo({ recipeId, memberId: userId });
     setRecipeInfo(json);
     setIsLoading(false);
   };
@@ -57,7 +57,6 @@ const RecipeInfo = () => {
   useEffect(() => {
     if (userData !== null && userData !== undefined) {
       fetchRecipeInfo(userData.id);
-      console.log(userData.id);
     }
   }, [recipeId, userData]);
 
@@ -75,7 +74,11 @@ const RecipeInfo = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <Backdrop open={true} sx={{ color: '#fff', zIndex: 10000 }}>
+        <CircularProgress variantcolor="primary" />
+      </Backdrop>
+    );
   }
 
   if (isReviewMore) {
