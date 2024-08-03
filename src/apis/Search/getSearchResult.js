@@ -1,7 +1,8 @@
 import { baseURL } from '../api';
 
-export async function getPopularKeywords() {
-  const url = new URL(`${baseURL}/keywords/popular`);
+export async function getSearchResult(keyword) {
+  const url = new URL(`${baseURL}/recipes`);
+  url.searchParams.append('keyword', keyword);
   const response = await fetch(url, {
     method: 'GET',
     headers: {

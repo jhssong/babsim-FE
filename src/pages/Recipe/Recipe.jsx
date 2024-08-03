@@ -101,6 +101,7 @@ const Recipe = () => {
   const filteredRecipes = (recipesData[category] || []).filter((recipe) => {
     if (!allergy) return true; // 알레르기 필터링을 사용하지 않는 경우
     if (!recipe.allergies) return true; // allergies 속성이 없는 경우 필터에서 제외하지 않음
+    if (!isLoggined) return true;
     return !recipe.allergies.some((allergy) => userData.allergies.includes(allergy));
   });
 
@@ -162,7 +163,7 @@ const Recipe = () => {
                 sx={{
                   borderRadius: '4rem',
                   position: 'fixed',
-                  bottom: '8rem',
+                  bottom: '6rem',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.5rem',
