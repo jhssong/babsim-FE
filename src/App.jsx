@@ -50,7 +50,7 @@ function App() {
         const userData = await getMember(getLoginToken());
         setUserData(userData);
         setIsLoggedIn(true);
-        //navigate('/');
+        navigate('/');
       } catch (error) {
         console.error(error);
         navigate('/login');
@@ -62,7 +62,7 @@ function App() {
         const userData = await getMember(getLoginToken());
         setUserData(userData);
         setIsLoggedIn(true);
-        //navigate('/');
+        navigate('/');
       } catch (error) {
         console.error(error);
         navigate('/login');
