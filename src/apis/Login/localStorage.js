@@ -21,3 +21,11 @@ export function resetLoginStorage() {
   localStorage.clear(loggedInPlatformKey);
   localStorage.clear(loginTokenKey);
 }
+
+export function setSearchHistory(history) {
+  localStorage.setItem('searchHistory', history);
+}
+
+export function getSearchHistory() {
+  return localStorage.getItem('searchHistory');
+}
