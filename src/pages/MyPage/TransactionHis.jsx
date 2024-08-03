@@ -39,10 +39,6 @@ const TransactionHis = ({ setTransaction }) => {
     fetchTransaction(userData.id);
   }, []);
 
-  useEffect(() => {
-    console.log(logData);
-  }, [logData]);
-
   // const logData = [
   //   {
   //     id: 1,
@@ -78,21 +74,21 @@ const TransactionHis = ({ setTransaction }) => {
   //     pointContent: '판매',
   //     pointPrice: 800,
   //     pointType: 'SELL',
-  //     transactionDate: '2024-08-05T14:50:00.000000',
+  //     transactionDate: '2024-08-05T14:50:00.23424',
   //   },
   //   {
   //     id: 6,
   //     pointContent: '쿠폰 사용',
   //     pointPrice: 150,
   //     pointType: 'DISCOUNT',
-  //     transactionDate: '2024-08-06T09:15:00.000000',
+  //     transactionDate: '2024-08-09T09:15:00.000000',
   //   },
   //   {
   //     id: 7,
   //     pointContent: '이벤트 참여',
   //     pointPrice: 700,
   //     pointType: 'REWARD',
-  //     transactionDate: '2024-08-06T09:15:00.000000',
+  //     transactionDate: '2024-08-06T09:15:00.123412',
   //   },
   //   {
   //     id: 8,
@@ -178,7 +174,9 @@ const TransactionHis = ({ setTransaction }) => {
                   width: '100%',
                   gap: '0.5rem',
                 }}>
-                {index === 0 || log.transactionDate !== logData[index - 1].transactionDate ? (
+                {index === 0 ||
+                formatDate(log.transactionDate) !==
+                  formatDate(logData[index - 1].transactionDate) ? (
                   <Typography variant="body2" sx={{ color: 'transaction.date' }}>
                     {formatDate(log.transactionDate)}
                   </Typography>
