@@ -6,7 +6,7 @@ NFT 판매 등록 API
 @price(BigDecimal) 판매 가격
 */
 export default async function postNftSaleRegister({ recipeId, price }) {
-  let url = `${baseURL}/api/nft/saleNft`;
+  let url = `${baseURL}/nft/saleNft`;
   const queryParams = new URLSearchParams({ recipeId, price });
   url += `?${queryParams.toString()}`;
 

@@ -38,7 +38,11 @@ const NftButton = ({ recipeInfo }) => {
   const createNft = async () => {
     setIsLoading(true);
     try {
-      const response = await postNftCreate({ recipeId: recipeInfo.id, price });
+      const response = await postNftCreate({
+        recipeId: recipeInfo.id,
+        memberId: userData.id,
+        price,
+      });
       console.log(response);
       setIsCreated(true);
     } catch (error) {
@@ -53,7 +57,7 @@ const NftButton = ({ recipeInfo }) => {
   const sellNft = async () => {
     setIsLoading(true);
     try {
-      const response = await postNftSaleRegister({ nftId: recipeInfo.id, price });
+      const response = await postNftSaleRegister({ recipeId: recipeInfo.id, price });
       console.log(response);
     } catch (error) {
       console.error('NFT 판매 실패:', error);
@@ -135,7 +139,7 @@ const NftButton = ({ recipeInfo }) => {
         setIsBtnHidden(true);
       } else {
         setButtonState({
-          Icon: Add,
+          Icon: ShoppingBag,
           buttonText: 'NFT 판매하기',
           modalTitle: 'NFT 판매 확인',
           modalMessage: 'NFT를 판매하시겠습니까? 가격을 설정하세요!',

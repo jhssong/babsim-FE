@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { AppBarWithTitle } from '../../components/AppBar';
 import { Alert, Box, Button, Divider, Snackbar, Typography } from '@mui/material';
 import RecipeInformation, { RecipeInfoImage } from './RecipeInfo/RecipeInformation';
@@ -8,7 +8,7 @@ import NutritionInfo from './RecipeInfo/NutritionInfo';
 import IngredientInfo from './RecipeInfo/IngredientInfo';
 import CookeryInfo from './RecipeInfo/CookeryInfo';
 import ReviewInfo from './RecipeInfo/ReviewInfo';
-import { CallSplitOutlined, LocalDiningOutlined } from '@mui/icons-material';
+import { CallSplitOutlined, Edit, LocalDiningOutlined } from '@mui/icons-material';
 import styled from '@emotion/styled';
 import RecipeReviews from './RecipeReviews';
 import RecipeEdit from './RecipeEdit';
@@ -19,15 +19,19 @@ import { userDataState } from '../../recoil/atoms';
 
 const BottomContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 1rem;
   margin: 1rem;
   padding-inline: 1rem;
 
-  button:nth-child(1) {
-    width: 42%;
+  #editBtn {
+    width: 5%;
   }
-  button:nth-child(2) {
-    width: 55%;
+  #forkBtn {
+    width: 30%;
+  }
+  #cookBtn {
+    width: 50%;
   }
 `;
 
@@ -53,6 +57,7 @@ const RecipeInfo = () => {
   useEffect(() => {
     if (userData !== null && userData !== undefined) {
       fetchRecipeInfo(userData.id);
+      console.log(userData.id);
     }
   }, [recipeId, userData]);
 
@@ -129,6 +134,7 @@ const RecipeInfo = () => {
       <Divider />
       <BottomContainer>
         <Button
+          id="forkBtn"
           onClick={() => setIsForkOpen(true)}
           startIcon={
             <CallSplitOutlined
@@ -148,6 +154,7 @@ const RecipeInfo = () => {
           </Typography>
         </Button>
         <Button
+          id="cookBtn"
           startIcon={
             <LocalDiningOutlined
               sx={{
@@ -166,6 +173,25 @@ const RecipeInfo = () => {
             요리하기
           </Typography>
         </Button>
+        {userData.id === recipeInfo.creatorId && (
+          <Button
+            id="editBtn"
+            component={Link}
+            to={`/recipe/edit/${recipeInfo.id}`}
+            variant="outlined"
+            color="primary"
+            sx={{ maxWidth: '1rem' }}>
+            <Edit
+              sx={{
+                minWidth: 'auto',
+                minHeight: 'auto',
+                padding: 0,
+                width: '32px',
+                height: '32px',
+              }}
+            />
+          </Button>
+        )}
       </BottomContainer>
     </>
   );
