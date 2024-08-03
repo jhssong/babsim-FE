@@ -205,6 +205,9 @@ export const VCard = ({ type, product, index, style, onClick }) => {
         <Typography
           variant="body1"
           sx={{
+            display: '-webkit-box',
+            WebkitBoxOrient: 'vertical',
+            WebkitLineClamp: 2,
             wordBreak: 'break-word',
             whiteSpace: 'normal',
             overflow: 'hidden',
