@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Fab,
   Typography,
@@ -11,19 +11,34 @@ import {
 } from '@mui/material';
 import { RemoveShoppingCart, ShoppingBag, Add } from '@mui/icons-material';
 import postNftCreate from '../../../apis/NFT/postNftCreate';
+import postNftSaleRegister from '../../../apis/NFT/postNftSaleRegister';
+import deleteNft from '../../../apis/NFT/deleteNft';
+import postNftPurchase from '../../../apis/NFT/postNftPurchase';
+import { useRecoilValue } from 'recoil';
+import { userDataState } from '../../../recoil/atoms';
 
 const NftButton = ({ recipeInfo }) => {
+  const userData = useRecoilValue(userDataState);
+
   const [isLoading, setIsLoading] = useState(false);
   const [isCreated, setIsCreated] = useState(recipeInfo.nftCreateStatus); // NFT 생성 여부
   const [isOnSale, setIsOnSale] = useState(recipeInfo.nftSaleStatus); // NFT 판매 여부
   const [open, setOpen] = useState(false); // 모달 열림 상태
   const [price, setPrice] = useState(''); // 가격 입력 상태
+  const [isBtnHidden, setIsBtnHidden] = useState(false); // 버튼 숨김 여부
+  const [buttonState, setButtonState] = useState({
+    Icon: null,
+    buttonText: '',
+    modalTitle: '',
+    modalMessage: '',
+  });
+  const [handleConfirm, setHandleConfirm] = useState(() => () => {}); // 버튼 클릭 핸들러
 
   // NFT 생성 요청
   const createNft = async () => {
     setIsLoading(true);
     try {
-      const response = await postNftCreate({ recipeId: recipeInfo.id, price: price });
+      const response = await postNftCreate({ recipeId: recipeInfo.id, price });
       console.log(response);
       setIsCreated(true);
     } catch (error) {
@@ -38,9 +53,38 @@ const NftButton = ({ recipeInfo }) => {
   const sellNft = async () => {
     setIsLoading(true);
     try {
-      const response = await postNftSaleRegister({ nftId: recipeInfo.id, price: price });
+      const response = await postNftSaleRegister({ nftId: recipeInfo.id, price });
+      console.log(response);
     } catch (error) {
       console.error('NFT 판매 실패:', error);
+    } finally {
+      setIsLoading(false);
+      handleClose();
+    }
+  };
+
+  // NFT 판매 중단 요청
+  const stopSellNft = async () => {
+    setIsLoading(true);
+    try {
+      const response = await deleteNft({ recipeId: recipeInfo.id });
+      console.log(response);
+    } catch (error) {
+      console.error('NFT 판매 중단 실패:', error);
+    } finally {
+      setIsLoading(false);
+      handleClose();
+    }
+  };
+
+  // NFT 구매 요청
+  const purchaseNft = async () => {
+    setIsLoading(true);
+    try {
+      const response = await postNftPurchase({ recipeId: recipeInfo.id, memberId: userData.id });
+      console.log(response);
+    } catch (error) {
+      console.error('NFT 구매 실패:', error);
     } finally {
       setIsLoading(false);
       handleClose();
@@ -55,25 +99,55 @@ const NftButton = ({ recipeInfo }) => {
     setOpen(false);
   };
 
-  const handleConfirm = () => {
+  useEffect(() => {
     if (!isCreated) {
-      // NFT 생성 요청
-      createNft();
+      if (recipeInfo.creatorId !== userData.id) {
+        setIsBtnHidden(true);
+      } else {
+        setButtonState({
+          Icon: Add,
+          buttonText: 'NFT 생성하기',
+          modalTitle: 'NFT 생성 확인',
+          modalMessage: 'NFT를 생성하시겠습니까?',
+        });
+        setHandleConfirm(() => createNft);
+      }
+    } else if (isOnSale) {
+      if (recipeInfo.nftOwnerId !== userData.id) {
+        setButtonState({
+          Icon: ShoppingBag,
+          buttonText: 'NFT 구매하기',
+          modalTitle: 'NFT 구매 확인',
+          modalMessage: 'NFT를 구매하시겠습니까?',
+        });
+        setHandleConfirm(() => purchaseNft);
+      } else {
+        setButtonState({
+          Icon: RemoveShoppingCart,
+          buttonText: '판매 중단하기',
+          modalTitle: '판매 중단 확인',
+          modalMessage: '정말로 NFT 판매를 중단하시겠습니까?',
+        });
+        setHandleConfirm(() => stopSellNft);
+      }
     } else {
-      // NFT 판매/판매 중단
-      setIsOnSale(!isOnSale);
-      handleClose();
+      if (recipeInfo.creatorId !== userData.id) {
+        setIsBtnHidden(true);
+      } else {
+        setButtonState({
+          Icon: Add,
+          buttonText: 'NFT 판매하기',
+          modalTitle: 'NFT 판매 확인',
+          modalMessage: 'NFT를 판매하시겠습니까? 가격을 설정하세요!',
+        });
+        setHandleConfirm(() => sellNft);
+      }
     }
-  };
+  }, [isCreated, isOnSale, recipeInfo, userData]);
 
-  const Icon = !isCreated ? Add : isOnSale ? RemoveShoppingCart : ShoppingBag;
-  const buttonText = !isCreated ? 'NFT 생성하기' : isOnSale ? '판매 중단하기' : 'NFT 판매하기';
-  const modalTitle = !isCreated ? 'NFT 생성 확인' : isOnSale ? '판매 중단 확인' : 'NFT 판매 확인';
-  const modalMessage = !isCreated
-    ? 'NFT를 생성하시겠습니까?'
-    : isOnSale
-      ? '정말로 NFT 판매를 중단하시겠습니까?'
-      : 'NFT를 판매하시겠습니까? 가격을 설정하세요.';
+  if (isBtnHidden) {
+    return null;
+  }
 
   return (
     <>
@@ -84,19 +158,19 @@ const NftButton = ({ recipeInfo }) => {
         aria-label="nft-action"
         onClick={handleClickOpen}
         sx={{ width: '10rem' }}>
-        <Icon />
+        {buttonState.Icon && <buttonState.Icon />}
         <Typography variant="body1" sx={{ ml: '0.5rem' }}>
-          {buttonText}
+          {buttonState.buttonText}
         </Typography>
       </Fab>
 
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>{modalTitle}</DialogTitle>
+        <DialogTitle>{buttonState.modalTitle}</DialogTitle>
         <DialogContent>
           <Typography variant="body1" gutterBottom>
-            {modalMessage}
+            {buttonState.modalMessage}
           </Typography>
-          {isCreated && !isOnSale ? (
+          {isCreated && !isOnSale && (
             <TextField
               autoFocus
               margin="dense"
@@ -107,16 +181,13 @@ const NftButton = ({ recipeInfo }) => {
               value={price}
               onChange={(e) => setPrice(e.target.value)}
             />
-          ) : null}
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} disabled={isLoading}>
             취소
           </Button>
-          <Button
-            onClick={handleConfirm}
-            color="primary"
-            disabled={isLoading}>
+          <Button onClick={handleConfirm} color="primary" disabled={isLoading}>
             {isLoading ? '생성 중...' : '확인'}
           </Button>
         </DialogActions>

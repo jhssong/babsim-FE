@@ -105,9 +105,9 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
-  const fetchRecipeInfo = async () => {
+  const fetchRecipeInfo = async (userId) => {
     try {
-      const json = await getRecipeInfo(recipeId);
+      const json = await getRecipeInfo({ recipeId, userId });
       setRecipeInfo(json);
       setImageUrls(json.recipeImgs);
       setImageIds(json.recipeImgs);
@@ -118,9 +118,9 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
   };
 
   // 새로운 레시피 POST 요청
-  const postNewRecipe = async () => {
+  const postNewRecipe = async (userId) => {
     try {
-      const response = postRecipeWrite({ recipeInfo });
+      const response = postRecipeWrite({ recipeInfo, creatorId: userData.id });
       console.log(response);
       setDone(true);
     } catch (error) {
@@ -129,9 +129,9 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
   };
 
   // 수정한 레시피 PUT 요청
-  const putEdittedRecipe = async () => {
+  const putEdittedRecipe = async (userId) => {
     try {
-      const response = putRecipeEdit({ recipeInfo, recipeId });
+      const response = putRecipeEdit({ recipeInfo, creatorId: userData.id, recipeId });
       console.log(response);
       setDone(true);
     } catch (error) {
@@ -142,7 +142,11 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
   // 포크한 레시피 POST 요청
   const postForkedRecipe = async () => {
     try {
-      const response = postRecipeFork({ recipeInfo, forkedRecipeId: recipeId });
+      const response = postRecipeFork({
+        recipeInfo,
+        creatorId: userData.id,
+        forkedRecipeId: recipeId,
+      });
       console.log(response);
       setDone(true);
     } catch (error) {
@@ -151,14 +155,14 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
   };
 
   useEffect(() => {
-    if (mode === 'edit' || mode === 'fork') {
-      fetchRecipeInfo();
+    if ((mode === 'edit' || mode === 'fork') && userData !== null) {
+      fetchRecipeInfo({ userId: userData.id });
     } else if (mode === 'write') {
       setRecipeInfo(initialRecipe);
       setIsLoading(false);
       console.log(recipeInfo);
     }
-  }, []);
+  }, [userData]);
 
   useEffect(() => {
     const loadImages = async () => {
@@ -193,7 +197,7 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
 
   useEffect(() => {
     if (isDone === true) {
-      setState(false);  // 모달 닫기
+      setState(false); // 모달 닫기
       onComplete(true);
       setDone(false);
     }
@@ -206,11 +210,11 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
   const handleSaveClick = () => {
     if (isValid) {
       if (mode === 'edit') {
-        putEdittedRecipe();
+        putEdittedRecipe({ userId: userData.id });
       } else if (mode === 'write') {
-        postNewRecipe();
+        postNewRecipe({ userId: userData.id });
       } else if (mode === 'fork') {
-        postForkedRecipe();
+        postForkedRecipe({ userId: userData.id });
       }
     } else {
       setSnackbarMessage('입력되지 않은 항목이 있어요!');

@@ -1,13 +1,13 @@
-import { baseURL } from '../../api';
+import { baseURL } from '../api';
 
 /*
 NFT 판매 등록 API
-@nftId(Long) NFT ID
+@recipeId(Long) NFT ID
 @price(BigDecimal) 판매 가격
 */
-export default async function postNftSaleRegister({ nftId, price }) {
+export default async function postNftSaleRegister({ recipeId, price }) {
   let url = `${baseURL}/api/nft/saleNft`;
-  const queryParams = new URLSearchParams({ nftId, price });
+  const queryParams = new URLSearchParams({ recipeId, price });
   url += `?${queryParams.toString()}`;
 
   const response = await fetch(url, {

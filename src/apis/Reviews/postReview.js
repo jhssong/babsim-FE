@@ -5,9 +5,8 @@ import { baseURL } from '../api';
 @recipeId(Long)
 @memberId(String)
 */
-export default async function postReview({ recipeId, rating, comment, forkedRecipeId }) {
+export default async function postReview({ recipeId, memberId, rating, comment, forkedRecipeId }) {
   let url = `${baseURL}/reviews`;
-  let memberId = 4;
   const queryParams = new URLSearchParams({ recipeId, memberId });
   url += `?${queryParams.toString()}`;
 

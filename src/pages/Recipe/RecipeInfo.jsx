@@ -14,6 +14,8 @@ import RecipeReviews from './RecipeReviews';
 import RecipeEdit from './RecipeEdit';
 import getRecipeInfo from '../../apis/Recipe/RecipeInfo/getRecipeInfo';
 import Cook from './Cook';
+import { useRecoilValue } from 'recoil';
+import { userDataState } from '../../recoil/atoms';
 
 const BottomContainer = styled.div`
   display: flex;
@@ -30,6 +32,8 @@ const BottomContainer = styled.div`
 `;
 
 const RecipeInfo = () => {
+  const userData = useRecoilValue(userDataState);
+
   const { recipeId } = useParams();
   const [isLoading, setIsLoading] = useState(true); // Backend API 구현 후 true로 변경
   const [isReviewMore, setIsReviewMore] = useState(false);
@@ -40,19 +44,23 @@ const RecipeInfo = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   // 레시피 정보 GET 요청
-  const fetchRecipeInfo = async () => {
-    const json = await getRecipeInfo(recipeId, 1);
+  const fetchRecipeInfo = async (userId) => {
+    const json = await getRecipeInfo({ recipeId, userId });
     setRecipeInfo(json);
     setIsLoading(false);
   };
 
   useEffect(() => {
-    fetchRecipeInfo();
-  }, [recipeId]);
+    if (userData !== null && userData !== undefined) {
+      fetchRecipeInfo(userData.id);
+    }
+  }, [recipeId, userData]);
 
   useEffect(() => {
-    fetchRecipeInfo();
-  }, [isReviewMore, isForkOpen]);
+    if (userData !== null && userData !== undefined) {
+      fetchRecipeInfo(userData.id);
+    }
+  }, [isReviewMore, isForkOpen, userData]);
 
   const handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') {
