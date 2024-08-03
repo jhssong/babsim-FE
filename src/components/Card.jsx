@@ -13,6 +13,7 @@ const RecipeContiner = styled.div`
   align-self: stretch;
   flex: 1;
   margin: 0.5rem 0rem;
+  cursor: pointer;
 `;
 
 const Recipe = styled.div`
@@ -139,6 +140,7 @@ const ProdcutContainer = styled.div`
   width: 100%;
   flex-direction: column;
   align-items: flex-start;
+  cursor: pointer;
 `;
 
 const ProductImage = styled.img`

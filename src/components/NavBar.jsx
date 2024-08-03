@@ -27,6 +27,7 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
+  cursor: pointer;
 `;
 
 const NavBar = ({ page }) => {
