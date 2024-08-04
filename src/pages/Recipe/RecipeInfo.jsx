@@ -57,14 +57,10 @@ const RecipeInfo = () => {
   useEffect(() => {
     if (userData !== null && userData !== undefined) {
       fetchRecipeInfo(userData.id);
+    } else {
+      fetchRecipeInfo(null);
     }
-  }, [recipeId, userData]);
-
-  useEffect(() => {
-    if (userData !== null && userData !== undefined) {
-      fetchRecipeInfo(userData.id);
-    }
-  }, [isReviewMore, isForkOpen, userData]);
+  }, [recipeId, userData, isReviewMore, isForkOpen]);
 
   const handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') {
