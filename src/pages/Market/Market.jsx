@@ -19,7 +19,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 1rem;
+
   flex: 1 0 0;
   align-self: stretch;
   overflow-y: auto;
@@ -46,20 +46,21 @@ const Market = () => {
   const handleClose = () => setOpen(false);
 
   const [productData, setProductData] = useState({});
-  // const [nftDatas, setNftDatas] = useState([]);
+  const [nftDatas, setNftDatas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   useEffect(() => {
-    // const fetchNfts = async () => {
-    //   try {
-    //     const data = await getNfts();
-    //     setNftDatas(data);
-    //     setLoading(false);
-    //   } catch (error) {
-    //     setError(error);
-    //     setLoading(false);
-    //   }
-    // };
+    const fetchNfts = async () => {
+      try {
+        const data = await getNfts();
+        setNftDatas(data);
+        console.log(data);
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    };
 
     const fetchProducts = async () => {
       try {
@@ -73,29 +74,12 @@ const Market = () => {
     };
 
     fetchProducts();
-    // fetchNfts();
+    fetchNfts();
   }, []);
+
   if (loading) return <Loading />;
   if (error) return <div>Error: {error.message}</div>;
 
-  const nftDatas = {
-    list: [
-      {
-        nftId: 1,
-        uri: 'f4308714-b5d4-49f2-a575-e72212621b3b',
-        recipeId: 6,
-        recipeName: '누구나 맛있게 만들수 있는 김치볶음밥',
-        price: 1000.0,
-      },
-      {
-        nftId: 2,
-        uri: 'e7821fd7-c710-4386-84a5-c19e7dd675a9',
-        recipeId: 7,
-        recipeName: '비엔나 만두 강정',
-        price: 1000.0,
-      },
-    ],
-  };
   return (
     <>
       <ComingSoonModal open={open} onClose={handleClose} />
@@ -104,7 +88,7 @@ const Market = () => {
       <Container>
         <Banner images={bannerImages} />
         <RollCardList title="NFT 상품">
-          {nftDatas.list.map((nft, index) => (
+          {nftDatas.map((nft, index) => (
             <VCard
               key={nft.id}
               type="nft"
@@ -137,7 +121,7 @@ const Market = () => {
 
 const BannerContainer = styled.div`
   width: 100%;
-  margin: 0 auto; /* 중앙 정렬 */
+  margin: 0 auto 0.5rem; /* 중앙 정렬 */
 `;
 
 const BannerImageWrapper = styled.img`
