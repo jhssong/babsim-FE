@@ -1,14 +1,23 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { AppBarWithTitle } from '../../components/AppBar';
-import { Alert, Backdrop, Box, Button, CircularProgress, Divider, Snackbar, Typography } from '@mui/material';
+import {
+  Alert,
+  Backdrop,
+  Box,
+  Button,
+  CircularProgress,
+  Divider,
+  Snackbar,
+  Typography,
+} from '@mui/material';
 import RecipeInformation, { RecipeInfoImage } from './RecipeInfo/RecipeInformation';
 import AllergyInfo from './RecipeInfo/AllergyInfo';
 import NutritionInfo from './RecipeInfo/NutritionInfo';
 import IngredientInfo from './RecipeInfo/IngredientInfo';
 import CookeryInfo from './RecipeInfo/CookeryInfo';
 import ReviewInfo from './RecipeInfo/ReviewInfo';
-import { CallSplitOutlined, Edit, LocalDiningOutlined } from '@mui/icons-material';
+import { CallSplitOutlined, LocalDiningOutlined } from '@mui/icons-material';
 import styled from '@emotion/styled';
 import RecipeReviews from './RecipeReviews';
 import RecipeEdit from './RecipeEdit';
@@ -16,6 +25,7 @@ import getRecipeInfo from '../../apis/Recipe/RecipeInfo/getRecipeInfo';
 import Cook from './Cook';
 import { useRecoilValue } from 'recoil';
 import { userDataState } from '../../recoil/atoms';
+import putCook from '../../apis/Recipe/putCook';
 
 const BottomContainer = styled.div`
   display: flex;
@@ -72,6 +82,11 @@ const RecipeInfo = () => {
       return;
     }
     setSnackbarOpen(false);
+  };
+
+  const onClickCook = async () => {
+    setCook(true);
+    await putCook({ recipeId });
   };
 
   if (isLoading) {
@@ -172,7 +187,7 @@ const RecipeInfo = () => {
           }
           variant="contained"
           color="primary"
-          onClick={() => setCook(true)}>
+          onClick={onClickCook}>
           <Typography variant="button" fontWeight="bold">
             요리하기
           </Typography>
