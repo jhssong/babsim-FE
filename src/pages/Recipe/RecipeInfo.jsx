@@ -115,6 +115,7 @@ const RecipeInfo = () => {
   if (cook) {
     return <Cook recipe={recipeInfo} handleBack={() => setCook(false)} />;
   }
+  console.log(userDataState);
 
   return (
     <>

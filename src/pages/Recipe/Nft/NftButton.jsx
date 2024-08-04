@@ -111,6 +111,7 @@ const NftButton = ({ recipeInfo }) => {
       console.log(response);
     } catch (error) {
       console.error('NFT 구매 실패:', error);
+      console.log(error);
     } finally {
       setIsLoading(false);
       handleClose();
@@ -146,6 +147,7 @@ const NftButton = ({ recipeInfo }) => {
           modalTitle: 'NFT 구매 확인',
           modalMessage: '정말로 NFT를 구매하시겠어요?',
         });
+        console.log('NFT 구매하기');
         setHandleConfirm(() => purchaseNft);
       } else {
         setButtonState({
@@ -157,7 +159,7 @@ const NftButton = ({ recipeInfo }) => {
         setHandleConfirm(() => stopSellNft);
       }
     } else {
-      if (recipe.creatorId !== userData.id) {
+      if (recipe.nftOwnerId !== userData.id) {
         setIsBtnHidden(true);
       } else {
         setButtonState({
@@ -166,6 +168,7 @@ const NftButton = ({ recipeInfo }) => {
           modalTitle: 'NFT 판매 확인',
           modalMessage: 'NFT를 판매할 가격을 알려주세요.',
         });
+        console.log('NFT 판매하기');
         setHandleConfirm(() => () => sellNft(price));
       }
     }

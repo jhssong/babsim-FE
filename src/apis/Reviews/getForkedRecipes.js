@@ -4,8 +4,8 @@ import { baseURL } from "../api";
 특정 레시피 기준 나의 포크레시피 조회
 {path} : recipeId
 */
-export default async function getForkedRecipes(memberID, recipeId) {
-  let url = `${baseURL}/forked/` + recipeId;
+export default async function getForkedRecipes({ memberID, recipeId }) {
+  let url = `${baseURL}/recipes/forked/` + recipeId;
   const queryParams = new URLSearchParams({ memberID });
   url += `?${queryParams.toString()}`;
 

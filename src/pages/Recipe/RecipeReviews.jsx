@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { AppBarWithTitle } from '../../components/AppBar';
 import {
   Alert,
+  Backdrop,
   Box,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -52,24 +54,24 @@ const RecipeReviews = ({ onBackBtnClick }) => {
     // 모든 리뷰 가져오기
     const fetchReviews = async () => {
       const json = await getReviews(recipeId);
-      setReviews(json);
+      setReviews(json.reverse());
     };
     fetchReviews();
 
     // 포크된 레시피 가져오기
     const fetchForkedRecipes = async () => {
-      const recipes = await getForkedRecipes(userId, 1); // 임시로 1번 유저로 설정
+      const recipes = await getForkedRecipes({ memberID: userId, recipeId: recipeId }); // 임시로 1번 유저로 설정
       setForkedRecipes(recipes);
     };
     fetchForkedRecipes();
     setIsLoading(false);
-  }, []);
+  }, [isReviewModalOpen]);
 
   useEffect(() => {
     // 리뷰 작성 후 리뷰 다시 불러오기
     const fetchReviews = async () => {
       const json = await getReviews(recipeId);
-      setReviews(json);
+      setReviews(json.reverse());
     };
     fetchReviews();
   }, [isReviewModalOpen]);
@@ -95,27 +97,42 @@ const RecipeReviews = ({ onBackBtnClick }) => {
     setIsReviewModalOpen(false);
   };
 
-  const handleSave = () => {
-    console.log(reviewText);
-    // save review
+  const handleSave = async () => {
     if (ratingValue !== null && reviewText.trim() !== '') {
-      console.log(
-        `recipe id: ${recipeId}, rating: ${ratingValue}, review: ${reviewText}, selectedForkedRecipe : ${selectedForkedRecipe}`
-      );
-      if (selectedForkedRecipe === undefined) {
-        setSelectedForkedRecipe(null);
+      setIsLoading(true); // 로딩 시작
+
+      try {
+        if (selectedForkedRecipe === undefined) {
+          setSelectedForkedRecipe(null);
+        }
+        await postReview({
+          recipeId: recipeId,
+          memberId: userId,
+          rating: ratingValue,
+          comment: reviewText,
+          forkedRecipeId: selectedForkedRecipe,
+        });
+
+        setIsReviewModalOpen(false);
+        setAlert(false);
+      } catch (error) {
+        console.error('Error posting review:', error);
+        setAlert(true); // 실패 시 알림
+      } finally {
+        setIsLoading(false); // 로딩 종료
       }
-      postReview({
-        recipeId: recipeId,
-        rating: ratingValue,
-        comment: reviewText,
-        forkedRecipeId: selectedForkedRecipe,
-      });
-      setIsReviewModalOpen(false);
     } else {
-      setAlert(true);
+      setAlert(true); // 입력 오류 알림
     }
   };
+
+  if (isLoading) {
+    return (
+      <Backdrop open={true} sx={{ color: '#fff', zIndex: 10000 }}>
+        <CircularProgress variantcolor="primary" />
+      </Backdrop>
+    );
+  }
 
   return (
     <div>

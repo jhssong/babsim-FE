@@ -6,7 +6,7 @@ NFT 생성 API
 @creatorId(String) 작성자 ID
 */
 export default async function postNftCreate({ recipeId, memberId }) {
-  let url = `${baseURL}/nft`;
+  let url = `${baseURL}/nft/create`;
   const queryParams = new URLSearchParams({ recipeId, memberId });
   url += `?${queryParams.toString()}`;
 
