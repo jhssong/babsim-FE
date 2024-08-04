@@ -24,14 +24,11 @@ const BottomContainer = styled.div`
   margin: 1rem;
   padding-inline: 1rem;
 
-  #editBtn {
-    width: 5%;
-  }
   #forkBtn {
-    width: 30%;
+    width: 43%;
   }
   #cookBtn {
-    width: 50%;
+    width: 55%;
   }
 `;
 
@@ -57,12 +54,16 @@ const RecipeInfo = () => {
   useEffect(() => {
     if (userData !== null && userData !== undefined) {
       fetchRecipeInfo(userData.id);
+    } else {
+      fetchRecipeInfo(null);
     }
   }, [recipeId, userData]);
 
   useEffect(() => {
     if (userData !== null && userData !== undefined) {
       fetchRecipeInfo(userData.id);
+    } else {
+      fetchRecipeInfo(null);
     }
   }, [isReviewMore, isForkOpen, userData]);
 
@@ -176,25 +177,6 @@ const RecipeInfo = () => {
             요리하기
           </Typography>
         </Button>
-        {recipeInfo.editable && (
-          <Button
-            id="editBtn"
-            component={Link}
-            to={`/recipe/edit/${recipeInfo.id}`}
-            variant="outlined"
-            color="primary"
-            sx={{ maxWidth: '1rem' }}>
-            <Edit
-              sx={{
-                minWidth: 'auto',
-                minHeight: 'auto',
-                padding: 0,
-                width: '32px',
-                height: '32px',
-              }}
-            />
-          </Button>
-        )}
       </BottomContainer>
     </>
   );

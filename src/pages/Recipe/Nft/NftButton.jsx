@@ -183,7 +183,7 @@ const NftButton = ({ recipeInfo }) => {
     <>
       <Fab
         color="primary"
-        size="medium"
+        size="small"
         variant="extended"
         aria-label="nft-action"
         onClick={handleClickOpen}
