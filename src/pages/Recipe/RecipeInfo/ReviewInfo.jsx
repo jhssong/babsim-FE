@@ -94,7 +94,7 @@ const ReviewInfo = ({ reviews, setState }) => {
           rating={review.rating}
           comment={review.comment}
           registerDate={review.registerDate}
-          forkedRecipe={review.forkedRecipeId}
+          forkedRecipe={review.forkRecipeId}
         />
       ))}
     </Container>

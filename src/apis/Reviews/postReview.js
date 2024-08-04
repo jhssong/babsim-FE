@@ -5,12 +5,12 @@ import { baseURL } from '../api';
 @recipeId(Long)
 @memberId(String)
 */
-export default async function postReview({ recipeId, memberId, rating, comment, forkedRecipeId }) {
+export default async function postReview({ recipeId, memberId, rating, comment, forkRecipeId }) {
   let url = `${baseURL}/reviews`;
   const queryParams = new URLSearchParams({ recipeId, memberId });
   url += `?${queryParams.toString()}`;
 
-  console.log(`forkedRecipeId is ${forkedRecipeId}`);
+  console.log(`forkRecipeId is ${forkRecipeId}`);
 
   const response = await fetch(url, {
     method: 'POST',
@@ -20,7 +20,7 @@ export default async function postReview({ recipeId, memberId, rating, comment, 
     body: JSON.stringify({
       rating: rating,
       comment: comment,
-      forkedRecipeId: forkedRecipeId,
+      forkRecipeId: forkRecipeId,
     }),
   });
   if (!response.ok) throw new Error('Failed to post review');

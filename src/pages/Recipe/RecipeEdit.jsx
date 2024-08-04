@@ -160,7 +160,7 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
       const response = await postRecipeFork({
         recipeInfo,
         creatorId: userData.id,
-        forkedRecipeId: recipeId,
+        forkRecipeId: recipeId,
       });
       console.log(response);
       setDone(true);

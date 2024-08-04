@@ -27,6 +27,7 @@ import { useRecoilValue } from 'recoil';
 import getForkedRecipes from '../../apis/Reviews/getForkedRecipes';
 import getReviews from '../../apis/Reviews/getReviews';
 import postReview from '../../apis/Reviews/postReview';
+import styled from '@emotion/styled';
 
 const labels = {
   1: '😥 별로예요',
@@ -35,6 +36,10 @@ const labels = {
   4: '😊 좋아요',
   5: '😍 최고예요!',
 };
+
+const Container = styled.div`
+  height: 100vh;
+`;
 
 const RecipeReviews = ({ onBackBtnClick }) => {
   const { recipeId } = useParams();
@@ -110,7 +115,7 @@ const RecipeReviews = ({ onBackBtnClick }) => {
           memberId: userId,
           rating: ratingValue,
           comment: reviewText,
-          forkedRecipeId: selectedForkedRecipe,
+          forkRecipeId: selectedForkedRecipe,
         });
 
         setIsReviewModalOpen(false);
@@ -135,7 +140,7 @@ const RecipeReviews = ({ onBackBtnClick }) => {
   }
 
   return (
-    <div>
+    <Container>
       <AppBarWithTitle onBackBtnClick={onBackBtnClick} />
 
       <Dialog fullScreen open={isReviewModalOpen} onClose={handleIsModalClose}>
@@ -242,7 +247,7 @@ const RecipeReviews = ({ onBackBtnClick }) => {
           </Typography>
         </Box>
       ) : (
-        <>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           {paginatedReviews.map((review) => (
             <Review
               key={review.memberID}
@@ -251,7 +256,7 @@ const RecipeReviews = ({ onBackBtnClick }) => {
               rating={review.rating}
               comment={review.comment}
               registerDate={review.registerDate}
-              forkedRecipe={review.forkedRecipeId}
+              forkedRecipe={review.forkRecipeId}
             />
           ))}
           <Pagination
@@ -261,7 +266,7 @@ const RecipeReviews = ({ onBackBtnClick }) => {
             color="primary"
             style={{ display: 'flex', justifyContent: 'center', margin: '1rem' }}
           />
-        </>
+        </Box>
       )}
       <Box sx={{ display: 'flex', justifyContent: 'center', paddingBottom: '1rem' }}>
         <Button
@@ -272,7 +277,7 @@ const RecipeReviews = ({ onBackBtnClick }) => {
           리뷰 작성하기
         </Button>
       </Box>
-    </div>
+    </Container>
   );
 };
 
