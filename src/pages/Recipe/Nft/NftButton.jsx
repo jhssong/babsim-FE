@@ -23,6 +23,10 @@ import getRecipeInfo from '../../../apis/Recipe/RecipeInfo/getRecipeInfo';
 const NftButton = ({ recipeInfo }) => {
   const userData = useRecoilValue(userDataState);
 
+  if (!userData) {
+    return null;
+  }
+
   const [recipe, setRecipe] = useState(recipeInfo);
   const [isLoading, setIsLoading] = useState(false);
   const [isCreated, setIsCreated] = useState(recipe.nftCreateStatus); // NFT 생성 여부

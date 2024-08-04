@@ -14,7 +14,8 @@ import { baseURL } from '../api';
  * }
  */
 export default async function getNfts() {
-  const response = await fetch({ baseURL } + '/nft/saleNft', {
+  const url = new URL(`${baseURL}/nft/saleNft`);
+  const response = await fetch(url, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

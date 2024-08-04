@@ -56,6 +56,8 @@ const RecipeInfo = () => {
       fetchRecipeInfo(userData.id);
     } else {
       fetchRecipeInfo(null);
+    } else {
+      fetchRecipeInfo(null);
     }
   }, [recipeId, userData]);
 

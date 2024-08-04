@@ -14,6 +14,7 @@ const GridCardContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
   align-self: stretch;
+  gap: 0.5rem;
 `;
 
 export const GridCardList = ({ children, title }) => {
@@ -30,7 +31,6 @@ const RollCardWrapper = styled.div`
   overflow-x: auto;
   white-space: nowrap;
 
-  padding: 0.5rem 0;
   align-items: flex-start;
   gap: 1rem;
   align-self: stretch;
@@ -48,6 +48,7 @@ const RollCardContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
   align-self: stretch;
+  gap: 0.5rem;
 `;
 
 export const RollCardList = ({ children, title }) => {
