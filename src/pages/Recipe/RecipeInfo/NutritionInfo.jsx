@@ -40,8 +40,8 @@ const NutritionInfo = ({ nutrition }) => {
       </Box>
       <Wrapper>
         <Typography variant="body1" color="gray" sx={{ marginBottom: '1rem' }}>
-          생성형 인공지능 Gemini를 통해 분석한 영양 성분 정보예요. <br /> 부정확한 정보가 포함되어
-          있을 수 있어요.
+          생성형 인공지능 Gemini를 통해 분석한 영양 성분 정보예요. 부정확한 정보가 포함되어 있을 수
+          있어요.
         </Typography>
         {isLoading ? (
           <Skeleton variant="text" width="100%" height={30} />

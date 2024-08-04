@@ -21,7 +21,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Add } from '@mui/icons-material';
 import ImageCard from '../../../components/ImageCard';
-import { set } from 'date-fns';
 
 const CookeryWrapper = styled.div`
   padding: 1rem;

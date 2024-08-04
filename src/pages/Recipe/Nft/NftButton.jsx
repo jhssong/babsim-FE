@@ -32,7 +32,7 @@ const NftButton = ({ recipeInfo }) => {
   const [isCreated, setIsCreated] = useState(recipe.nftCreateStatus); // NFT 생성 여부
   const [isOnSale, setIsOnSale] = useState(recipe.nftSaleStatus); // NFT 판매 여부
   const [open, setOpen] = useState(false); // 모달 열림 상태
-  const [price, setPrice] = useState(''); // 가격 입력 상태
+  const [price, setPrice] = useState(1); // 가격 입력 상태
   const [isBtnHidden, setIsBtnHidden] = useState(false); // 버튼 숨김 여부
   const [buttonState, setButtonState] = useState({
     Icon: null,
@@ -134,7 +134,7 @@ const NftButton = ({ recipeInfo }) => {
           Icon: Add,
           buttonText: 'NFT 생성하기',
           modalTitle: 'NFT 생성 확인',
-          modalMessage: 'NFT를 생성하시겠습니까?',
+          modalMessage: '정말로 NFT를 생성하시겠어요?',
         });
         setHandleConfirm(() => createNft);
       }
@@ -144,7 +144,7 @@ const NftButton = ({ recipeInfo }) => {
           Icon: ShoppingBag,
           buttonText: 'NFT 구매하기',
           modalTitle: 'NFT 구매 확인',
-          modalMessage: 'NFT를 구매하시겠습니까?',
+          modalMessage: '정말로 NFT를 구매하시겠어요?',
         });
         setHandleConfirm(() => purchaseNft);
       } else {
@@ -152,7 +152,7 @@ const NftButton = ({ recipeInfo }) => {
           Icon: RemoveShoppingCart,
           buttonText: '판매 중단하기',
           modalTitle: '판매 중단 확인',
-          modalMessage: '정말로 NFT 판매를 중단하시겠습니까?',
+          modalMessage: '정말로 NFT 판매를 중단하시겠어요?',
         });
         setHandleConfirm(() => stopSellNft);
       }
@@ -164,12 +164,19 @@ const NftButton = ({ recipeInfo }) => {
           Icon: ShoppingBag,
           buttonText: 'NFT 판매하기',
           modalTitle: 'NFT 판매 확인',
-          modalMessage: 'NFT를 판매하시겠습니까? 가격을 설정하세요!',
+          modalMessage: 'NFT를 판매할 가격을 알려주세요.',
         });
         setHandleConfirm(() => () => sellNft(price));
       }
     }
   }, [isCreated, isOnSale, userData, price, recipe.nftCreateStatus, recipe.nftSaleStatus]);
+
+  const handlePriceChange = (e) => {
+    let value = e.target.value;
+    value = Math.max(1, Math.min(value, 1000000)); // 가격 제한
+
+    setPrice(value);
+  };
 
   if (isLoading) {
     return (
@@ -187,13 +194,13 @@ const NftButton = ({ recipeInfo }) => {
     <>
       <Fab
         color="primary"
-        size="small"
+        size="medium"
         variant="extended"
         aria-label="nft-action"
         onClick={handleClickOpen}
         sx={{ width: '10rem' }}>
         {buttonState.Icon && <buttonState.Icon />}
-        <Typography variant="body1" sx={{ ml: '0.5rem' }}>
+        <Typography variant="body1" sx={{ ml: '0.5rem', mt: '0.25rem' }}>
           {buttonState.buttonText}
         </Typography>
       </Fab>
@@ -213,7 +220,7 @@ const NftButton = ({ recipeInfo }) => {
               fullWidth
               variant="outlined"
               value={price}
-              onChange={(e) => setPrice(e.target.value)}
+              onChange={handlePriceChange}
             />
           )}
         </DialogContent>

@@ -1,4 +1,4 @@
-import { Rating, Typography, Skeleton, Box, Button } from '@mui/material';
+import { Rating, Typography, Skeleton, Box, Button, Fab } from '@mui/material';
 import styled from '@emotion/styled';
 import LikeButton from './LikeButton';
 import Slider from 'react-slick';
@@ -173,26 +173,25 @@ const RecipeInformation = ({ recipeInfo, isLoading }) => {
           </Typography>
         ))
       )}
-      <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', gap: '1rem' }}>
         <NftButton id="nftBtn" recipeInfo={recipeInfo} createdNft={true} />
         {recipeInfo.editable && (
-          <Button
+          <Fab
             id="editBtn"
             component={Link}
             to={`/recipe/edit/${recipeInfo.id}`}
             variant="outlined"
             color="primary"
-            sx={{ maxWidth: '1rem' }}>
+            size="small"
+            sx={{}}>
             <Edit
               sx={{
                 minWidth: 'auto',
                 minHeight: 'auto',
                 padding: 0,
-                width: '32px',
-                height: '32px',
               }}
             />
-          </Button>
+          </Fab>
         )}
       </Box>
     </Container>
