@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 import allergyList from '../../assets/constants/allergyList';
 import createMember from '../../apis/Login/createMember';
@@ -16,12 +17,7 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import {
-  isLoggedInState,
-  isTryingToLoginState,
-  loginState,
-  userDataState,
-} from '../../recoil/atoms';
+import { isLoggedInState, isTryingToLoginState, userDataState } from '../../recoil/atoms';
 
 const AllergyReqWrapper = styled.div`
   display: flex;

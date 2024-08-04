@@ -7,14 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { getImageFromStorage } from '../apis/firebase/storage';
 
-export default function ImageCard({
-  mode,
-  initialImageUrls,
-  initialImageIds,
-  maxImageCount,
-  onCancel,
-  onDone,
-}) {
+export default function ImageCard({ mode, initialImageIds, maxImageCount, onCancel, onDone }) {
   const [localImageUrls, setLocalImageUrls] = useState([]);
   const [localImageIds, setLocalImageIds] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -54,6 +47,7 @@ export default function ImageCard({
     const urls = [];
     const ids = [];
     for (const file of newFiles) {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       const { downloadUrl, id } = await useUploadImage(file);
       if (downloadUrl !== 'undefined') {
         urls.push(downloadUrl);
@@ -125,7 +119,9 @@ export default function ImageCard({
           </label>
         </div>
       )}
-      {mode === 'cookery' ? <Button onClick={() => onDone(localImageUrls, localImageIds)}>적용</Button> : (
+      {mode === 'cookery' ? (
+        <Button onClick={() => onDone(localImageUrls, localImageIds)}>적용</Button>
+      ) : (
         <>
           <Button onClick={onCancel} color="primary">
             취소

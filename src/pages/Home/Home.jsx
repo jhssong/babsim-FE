@@ -5,7 +5,7 @@ import WeeklyRecipe from './WeeklyRecipe';
 import RecommendedProduct from './RecommendedProduct';
 import RecommendedRecipe from './RecommendedRecipe';
 import { useRecoilValue } from 'recoil';
-import { isLoggedInState, userDataState } from '../../recoil/atoms';
+import { isLoggedInState } from '../../recoil/atoms';
 
 const Container = styled.div`
   display: flex;
