@@ -117,7 +117,7 @@ const RecipeInfo = () => {
       <Divider />
       <AllergyInfo allergies={recipeInfo.allergies} />
       <Divider />
-      <NutritionInfo />
+      <NutritionInfo nutrition={recipeInfo.nutritionInfo} />
       <Divider />
       <IngredientInfo ingredients={recipeInfo.ingredients} />
       <Divider />
