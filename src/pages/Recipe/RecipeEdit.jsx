@@ -155,8 +155,9 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
 
   // 포크한 레시피 POST 요청
   const postForkedRecipe = async () => {
+    setIsLoading(true);
     try {
-      const response = postRecipeFork({
+      const response = await postRecipeFork({
         recipeInfo,
         creatorId: userData.id,
         forkedRecipeId: recipeId,
@@ -165,6 +166,8 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
       setDone(true);
     } catch (error) {
       console.error('Failed to post forked recipe:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 

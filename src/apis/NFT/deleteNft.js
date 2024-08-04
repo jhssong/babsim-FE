@@ -5,7 +5,7 @@ NFT 판매 중단 API
 @recipeId(Long) recipe ID
 */
 export default async function deleteNft({ recipeId }) {
-  let url = `${baseURL}/api/nft/saleNft`;
+  let url = `${baseURL}/nft/saleNft`;
   const queryParams = new URLSearchParams({ recipeId });
   url += `?${queryParams.toString()}`;
 

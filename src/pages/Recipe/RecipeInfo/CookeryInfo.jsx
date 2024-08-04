@@ -94,7 +94,6 @@ const CookeryInfo = ({ imgIds, descs, timers, setRecipeState }) => {
           })
         );
         setImages(imageUrls);
-        setRecipeState((prev) => ({ ...prev, images: imageUrls }));
       } catch (error) {
         console.error('Error loading images:', error);
       } finally {

@@ -8,6 +8,8 @@ import {
   DialogTitle,
   Button,
   TextField,
+  Backdrop,
+  CircularProgress,
 } from '@mui/material';
 import { RemoveShoppingCart, ShoppingBag, Add } from '@mui/icons-material';
 import postNftCreate from '../../../apis/NFT/postNftCreate';
@@ -16,13 +18,15 @@ import deleteNft from '../../../apis/NFT/deleteNft';
 import postNftPurchase from '../../../apis/NFT/postNftPurchase';
 import { useRecoilValue } from 'recoil';
 import { userDataState } from '../../../recoil/atoms';
+import getRecipeInfo from '../../../apis/Recipe/RecipeInfo/getRecipeInfo';
 
 const NftButton = ({ recipeInfo }) => {
   const userData = useRecoilValue(userDataState);
 
+  const [recipe, setRecipe] = useState(recipeInfo);
   const [isLoading, setIsLoading] = useState(false);
-  const [isCreated, setIsCreated] = useState(recipeInfo.nftCreateStatus); // NFT 생성 여부
-  const [isOnSale, setIsOnSale] = useState(recipeInfo.nftSaleStatus); // NFT 판매 여부
+  const [isCreated, setIsCreated] = useState(recipe.nftCreateStatus); // NFT 생성 여부
+  const [isOnSale, setIsOnSale] = useState(recipe.nftSaleStatus); // NFT 판매 여부
   const [open, setOpen] = useState(false); // 모달 열림 상태
   const [price, setPrice] = useState(''); // 가격 입력 상태
   const [isBtnHidden, setIsBtnHidden] = useState(false); // 버튼 숨김 여부
@@ -34,14 +38,27 @@ const NftButton = ({ recipeInfo }) => {
   });
   const [handleConfirm, setHandleConfirm] = useState(() => () => {}); // 버튼 클릭 핸들러
 
+  const fetchRecipeInfo = async (userId) => {
+    const json = await getRecipeInfo({ recipeId: recipe.id, memberId: userId });
+    setRecipe(json);
+    setIsCreated(json.nftCreateStatus);
+    setIsOnSale(json.nftSaleStatus);
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+    fetchRecipeInfo(userData.id);
+  }, [open]);
+
   // NFT 생성 요청
   const createNft = async () => {
     setIsLoading(true);
     try {
       const response = await postNftCreate({
-        recipeId: recipeInfo.id,
+        recipeId: recipe.id,
         memberId: userData.id,
-        price,
+        price: price,
       });
       console.log(response);
       setIsCreated(true);
@@ -57,7 +74,8 @@ const NftButton = ({ recipeInfo }) => {
   const sellNft = async () => {
     setIsLoading(true);
     try {
-      const response = await postNftSaleRegister({ recipeId: recipeInfo.id, price });
+      console.log(price);
+      const response = await postNftSaleRegister({ recipeId: recipe.id, price: price });
       console.log(response);
     } catch (error) {
       console.error('NFT 판매 실패:', error);
@@ -71,7 +89,7 @@ const NftButton = ({ recipeInfo }) => {
   const stopSellNft = async () => {
     setIsLoading(true);
     try {
-      const response = await deleteNft({ recipeId: recipeInfo.id });
+      const response = await deleteNft({ recipeId: recipe.id });
       console.log(response);
     } catch (error) {
       console.error('NFT 판매 중단 실패:', error);
@@ -85,7 +103,7 @@ const NftButton = ({ recipeInfo }) => {
   const purchaseNft = async () => {
     setIsLoading(true);
     try {
-      const response = await postNftPurchase({ recipeId: recipeInfo.id, memberId: userData.id });
+      const response = await postNftPurchase({ recipeId: recipe.id, memberId: userData.id });
       console.log(response);
     } catch (error) {
       console.error('NFT 구매 실패:', error);
@@ -105,7 +123,7 @@ const NftButton = ({ recipeInfo }) => {
 
   useEffect(() => {
     if (!isCreated) {
-      if (recipeInfo.creatorId !== userData.id) {
+      if (recipe.creatorId !== userData.id) {
         setIsBtnHidden(true);
       } else {
         setButtonState({
@@ -117,7 +135,7 @@ const NftButton = ({ recipeInfo }) => {
         setHandleConfirm(() => createNft);
       }
     } else if (isOnSale) {
-      if (recipeInfo.nftOwnerId !== userData.id) {
+      if (recipe.nftOwnerId !== userData.id) {
         setButtonState({
           Icon: ShoppingBag,
           buttonText: 'NFT 구매하기',
@@ -135,7 +153,7 @@ const NftButton = ({ recipeInfo }) => {
         setHandleConfirm(() => stopSellNft);
       }
     } else {
-      if (recipeInfo.creatorId !== userData.id) {
+      if (recipe.creatorId !== userData.id) {
         setIsBtnHidden(true);
       } else {
         setButtonState({
@@ -144,10 +162,18 @@ const NftButton = ({ recipeInfo }) => {
           modalTitle: 'NFT 판매 확인',
           modalMessage: 'NFT를 판매하시겠습니까? 가격을 설정하세요!',
         });
-        setHandleConfirm(() => sellNft);
+        setHandleConfirm(() => () => sellNft(price));
       }
     }
-  }, [isCreated, isOnSale, recipeInfo, userData]);
+  }, [isCreated, isOnSale, userData, price, recipe.nftCreateStatus, recipe.nftSaleStatus]);
+
+  if (isLoading) {
+    return (
+      <Backdrop open={true} sx={{ color: '#fff', zIndex: 10000 }}>
+        <CircularProgress variantcolor="primary" />
+      </Backdrop>
+    );
+  }
 
   if (isBtnHidden) {
     return null;

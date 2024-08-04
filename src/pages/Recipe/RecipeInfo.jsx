@@ -176,7 +176,7 @@ const RecipeInfo = () => {
             요리하기
           </Typography>
         </Button>
-        {userData.id === recipeInfo.creatorId && (
+        {recipeInfo.editable && (
           <Button
             id="editBtn"
             component={Link}
