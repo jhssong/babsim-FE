@@ -27,9 +27,9 @@ const LinkButton = styled(Button)`
   right: 1rem; /* 오른쪽 여백 */
 `;
 
-export const Ingredient = ({ name, amount, link }) => {
+export const Ingredient = ({ name, amount }) => {
   const onBtnClick = () => {
-    window.open(link, '_blank');
+    window.open(`https://www.coupang.com/np/search?component=&q=${name}`, '_blank');
   };
 
   return (
