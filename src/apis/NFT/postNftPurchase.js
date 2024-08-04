@@ -1,12 +1,12 @@
-import { baseURL } from '../../api';
+import { baseURL } from '../api';
 
 /*
 NFT 구매 API
-@nftId(Long) NFT ID
+@recipeId(Long) NFT ID
 @memberId(String) 현재 로그인 되어 있는 멤버Id(구매자 ID)
 */
-export default async function postNftPurchase({ nftId, memberId }) {
-  let url = `${baseURL}/api/nft/saleNft` + nftId;
+export default async function postNftPurchase({ recipeId, memberId }) {
+  let url = `${baseURL}/api/nft/saleNft` + recipeId;
   const queryParams = new URLSearchParams({ memberId });
   url += `?${queryParams.toString()}`;
 

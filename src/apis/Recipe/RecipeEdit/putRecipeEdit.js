@@ -4,9 +4,8 @@ import { baseURL } from '../../api';
 레시피 수정 API
 @creatorId(String) 작성자 ID
 */
-export default async function putRecipeEdit({ recipeInfo, recipeId }) {
+export default async function putRecipeEdit({ recipeInfo, creatorId, recipeId }) {
   let url = `${baseURL}/recipes/` + recipeId;
-  let creatorId = 4; // 임시로 4로 설정, 나중엔 props로 받아와야 함
   const queryParams = new URLSearchParams({ creatorId });
   url += `?${queryParams.toString()}`;
 

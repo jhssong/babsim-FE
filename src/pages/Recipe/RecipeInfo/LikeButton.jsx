@@ -9,7 +9,7 @@ const LikeButton = ({ liked, recipeId }) => {
   const [isLiked, setIsLiked] = useState(liked);
 
   const handleLike = async () => {
-    await setLike(recipeId, userData.id);
+    await setLike({ recipeId, memberId: userData.id });
     setIsLiked(!isLiked);
   };
 

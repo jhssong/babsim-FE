@@ -4,9 +4,8 @@ import { baseURL } from '../../api';
 레시피 작성 API
 @creatorId(String) 작성자 ID
 */
-export default async function postRecipeWrite({ recipeInfo }) {
+export default async function postRecipeWrite({ recipeInfo, creatorId }) {
   let url = `${baseURL}/recipes`;
-  let creatorId = 4; // 임시로 4로 설정, 나중엔 props로 받아와야 함
   const queryParams = new URLSearchParams({ creatorId });
   url += `?${queryParams.toString()}`;
 

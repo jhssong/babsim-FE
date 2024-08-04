@@ -1,35 +1,43 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { AppBarWithTitle } from '../../components/AppBar';
-import { Alert, Box, Button, Divider, Snackbar, Typography } from '@mui/material';
+import { Alert, Backdrop, Box, Button, CircularProgress, Divider, Snackbar, Typography } from '@mui/material';
 import RecipeInformation, { RecipeInfoImage } from './RecipeInfo/RecipeInformation';
 import AllergyInfo from './RecipeInfo/AllergyInfo';
 import NutritionInfo from './RecipeInfo/NutritionInfo';
 import IngredientInfo from './RecipeInfo/IngredientInfo';
 import CookeryInfo from './RecipeInfo/CookeryInfo';
 import ReviewInfo from './RecipeInfo/ReviewInfo';
-import { CallSplitOutlined, LocalDiningOutlined } from '@mui/icons-material';
+import { CallSplitOutlined, Edit, LocalDiningOutlined } from '@mui/icons-material';
 import styled from '@emotion/styled';
 import RecipeReviews from './RecipeReviews';
 import RecipeEdit from './RecipeEdit';
 import getRecipeInfo from '../../apis/Recipe/RecipeInfo/getRecipeInfo';
 import Cook from './Cook';
+import { useRecoilValue } from 'recoil';
+import { userDataState } from '../../recoil/atoms';
 
 const BottomContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 1rem;
   margin: 1rem;
   padding-inline: 1rem;
 
-  button:nth-child(1) {
-    width: 42%;
+  #editBtn {
+    width: 5%;
   }
-  button:nth-child(2) {
-    width: 55%;
+  #forkBtn {
+    width: 30%;
+  }
+  #cookBtn {
+    width: 50%;
   }
 `;
 
 const RecipeInfo = () => {
+  const userData = useRecoilValue(userDataState);
+
   const { recipeId } = useParams();
   const [isLoading, setIsLoading] = useState(true); // Backend API 구현 후 true로 변경
   const [isReviewMore, setIsReviewMore] = useState(false);
@@ -40,19 +48,23 @@ const RecipeInfo = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   // 레시피 정보 GET 요청
-  const fetchRecipeInfo = async () => {
-    const json = await getRecipeInfo(recipeId, 1);
+  const fetchRecipeInfo = async (userId) => {
+    const json = await getRecipeInfo({ recipeId, memberId: userId });
     setRecipeInfo(json);
     setIsLoading(false);
   };
 
   useEffect(() => {
-    fetchRecipeInfo();
-  }, [recipeId]);
+    if (userData !== null && userData !== undefined) {
+      fetchRecipeInfo(userData.id);
+    }
+  }, [recipeId, userData]);
 
   useEffect(() => {
-    fetchRecipeInfo();
-  }, [isReviewMore, isForkOpen]);
+    if (userData !== null && userData !== undefined) {
+      fetchRecipeInfo(userData.id);
+    }
+  }, [isReviewMore, isForkOpen, userData]);
 
   const handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -62,7 +74,11 @@ const RecipeInfo = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <Backdrop open={true} sx={{ color: '#fff', zIndex: 10000 }}>
+        <CircularProgress variantcolor="primary" />
+      </Backdrop>
+    );
   }
 
   if (isReviewMore) {
@@ -121,6 +137,7 @@ const RecipeInfo = () => {
       <Divider />
       <BottomContainer>
         <Button
+          id="forkBtn"
           onClick={() => setIsForkOpen(true)}
           startIcon={
             <CallSplitOutlined
@@ -140,6 +157,7 @@ const RecipeInfo = () => {
           </Typography>
         </Button>
         <Button
+          id="cookBtn"
           startIcon={
             <LocalDiningOutlined
               sx={{
@@ -158,6 +176,25 @@ const RecipeInfo = () => {
             요리하기
           </Typography>
         </Button>
+        {recipeInfo.editable && (
+          <Button
+            id="editBtn"
+            component={Link}
+            to={`/recipe/edit/${recipeInfo.id}`}
+            variant="outlined"
+            color="primary"
+            sx={{ maxWidth: '1rem' }}>
+            <Edit
+              sx={{
+                minWidth: 'auto',
+                minHeight: 'auto',
+                padding: 0,
+                width: '32px',
+                height: '32px',
+              }}
+            />
+          </Button>
+        )}
       </BottomContainer>
     </>
   );

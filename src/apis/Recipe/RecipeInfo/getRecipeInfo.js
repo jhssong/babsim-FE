@@ -5,10 +5,10 @@ import { baseURL } from '../../api';
 {path} : recipeId
 @memberID (nullable) (String)
 */
-export default async function getRecipeInfo(recipeId) {
+export default async function getRecipeInfo({ recipeId, memberId }) {
   let url = `${baseURL}/recipes/` + recipeId;
 
-  let memberId = 4;
+  console.log('memberid:', memberId);
   if (memberId) {
     const queryParams = new URLSearchParams({ memberId });
     url += '?' + queryParams.toString();

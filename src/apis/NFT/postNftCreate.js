@@ -5,9 +5,8 @@ NFT 생성 API
 @recipeId(Long) 레시피 ID
 @creatorId(String) 작성자 ID
 */
-export default async function postNftCreate({ recipeId }) {
+export default async function postNftCreate({ recipeId, memberId }) {
   let url = `${baseURL}/nft`;
-  let memberId = 1; // 임시로 4로 설정, 나중엔 props로 받아와야 함
   const queryParams = new URLSearchParams({ recipeId, memberId });
   url += `?${queryParams.toString()}`;
 

@@ -5,9 +5,8 @@ import { baseURL } from '../../api';
 @creatorId(String) 작성자 ID
 PathVariable: forkedRecipeId 포크되어진 레시피 ID
 */
-export default async function postRecipeFork({ recipeInfo, forkedRecipeId }) {
+export default async function postRecipeFork({ recipeInfo, creatorId, forkedRecipeId }) {
   let url = `${baseURL}/recipes/` + forkedRecipeId + '/fork';
-  let creatorId = 4; // 임시로 4로 설정, 나중엔 props로 받아와야 함
   const queryParams = new URLSearchParams({ creatorId });
   url += `?${queryParams.toString()}`;
 

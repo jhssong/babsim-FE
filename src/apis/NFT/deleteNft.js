@@ -1,13 +1,12 @@
-import { baseURL } from '../../api';
+import { baseURL } from '../api';
 
 /*
 NFT 판매 중단 API
-@saleNftId(Long) NFT ID
-@price(BigDecimal) 판매 가격
+@recipeId(Long) recipe ID
 */
-export default async function deleteNft({ saleNftId, price }) {
-  let url = `${baseURL}/api/nft/saleNft`;
-  const queryParams = new URLSearchParams({ saleNftId, price });
+export default async function deleteNft({ recipeId }) {
+  let url = `${baseURL}/nft/saleNft`;
+  const queryParams = new URLSearchParams({ recipeId });
   url += `?${queryParams.toString()}`;
 
   const response = await fetch(url, {

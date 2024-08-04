@@ -155,11 +155,6 @@ const RecipeInformation = ({ recipeInfo, isLoading }) => {
             <Rating name="read-only" value={recipeInfo.rate} size="small" readOnly />
             <Typography variant="caption">{getDifficultyLabel(recipeInfo.difficulty)}</Typography>
             <Typography variant="caption">요리 시간 {recipeInfo.cookingTime / 60}분</Typography>
-            {/* {recipeInfo.creatorId == userData.id ? ( */}
-            <Box sx={{ ml: 'auto' }}>
-              <NftButton id="nftBtn" recipeInfo={recipeInfo} createdNft={true} />
-            </Box>
-            {/* ) : null} */}
           </>
         )}
       </RatingLine>
@@ -167,17 +162,18 @@ const RecipeInformation = ({ recipeInfo, isLoading }) => {
         <Skeleton variant="text" width="100%" height={20} />
       ) : recipeInfo.tags === null ? null : (
         recipeInfo.tags.map((tag) => (
-          <>
-            <Typography
-              variant="caption"
-              color="textSecondary"
-              key={tag}
-              sx={{ paddingRight: '0.25rem' }}>
-              #{tag}
-            </Typography>
-          </>
+          <Typography
+            variant="caption"
+            color="textSecondary"
+            key={tag}
+            sx={{ paddingRight: '0.25rem' }}>
+            #{tag}
+          </Typography>
         ))
       )}
+      <Box sx={{ ml: 'auto' }}>
+        <NftButton id="nftBtn" recipeInfo={recipeInfo} createdNft={true} />
+      </Box>
     </Container>
   );
 };
