@@ -1,4 +1,4 @@
-import { Rating, Typography, Skeleton, Box } from '@mui/material';
+import { Rating, Typography, Skeleton, Box, Button, Fab } from '@mui/material';
 import styled from '@emotion/styled';
 import LikeButton from './LikeButton';
 import Slider from 'react-slick';
@@ -9,6 +9,8 @@ import { getImageFromStorage } from '../../../apis/firebase/storage';
 import { useRecoilValue } from 'recoil';
 import { userDataState } from '../../../recoil/atoms';
 import NftButton from '../Nft/NftButton';
+import { Edit } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
 
 // 슬라이드 스타일 정의
 const Slide = styled.div`
@@ -171,8 +173,26 @@ const RecipeInformation = ({ recipeInfo, isLoading }) => {
           </Typography>
         ))
       )}
-      <Box sx={{ ml: 'auto' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', gap: '1rem' }}>
         <NftButton id="nftBtn" recipeInfo={recipeInfo} createdNft={true} />
+        {recipeInfo.editable && (
+          <Fab
+            id="editBtn"
+            component={Link}
+            to={`/recipe/edit/${recipeInfo.id}`}
+            variant="outlined"
+            color="primary"
+            size="small"
+            sx={{}}>
+            <Edit
+              sx={{
+                minWidth: 'auto',
+                minHeight: 'auto',
+                padding: 0,
+              }}
+            />
+          </Fab>
+        )}
       </Box>
     </Container>
   );
