@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { AppBarWithTitle } from '../../components/AppBar';
 import {
   Alert,
+  Backdrop,
   Box,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -25,6 +27,7 @@ import { useRecoilValue } from 'recoil';
 import getForkedRecipes from '../../apis/Reviews/getForkedRecipes';
 import getReviews from '../../apis/Reviews/getReviews';
 import postReview from '../../apis/Reviews/postReview';
+import styled from '@emotion/styled';
 
 const labels = {
   1: '😥 별로예요',
@@ -33,6 +36,10 @@ const labels = {
   4: '😊 좋아요',
   5: '😍 최고예요!',
 };
+
+const Container = styled.div`
+  height: 100%;
+`;
 
 const RecipeReviews = ({ onBackBtnClick }) => {
   const { recipeId } = useParams();
@@ -52,24 +59,24 @@ const RecipeReviews = ({ onBackBtnClick }) => {
     // 모든 리뷰 가져오기
     const fetchReviews = async () => {
       const json = await getReviews(recipeId);
-      setReviews(json);
+      setReviews(json.reverse());
     };
     fetchReviews();
 
     // 포크된 레시피 가져오기
     const fetchForkedRecipes = async () => {
-      const recipes = await getForkedRecipes(userId, 1); // 임시로 1번 유저로 설정
+      const recipes = await getForkedRecipes({ memberId: userId, forkedRecipeId: recipeId });
       setForkedRecipes(recipes);
     };
     fetchForkedRecipes();
     setIsLoading(false);
-  }, []);
+  }, [isReviewModalOpen]);
 
   useEffect(() => {
     // 리뷰 작성 후 리뷰 다시 불러오기
     const fetchReviews = async () => {
       const json = await getReviews(recipeId);
-      setReviews(json);
+      setReviews(json.reverse());
     };
     fetchReviews();
   }, [isReviewModalOpen]);
@@ -95,30 +102,45 @@ const RecipeReviews = ({ onBackBtnClick }) => {
     setIsReviewModalOpen(false);
   };
 
-  const handleSave = () => {
-    console.log(reviewText);
-    // save review
+  const handleSave = async () => {
     if (ratingValue !== null && reviewText.trim() !== '') {
-      console.log(
-        `recipe id: ${recipeId}, rating: ${ratingValue}, review: ${reviewText}, selectedForkedRecipe : ${selectedForkedRecipe}`
-      );
-      if (selectedForkedRecipe === undefined) {
-        setSelectedForkedRecipe(null);
+      setIsLoading(true); // 로딩 시작
+
+      try {
+        if (selectedForkedRecipe === undefined) {
+          setSelectedForkedRecipe(null);
+        }
+        await postReview({
+          recipeId: recipeId,
+          memberId: userId,
+          rating: ratingValue,
+          comment: reviewText,
+          forkRecipeId: selectedForkedRecipe,
+        });
+
+        setIsReviewModalOpen(false);
+        setAlert(false);
+      } catch (error) {
+        console.error('Error posting review:', error);
+        setAlert(true); // 실패 시 알림
+      } finally {
+        setIsLoading(false); // 로딩 종료
       }
-      postReview({
-        recipeId: recipeId,
-        rating: ratingValue,
-        comment: reviewText,
-        forkedRecipeId: selectedForkedRecipe,
-      });
-      setIsReviewModalOpen(false);
     } else {
-      setAlert(true);
+      setAlert(true); // 입력 오류 알림
     }
   };
 
+  if (isLoading) {
+    return (
+      <Backdrop open={true} sx={{ color: '#fff', zIndex: 10000 }}>
+        <CircularProgress variantcolor="primary" />
+      </Backdrop>
+    );
+  }
+
   return (
-    <div>
+    <Container>
       <AppBarWithTitle onBackBtnClick={onBackBtnClick} />
 
       <Dialog fullScreen open={isReviewModalOpen} onClose={handleIsModalClose}>
@@ -173,7 +195,10 @@ const RecipeReviews = ({ onBackBtnClick }) => {
               labelId="forkedRecipe-label"
               id="forkedRecipe"
               value={selectedForkedRecipe}
-              onChange={(e) => setSelectedForkedRecipe(e.target.value)}
+              onChange={(e) => {
+                setSelectedForkedRecipe(e.target.value);
+                console.log(e.target.value);
+              }}
               label="레시피 추가"
               sx={{ width: '100%' }}>
               {forkedRecipes.length === 0 ? (
@@ -183,7 +208,7 @@ const RecipeReviews = ({ onBackBtnClick }) => {
               ) : (
                 forkedRecipes.map((recipe) => (
                   <MenuItem key={recipe.id} value={recipe.id}>
-                    {recipe.name}
+                    {recipe.recipeName}
                   </MenuItem>
                 ))
               )}
@@ -225,7 +250,7 @@ const RecipeReviews = ({ onBackBtnClick }) => {
           </Typography>
         </Box>
       ) : (
-        <>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           {paginatedReviews.map((review) => (
             <Review
               key={review.memberID}
@@ -234,7 +259,7 @@ const RecipeReviews = ({ onBackBtnClick }) => {
               rating={review.rating}
               comment={review.comment}
               registerDate={review.registerDate}
-              forkedRecipe={review.forkedRecipeId}
+              forkedRecipe={review.forkRecipeId}
             />
           ))}
           <Pagination
@@ -244,7 +269,7 @@ const RecipeReviews = ({ onBackBtnClick }) => {
             color="primary"
             style={{ display: 'flex', justifyContent: 'center', margin: '1rem' }}
           />
-        </>
+        </Box>
       )}
       <Box sx={{ display: 'flex', justifyContent: 'center', paddingBottom: '1rem' }}>
         <Button
@@ -255,7 +280,7 @@ const RecipeReviews = ({ onBackBtnClick }) => {
           리뷰 작성하기
         </Button>
       </Box>
-    </div>
+    </Container>
   );
 };
 

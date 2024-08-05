@@ -44,9 +44,9 @@ const BottomContainer = styled.div`
 
 const RecipeInfo = () => {
   const userData = useRecoilValue(userDataState);
-
   const { recipeId } = useParams();
-  const [isLoading, setIsLoading] = useState(true); // Backend API 구현 후 true로 변경
+
+  const [isLoading, setIsLoading] = useState(true);
   const [isReviewMore, setIsReviewMore] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isForkOpen, setIsForkOpen] = useState(false);
@@ -61,21 +61,22 @@ const RecipeInfo = () => {
     setIsLoading(false);
   };
 
+  // recipeId가 변경될 때 초기 상태로 설정
   useEffect(() => {
+    setIsLoading(true);
+    setIsReviewMore(false);
+    setIsReviewModalOpen(false);
+    setIsForkOpen(false);
+    setCook(false);
+    setSnackbarOpen(false);
+    setRecipeInfo([]); // 레시피 정보 초기화
+
     if (userData !== null && userData !== undefined) {
       fetchRecipeInfo(userData.id);
     } else {
       fetchRecipeInfo(null);
     }
   }, [recipeId, userData]);
-
-  useEffect(() => {
-    if (userData !== null && userData !== undefined) {
-      fetchRecipeInfo(userData.id);
-    } else {
-      fetchRecipeInfo(null);
-    }
-  }, [isReviewMore, isForkOpen, userData]);
 
   const handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -146,7 +147,7 @@ const RecipeInfo = () => {
         timers={recipeInfo.recipeTimers}
       />
       <Divider />
-      <ReviewInfo reviews={recipeInfo.reviews} />
+      <ReviewInfo reviews={recipeInfo.reviews.reverse()} />
       <Box sx={{ display: 'flex', justifyContent: 'center', paddingBottom: '1rem' }}>
         <Button onClick={() => setIsReviewMore(true)}>리뷰 더보기</Button>
       </Box>

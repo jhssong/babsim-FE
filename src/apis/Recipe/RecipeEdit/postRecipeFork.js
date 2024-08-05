@@ -3,10 +3,10 @@ import { baseURL } from '../../api';
 /*
 레시피 작성 API
 @creatorId(String) 작성자 ID
-PathVariable: forkedRecipeId 포크되어진 레시피 ID
+PathVariable: forkRecipeId 포크되어진 레시피 ID
 */
-export default async function postRecipeFork({ recipeInfo, creatorId, forkedRecipeId }) {
-  let url = `${baseURL}/recipes/` + forkedRecipeId + '/fork';
+export default async function postRecipeFork({ recipeInfo, creatorId, forkRecipeId }) {
+  let url = `${baseURL}/recipes/` + forkRecipeId + '/fork';
   const queryParams = new URLSearchParams({ creatorId });
   url += `?${queryParams.toString()}`;
 

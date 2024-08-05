@@ -94,12 +94,10 @@ const ReviewInfo = ({ reviews, setState }) => {
           rating={review.rating}
           comment={review.comment}
           registerDate={review.registerDate}
-          forkedRecipe={review.forkedRecipeId}
+          forkedRecipe={review.forkRecipeId}
         />
       ))}
     </Container>
   );
 };
-
-// 리뷰에서 포크된 레시피 등록할때, 스크랩 페이지의 포크된 레시피 중에서 선택할 수 있도록 구현할 것.
 export default ReviewInfo;

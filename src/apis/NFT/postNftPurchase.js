@@ -6,8 +6,8 @@ NFT 구매 API
 @memberId(String) 현재 로그인 되어 있는 멤버Id(구매자 ID)
 */
 export default async function postNftPurchase({ recipeId, memberId }) {
-  let url = `${baseURL}/api/nft/saleNft` + recipeId;
-  const queryParams = new URLSearchParams({ memberId });
+  let url = `${baseURL}/nft/approve`;
+  const queryParams = new URLSearchParams({ memberId, recipeId });
   url += `?${queryParams.toString()}`;
 
   const response = await fetch(url, {
