@@ -1,4 +1,4 @@
-import { Rating, Typography, Skeleton, Box, Button, Fab } from '@mui/material';
+import { Rating, Typography, Skeleton, Box, Fab } from '@mui/material';
 import styled from '@emotion/styled';
 import LikeButton from './LikeButton';
 import Slider from 'react-slick';

@@ -18,7 +18,6 @@ const ButtonContainer = styled(Box)`
 
 export default function ImageCard({
   mode,
-  initialImageUrls,
   initialImageIds,
   maxImageCount,
   onCancel,
