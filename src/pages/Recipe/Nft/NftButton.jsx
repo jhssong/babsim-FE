@@ -20,13 +20,11 @@ import { useRecoilValue } from 'recoil';
 import { userDataState } from '../../../recoil/atoms';
 import getRecipeInfo from '../../../apis/Recipe/RecipeInfo/getRecipeInfo';
 import getNftPrice from '../../../apis/NFT/getNftPrice';
+import { useNavigate } from 'react-router-dom';
 
 const NftButton = ({ recipeInfo }) => {
   const userData = useRecoilValue(userDataState);
-
-  if (!userData) {
-    return null;
-  }
+  const userId = userData ? userData.id : null;
 
   const [recipe, setRecipe] = useState(recipeInfo);
   const [isLoading, setIsLoading] = useState(false);
@@ -47,6 +45,8 @@ const NftButton = ({ recipeInfo }) => {
   const [point, setPoint] = useState(0);
   const [available, setAvailable] = useState(false);
 
+  const navigate = useNavigate();
+
   const fetchRecipeInfo = async (userId) => {
     const json = await getRecipeInfo({ recipeId: recipe.id, memberId: userId });
     setRecipe(json);
@@ -56,7 +56,7 @@ const NftButton = ({ recipeInfo }) => {
 
   const fetchNftPrice = async () => {
     try {
-      const json = await getNftPrice({ recipeId: recipe.id, memberId: userData.id });
+      const json = await getNftPrice({ recipeId: recipe.id, memberId: userId });
       console.log(json);
       setNftPrice(json.nftPrice);
       setPoint(json.point);
@@ -69,7 +69,7 @@ const NftButton = ({ recipeInfo }) => {
   useEffect(() => {
     if (isCreated && userData) {
       setIsLoading(true);
-      fetchRecipeInfo(userData.id);
+      fetchRecipeInfo(userId);
       fetchNftPrice();
       setIsLoading(false);
     }
@@ -81,7 +81,7 @@ const NftButton = ({ recipeInfo }) => {
     try {
       const response = await postNftCreate({
         recipeId: recipe.id,
-        memberId: userData.id,
+        memberId: userId,
         price: price,
       });
       console.log(response);
@@ -127,7 +127,7 @@ const NftButton = ({ recipeInfo }) => {
   const purchaseNft = async () => {
     setIsLoading(true);
     try {
-      const response = await postNftPurchase({ recipeId: recipe.id, memberId: userData.id });
+      const response = await postNftPurchase({ recipeId: recipe.id, memberId: userId });
       console.log(response);
     } catch (error) {
       console.error('NFT 구매 실패:', error);
@@ -148,7 +148,7 @@ const NftButton = ({ recipeInfo }) => {
 
   useEffect(() => {
     if (!isCreated) {
-      if (recipe.creatorId !== userData.id) {
+      if (recipe.creatorId !== userId) {
         setIsBtnHidden(true);
       } else {
         setButtonState({
@@ -160,7 +160,15 @@ const NftButton = ({ recipeInfo }) => {
         setHandleConfirm(() => createNft);
       }
     } else if (isOnSale) {
-      if (recipe.nftOwnerId !== userData.id) {
+      if (recipe.nftOwnerId === userId) {
+        setButtonState({
+          Icon: RemoveShoppingCart,
+          buttonText: '판매 중단하기',
+          modalTitle: '판매 중단 확인',
+          modalMessage: '정말로 NFT 판매를 중단하시겠어요?',
+        });
+        setHandleConfirm(() => stopSellNft);
+      } else {
         setButtonState({
           Icon: ShoppingBag,
           buttonText: 'NFT 구매하기',
@@ -170,17 +178,9 @@ const NftButton = ({ recipeInfo }) => {
         console.log('NFT 구매하기');
         if (available === true) setHandleConfirm(() => purchaseNft);
         else setHandleConfirm(() => {});
-      } else {
-        setButtonState({
-          Icon: RemoveShoppingCart,
-          buttonText: '판매 중단하기',
-          modalTitle: '판매 중단 확인',
-          modalMessage: '정말로 NFT 판매를 중단하시겠어요?',
-        });
-        setHandleConfirm(() => stopSellNft);
       }
     } else {
-      if (recipe.nftOwnerId !== userData.id) {
+      if (recipe.nftOwnerId !== userId) {
         setIsBtnHidden(true);
       } else {
         setButtonState({
@@ -231,7 +231,7 @@ const NftButton = ({ recipeInfo }) => {
         size="medium"
         variant="extended"
         aria-label="nft-action"
-        onClick={handleClickOpen}
+        onClick={userId === null ? () => navigate('/login') : handleClickOpen}
         sx={{ width: '10rem' }}>
         {buttonState.Icon && <buttonState.Icon />}
         <Typography variant="body1" sx={{ ml: '0.5rem', mt: '0.25rem' }}>
