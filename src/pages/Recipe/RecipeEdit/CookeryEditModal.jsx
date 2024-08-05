@@ -21,6 +21,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Add } from '@mui/icons-material';
 import ImageCard from '../../../components/ImageCard';
+import { getImageFromStorage } from '../../../apis/firebase/storage';
 
 const CookeryWrapper = styled.div`
   padding: 1rem;
@@ -65,6 +66,7 @@ const AddButtonText = styled(Typography)`
 const CookeryEditModal = ({ recipe, onBackBtnClick, setRecipeState, setModalState }) => {
   const [alert, setAlert] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(true);
   const [cookeries, setCookeries] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -81,6 +83,7 @@ const CookeryEditModal = ({ recipe, onBackBtnClick, setRecipeState, setModalStat
   const [newCookery, setNewCookery] = useState({ imaegUrl: '', image: '', desc: '', timer: 0 });
   const [newMinutes, setNewMinutes] = useState(0);
   const [newSeconds, setNewSeconds] = useState(0);
+  const [imageUrls, setImageUrls] = useState([]);
 
   const [newImageUrls, setNewImageUrls] = useState([]); // 업로드된 이미지 URL
   const [currentImageUrls, setCurrentImageUrls] = useState([]); // 현재 이미지 URL
@@ -91,7 +94,7 @@ const CookeryEditModal = ({ recipe, onBackBtnClick, setRecipeState, setModalStat
     const cookeries = [];
     for (let i = 0; i < recipe.recipeContents.length; i++) {
       cookeries.push({
-        imageUrl: recipe.images[i],
+        imageUrl: imageUrls[i],
         image: recipe.recipeDetailImgs[i],
         desc: recipe.recipeContents[i],
         timer: recipe.recipeTimers[i],
@@ -101,8 +104,25 @@ const CookeryEditModal = ({ recipe, onBackBtnClick, setRecipeState, setModalStat
   };
 
   useEffect(() => {
+    const loadImages = async () => {
+      try {
+        const imageUrls = await Promise.all(
+          recipe.recipeDetailImgs.map(async (imgId) => {
+            return await getImageFromStorage(imgId);
+          })
+        );
+        setImageUrls(imageUrls);
+      } catch (error) {
+        console.error('Error loading images:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (recipe.recipeDetailImgs !== undefined) loadImages();
+    
     initCookeries();
-  }, []);
+  }, [isLoading]);
 
   // newImageUrls가 업데이트되면 newCookery의 image를 업데이트
   useEffect(() => {

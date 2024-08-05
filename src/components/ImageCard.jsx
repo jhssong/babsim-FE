@@ -29,12 +29,11 @@ export default function ImageCard({
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    height: 50vh;
-    width: 80vw;
-    background-color: white;
+    height: 30vh;
+    width: 100%;
     border-radius: 0.5rem;
+    background-color: #fff;
     padding: 20px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
     position: relative; /* 하단 고정을 위한 설정 */
   `;
   

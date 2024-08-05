@@ -38,7 +38,7 @@ const labels = {
 };
 
 const Container = styled.div`
-  height: 100%;
+  height: 110vh;
 `;
 
 const RecipeReviews = ({ onBackBtnClick }) => {
