@@ -6,6 +6,15 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { getImageFromStorage } from '../apis/firebase/storage';
+import { Backdrop, Box, CircularProgress } from '@mui/material';
+import styled from '@emotion/styled';
+
+const ButtonContainer = styled(Box)`
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: auto; /* 하단으로 위치 조정 */
+`;
 
 export default function ImageCard({
   mode,
@@ -15,6 +24,20 @@ export default function ImageCard({
   onCancel,
   onDone,
 }) {
+  const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 50vh;
+    width: 80vw;
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 20px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+    position: relative; /* 하단 고정을 위한 설정 */
+  `;
+  
   const [localImageUrls, setLocalImageUrls] = useState([]);
   const [localImageIds, setLocalImageIds] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -85,11 +108,15 @@ export default function ImageCard({
   };
 
   if (isLoading) {
-    return <div>Loading...</div>; // 로딩 상태
+    return (
+      <Backdrop open={true} sx={{ color: '#fff', zIndex: 10000 }}>
+        <CircularProgress variantcolor="primary" />
+      </Backdrop>
+    );
   }
 
   return (
-    <>
+    <Container>
       <div>
         {localImageUrls.map((url, index) => (
           <div
@@ -104,37 +131,41 @@ export default function ImageCard({
           </div>
         ))}
       </div>
-      {localImageUrls.length >= maxImageCount ? (
-        <Button variant="contained" disabled>
-          사진 업로드
-        </Button>
-      ) : (
-        <div>
-          <input
-            style={{ display: 'none' }}
-            accept="image/*"
-            multiple
-            id="upload-button-file"
-            type="file"
-            onChange={onchangeImageUpload}
-          />
-          <label htmlFor="upload-button-file">
-            <Button variant="contained" component="span">
-              사진 업로드
+      <ButtonContainer sx={{ display: 'flex' }}>
+        {localImageUrls.length >= maxImageCount ? (
+          <Button variant="contained" disabled>
+            사진 업로드
+          </Button>
+        ) : (
+          <div>
+            <input
+              style={{ display: 'none' }}
+              accept="image/*"
+              multiple
+              id="upload-button-file"
+              type="file"
+              onChange={onchangeImageUpload}
+            />
+            <label htmlFor="upload-button-file">
+              <Button variant="contained" component="span">
+                사진 업로드
+              </Button>
+            </label>
+          </div>
+        )}
+        {mode === 'cookery' ? (
+          <Button onClick={() => onDone(localImageUrls, localImageIds)}>적용</Button>
+        ) : (
+          <>
+            <Button onClick={onCancel} color="primary">
+              취소
             </Button>
-          </label>
-        </div>
-      )}
-      {mode === 'cookery' ? <Button onClick={() => onDone(localImageUrls, localImageIds)}>적용</Button> : (
-        <>
-          <Button onClick={onCancel} color="primary">
-            취소
-          </Button>
-          <Button onClick={() => onDone(localImageUrls, localImageIds)} color="primary">
-            확인
-          </Button>
-        </>
-      )}
-    </>
+            <Button onClick={() => onDone(localImageUrls, localImageIds)} color="primary">
+              확인
+            </Button>
+          </>
+        )}
+      </ButtonContainer>
+    </Container>
   );
 }

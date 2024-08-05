@@ -18,6 +18,17 @@ const ReviewContainer = styled.div`
 `;
 
 export const Review = ({ memberID, name, img, rating, comment, registerDate, forkedRecipe }) => {
+  const formatDate = (dateString) => {
+    const year = dateString.substring(0, 4);
+    const date = new Date(dateString);
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const hour = date.getHours();
+    const minute = date.getMinutes();
+
+    return `${year}.${month}.${day} ${hour}:${minute}`;
+  };
+
   if (forkedRecipe === undefined) {
     forkedRecipe = null;
   }
@@ -33,7 +44,7 @@ export const Review = ({ memberID, name, img, rating, comment, registerDate, for
             <Rating value={rating} readOnly precision={0.5} />
             <ReviewContainer>
               <Typography variant="subtitle" component="div">
-                {name} • {registerDate}
+                {name} • {formatDate(registerDate)}
               </Typography>
               {forkedRecipe === null ? null : (
                 <Button
