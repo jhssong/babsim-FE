@@ -154,7 +154,13 @@ const RecipeInformation = ({ recipeInfo, isLoading }) => {
           </>
         ) : (
           <>
-            <Rating name="read-only" value={recipeInfo.rate} size="small" readOnly />
+            <Rating
+              name="read-only"
+              value={recipeInfo.rate}
+              precision={0.5}
+              size="small"
+              readOnly
+            />
             <Typography variant="caption">{getDifficultyLabel(recipeInfo.difficulty)}</Typography>
             <Typography variant="caption">요리 시간 {recipeInfo.cookingTime / 60}분</Typography>
           </>

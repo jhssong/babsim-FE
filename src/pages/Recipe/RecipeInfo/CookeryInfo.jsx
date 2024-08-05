@@ -54,10 +54,18 @@ const formatTime = (timer) => {
 export const Cookery = ({ image, desc, timer, order }) => {
   return (
     <StyledHeader>
-      {image === null ? (
+      {image === undefined ? (
         <Skeleton animation="wave" variant="rectangular" width={210} height={118} />
       ) : (
-        <Box sx={{ width: '210px' }}>
+        <Box
+          sx={{
+            width: '10rem',
+            height: '8rem',
+            borderRadius: '4px',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+            overflow: 'hidden',
+            marginRight: '0.5rem',
+          }}>
           <img
             src={image}
             alt="Cookery"

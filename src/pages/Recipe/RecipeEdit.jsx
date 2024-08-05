@@ -12,6 +12,7 @@ import {
   Alert,
   CircularProgress,
   Backdrop,
+  Modal,
 } from '@mui/material';
 import { Edit } from '@mui/icons-material';
 import styled from '@emotion/styled';
@@ -115,12 +116,6 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
       setRecipeInfo(json);
       setImageUrls(json.recipeImgs);
       setImageIds(json.recipeImgs);
-
-      if (mode === 'edit' && json.creatorId !== userId.userId) {
-        alert('작성자만 수정할 수 있어요!');
-        navigate('/recipe/' + recipeId);
-        return;
-      }
 
       setIsLoading(false);
     } catch (error) {
@@ -251,30 +246,16 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
     );
   }
 
-  if (isImageModalOpen) {
-    const handleCancel = () => {
-      setIsImageModalOpen(false);
-    };
+  const handleCancel = () => {
+    setIsImageModalOpen(false);
+  };
 
-    const handleDone = (localImageUrls, localImageIds) => {
-      setImageUrls(localImageUrls);
-      setImageIds(localImageIds);
-      setRecipeInfo({ ...recipeInfo, recipeImgs: localImageIds });
-      setIsImageModalOpen(false);
-    };
-    return (
-      <>
-        <ImageCard
-          mode={'indirect'}
-          initialImageUrls={imageUrls}
-          initialImageIds={imageIds}
-          maxImageCount={3}
-          onCancel={handleCancel}
-          onDone={handleDone}
-        />
-      </>
-    );
-  }
+  const handleDone = (localImageUrls, localImageIds) => {
+    setImageUrls(localImageUrls);
+    setImageIds(localImageIds);
+    setRecipeInfo({ ...recipeInfo, recipeImgs: localImageIds });
+    setIsImageModalOpen(false);
+  };
 
   if (isCookeryModalOpen) {
     return (
@@ -462,6 +443,31 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
           {snackbarMessage}
         </Alert>
       </Snackbar>
+
+      <Modal
+        open={isImageModalOpen}
+        onClose={() => setIsImageModalOpen(false)}
+        aria-labelledby="image-modal-title"
+        aria-describedby="image-modal-description"
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <ImageCard
+          mode={'indirect'}
+          initialImageUrls={imageUrls}
+          initialImageIds={imageIds}
+          maxImageCount={3}
+          onCancel={() => setIsImageModalOpen(false)}
+          onDone={(localImageUrls, localImageIds) => {
+            setImageUrls(localImageUrls);
+            setImageIds(localImageIds);
+            setRecipeInfo({ ...recipeInfo, recipeImgs: localImageIds });
+            setIsImageModalOpen(false);
+          }}
+        />
+      </Modal>
     </>
   );
 };
