@@ -38,7 +38,7 @@ const labels = {
 };
 
 const Container = styled.div`
-  height: 100vh;
+  height: 100%;
 `;
 
 const RecipeReviews = ({ onBackBtnClick }) => {
@@ -65,7 +65,7 @@ const RecipeReviews = ({ onBackBtnClick }) => {
 
     // 포크된 레시피 가져오기
     const fetchForkedRecipes = async () => {
-      const recipes = await getForkedRecipes({ memberID: userId, recipeId: recipeId }); // 임시로 1번 유저로 설정
+      const recipes = await getForkedRecipes({ memberId: userId, forkedRecipeId: recipeId });
       setForkedRecipes(recipes);
     };
     fetchForkedRecipes();
@@ -195,7 +195,10 @@ const RecipeReviews = ({ onBackBtnClick }) => {
               labelId="forkedRecipe-label"
               id="forkedRecipe"
               value={selectedForkedRecipe}
-              onChange={(e) => setSelectedForkedRecipe(e.target.value)}
+              onChange={(e) => {
+                setSelectedForkedRecipe(e.target.value);
+                console.log(e.target.value);
+              }}
               label="레시피 추가"
               sx={{ width: '100%' }}>
               {forkedRecipes.length === 0 ? (
@@ -205,7 +208,7 @@ const RecipeReviews = ({ onBackBtnClick }) => {
               ) : (
                 forkedRecipes.map((recipe) => (
                   <MenuItem key={recipe.id} value={recipe.id}>
-                    {recipe.name}
+                    {recipe.recipeName}
                   </MenuItem>
                 ))
               )}
