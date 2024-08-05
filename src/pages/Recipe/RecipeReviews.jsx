@@ -38,7 +38,15 @@ const labels = {
 };
 
 const Container = styled.div`
-  height: 110vh;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+`;
+
+const ContentContainer = styled.div`
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 1rem;
 `;
 
 const RecipeReviews = ({ onBackBtnClick }) => {
@@ -53,17 +61,15 @@ const RecipeReviews = ({ onBackBtnClick }) => {
   const [alert, setAlert] = useState(false);
 
   const userData = useRecoilValue(userDataState);
-  const userId = userData ? userData.id : null; // 현재 로그인된 유저 아이디
+  const userId = userData ? userData.id : null;
 
   useEffect(() => {
-    // 모든 리뷰 가져오기
     const fetchReviews = async () => {
       const json = await getReviews(recipeId);
       setReviews(json.reverse());
     };
     fetchReviews();
 
-    // 포크된 레시피 가져오기
     const fetchForkedRecipes = async () => {
       const recipes = await getForkedRecipes({ memberId: userId, forkedRecipeId: recipeId });
       setForkedRecipes(recipes);
@@ -72,15 +78,6 @@ const RecipeReviews = ({ onBackBtnClick }) => {
       fetchForkedRecipes();
     }
     setIsLoading(false);
-  }, [isReviewModalOpen]);
-
-  useEffect(() => {
-    // 리뷰 작성 후 리뷰 다시 불러오기
-    const fetchReviews = async () => {
-      const json = await getReviews(recipeId);
-      setReviews(json.reverse());
-    };
-    fetchReviews();
   }, [isReviewModalOpen]);
 
   const [page, setPage] = useState(1);
@@ -100,13 +97,9 @@ const RecipeReviews = ({ onBackBtnClick }) => {
     setIsReviewModalOpen(false);
   };
 
-  const handleReviewModalClose = () => {
-    setIsReviewModalOpen(false);
-  };
-
   const handleSave = async () => {
     if (ratingValue !== null && reviewText.trim() !== '') {
-      setIsLoading(true); // 로딩 시작
+      setIsLoading(true);
 
       try {
         if (selectedForkedRecipe === undefined) {
@@ -124,12 +117,12 @@ const RecipeReviews = ({ onBackBtnClick }) => {
         setAlert(false);
       } catch (error) {
         console.error('Error posting review:', error);
-        setAlert(true); // 실패 시 알림
+        setAlert(true);
       } finally {
-        setIsLoading(false); // 로딩 종료
+        setIsLoading(false);
       }
     } else {
-      setAlert(true); // 입력 오류 알림
+      setAlert(true);
     }
   };
 
@@ -144,144 +137,145 @@ const RecipeReviews = ({ onBackBtnClick }) => {
   return (
     <Container>
       <AppBarWithTitle onBackBtnClick={onBackBtnClick} />
+      <ContentContainer>
+        <Dialog fullScreen open={isReviewModalOpen} onClose={handleIsModalClose}>
+          <DialogTitle>리뷰 작성하기</DialogTitle>
+          <DialogContent>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textAlign: 'center',
+                paddingTop: '1.25rem',
+              }}>
+              <Typography variant="h6" sx={{ mb: 1 }}>
+                레시피가 만족스러우셨나요?
+              </Typography>
+              <Box
+                sx={{
+                  width: 220,
+                  display: 'flex',
+                  alignItems: 'center',
+                }}>
+                <Rating
+                  name="text-feedback"
+                  value={ratingValue}
+                  emptyIcon={<Star style={{ opacity: 0.55 }} fontSize="inherit" />}
+                  onChange={(event, newValue) => {
+                    setRatingValue(newValue);
+                  }}
+                />
+                <Box sx={{ ml: 2 }}>
+                  <Typography variant="body2">{labels[ratingValue]}</Typography>
+                </Box>
+              </Box>
+            </Box>
+            <TextField
+              margin="dense"
+              label="리뷰 내용"
+              type="text"
+              fullWidth
+              multiline
+              rows={7}
+              inputProps={{ maxLength: 100 }}
+              name="reviewText"
+              sx={{ marginTop: '1rem' }}
+              value={reviewText}
+              onChange={(e) => setReviewText(e.target.value)}
+            />
+            <FormControl sx={{ marginTop: '1rem' }} fullWidth>
+              <InputLabel id="forkedRecipe-label">레시피 추가</InputLabel>
+              <Select
+                labelId="forkedRecipe-label"
+                id="forkedRecipe"
+                value={selectedForkedRecipe}
+                onChange={(e) => {
+                  setSelectedForkedRecipe(e.target.value);
+                  console.log(e.target.value);
+                }}
+                label="레시피 추가"
+                sx={{ width: '100%' }}>
+                {forkedRecipes.length === 0 ? (
+                  <MenuItem disabled value={null}>
+                    레시피 없음
+                  </MenuItem>
+                ) : (
+                  forkedRecipes.map((recipe) => (
+                    <MenuItem key={recipe.id} value={recipe.id}>
+                      {recipe.recipeName}
+                    </MenuItem>
+                  ))
+                )}
+              </Select>
+            </FormControl>
+          </DialogContent>
+          {alert ? (
+            <Alert sx={{ width: '100%' }} severity="error">
+              입력되지 않은 항목이 있어요!
+            </Alert>
+          ) : null}
+          <DialogActions>
+            <Button onClick={handleIsModalClose} color="primary">
+              취소
+            </Button>
+            <Button onClick={handleSave} color="primary">
+              저장
+            </Button>
+          </DialogActions>
+        </Dialog>
 
-      <Dialog fullScreen open={isReviewModalOpen} onClose={handleIsModalClose}>
-        <DialogTitle>리뷰 작성하기</DialogTitle>
-        <DialogContent>
+        {reviews.length === 0 ? (
           <Box
             sx={{
               display: 'flex',
-              flexDirection: 'column',
+              justifyContent: 'center',
               alignItems: 'center',
-              textAlign: 'center',
-              paddingTop: '1.25rem',
+              minHeight: '50vh',
             }}>
-            <Typography variant="h6" sx={{ mb: 1 }}>
-              레시피가 만족스러우셨나요?
-            </Typography>
-            <Box
-              sx={{
-                width: 220,
-                display: 'flex',
-                alignItems: 'center',
+            <Typography
+              variant="body1"
+              style={{
+                textAlign: 'center',
+                padding: '1rem',
               }}>
-              <Rating
-                name="text-feedback"
-                value={ratingValue}
-                emptyIcon={<Star style={{ opacity: 0.55 }} fontSize="inherit" />}
-                onChange={(event, newValue) => {
-                  setRatingValue(newValue);
-                }}
-              />
-              <Box sx={{ ml: 2 }}>
-                <Typography variant="body2">{labels[ratingValue]}</Typography>
-              </Box>
-            </Box>
+              😢 아직 리뷰가 없습니다.
+              <br />
+              첫번째 리뷰를 작성해보세요!
+            </Typography>
           </Box>
-          <TextField
-            margin="dense"
-            label="리뷰 내용"
-            type="text"
-            fullWidth
-            multiline
-            rows={7}
-            inputProps={{ maxLength: 100 }}
-            name="reviewText"
-            sx={{ marginTop: '1rem' }}
-            value={reviewText}
-            onChange={(e) => setReviewText(e.target.value)}
-          />
-          <FormControl sx={{ marginTop: '1rem' }} fullWidth>
-            <InputLabel id="forkedRecipe-label">레시피 추가</InputLabel>
-            <Select
-              labelId="forkedRecipe-label"
-              id="forkedRecipe"
-              value={selectedForkedRecipe}
-              onChange={(e) => {
-                setSelectedForkedRecipe(e.target.value);
-                console.log(e.target.value);
-              }}
-              label="레시피 추가"
-              sx={{ width: '100%' }}>
-              {forkedRecipes.length === 0 ? (
-                <MenuItem disabled value={null}>
-                  레시피 없음
-                </MenuItem>
-              ) : (
-                forkedRecipes.map((recipe) => (
-                  <MenuItem key={recipe.id} value={recipe.id}>
-                    {recipe.recipeName}
-                  </MenuItem>
-                ))
-              )}
-            </Select>
-          </FormControl>
-        </DialogContent>
-        {alert ? (
-          <Alert sx={{ width: '100%' }} severity="error">
-            입력되지 않은 항목이 있어요!
-          </Alert>
-        ) : null}
-        <DialogActions>
-          <Button onClick={handleReviewModalClose} color="primary">
-            취소
-          </Button>
-          <Button onClick={handleSave} color="primary">
-            저장
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {reviews.length === 0 ? (
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            minHeight: '50vh',
-          }}>
-          <Typography
-            variant="body1"
-            style={{
-              textAlign: 'center',
-              padding: '1rem',
-            }}>
-            😢 아직 리뷰가 없습니다.
-            <br />
-            첫번째 리뷰를 작성해보세요!
-          </Typography>
-        </Box>
-      ) : (
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-          {paginatedReviews.map((review) => (
-            <Review
-              key={review.memberID}
-              name={review.memberName}
-              img={review.memberImg}
-              rating={review.rating}
-              comment={review.comment}
-              registerDate={review.registerDate}
-              forkedRecipe={review.forkRecipeId}
+        ) : (
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            {paginatedReviews.map((review) => (
+              <Review
+                key={review.memberID}
+                name={review.memberName}
+                img={review.memberImg}
+                rating={review.rating}
+                comment={review.comment}
+                registerDate={review.registerDate}
+                forkedRecipe={review.forkRecipeId}
+              />
+            ))}
+            <Pagination
+              count={Math.ceil(reviews.length / reviewsPerPage)}
+              page={page}
+              onChange={handleChange}
+              color="primary"
+              style={{ display: 'flex', justifyContent: 'center', margin: '1rem' }}
             />
-          ))}
-          <Pagination
-            count={Math.ceil(reviews.length / reviewsPerPage)}
-            page={page}
-            onChange={handleChange}
+          </Box>
+        )}
+        <Box sx={{ display: 'flex', justifyContent: 'center', paddingBottom: '1rem' }}>
+          <Button
+            variant="contained"
             color="primary"
-            style={{ display: 'flex', justifyContent: 'center', margin: '1rem' }}
-          />
+            startIcon={<Reviews />}
+            onClick={handleIsModalOpen}>
+            리뷰 작성하기
+          </Button>
         </Box>
-      )}
-      <Box sx={{ display: 'flex', justifyContent: 'center', paddingBottom: '1rem' }}>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<Reviews />}
-          onClick={handleIsModalOpen}>
-          리뷰 작성하기
-        </Button>
-      </Box>
+      </ContentContainer>
     </Container>
   );
 };
