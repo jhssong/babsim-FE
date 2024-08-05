@@ -59,7 +59,7 @@ export const Cookery = ({ image, desc, timer, order }) => {
       ) : (
         <Box
           sx={{
-            width: '10rem',
+            width: '15rem',
             height: '8rem',
             borderRadius: '4px',
             boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
