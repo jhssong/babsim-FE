@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import AppLogoPNG from '../../assets/images/logo512.png';
 import styled from '@emotion/styled';
 import GoogleLoginBtn from './GoogleLoginBtn';
@@ -5,7 +6,7 @@ import KakaoLoginBtn from './KakaoLoginBtn';
 import { useNavigate } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { isLoggedInState, isTryingToLoginState, userDataState } from '../../recoil/atoms';
 
 const Wrapper = styled.div`
@@ -32,7 +33,7 @@ const Divider16 = styled.div`
 `;
 const BeforeLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useRecoilState(isLoggedInState);
+  const isLoggedIn = useRecoilValue(isLoggedInState);
   const setUserData = useSetRecoilState(userDataState);
   const setIsTryingToLogin = useSetRecoilState(isTryingToLoginState);
   const navigate = useNavigate();

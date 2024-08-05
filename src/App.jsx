@@ -1,6 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import getMember from './apis/Login/getMember';
 import { getLoggedInPlatform, getLoginToken } from './apis/Login/localStorage';
 import { Suspense, lazy, useEffect } from 'react';
+
 import { ThemeProvider } from '@emotion/react';
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
@@ -45,34 +48,34 @@ function App() {
   const setIsLoggedIn = useSetRecoilState(isLoggedInState);
   const isTryingToLogin = useRecoilValue(isTryingToLoginState);
 
-  async function checkLogin() {
-    if (getLoggedInPlatform() == 'google' && isTryingToLogin == false) {
-      try {
-        console.log('Trying to find google user data');
-        const userData = await getMember(getLoginToken());
-        setUserData(userData);
-        setIsLoggedIn(true);
-        navigate('/');
-      } catch (error) {
-        console.error(error);
-        navigate('/login');
-      }
-    }
-    if (getLoggedInPlatform() == 'kakao' && isTryingToLogin == false) {
-      try {
-        console.log('Trying to find kakao user data');
-        const userData = await getMember(getLoginToken());
-        setUserData(userData);
-        setIsLoggedIn(true);
-        navigate('/');
-      } catch (error) {
-        console.error(error);
-        navigate('/login');
-      }
-    }
-  }
-
   useEffect(() => {
+    async function checkLogin() {
+      if (getLoggedInPlatform() == 'google' && isTryingToLogin == false) {
+        try {
+          console.log('Tyring to find google user data');
+          const userData = await getMember(getLoginToken());
+          setUserData(userData);
+          setIsLoggedIn(true);
+          navigate('/');
+        } catch (error) {
+          console.error(error);
+          navigate('/login');
+        }
+      }
+      if (getLoggedInPlatform() == 'kakao' && isTryingToLogin == false) {
+        try {
+          console.log('Tyring to find kakao user data');
+          const userData = await getMember(getLoginToken());
+          setUserData(userData);
+          setIsLoggedIn(true);
+          navigate('/');
+        } catch (error) {
+          console.error(error);
+          navigate('/login');
+        }
+      }
+    }
+
     checkLogin();
   }, []);
 

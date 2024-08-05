@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import styled from '@emotion/styled';
 
 import { Star, AccessTime } from '@mui/icons-material';
@@ -164,7 +165,7 @@ const ProductInfo = styled.div`
  * @param {*} type - nft, recipe, prouct
  * @returns
  */
-export const VCard = ({ type, product, index, style, onClick }) => {
+export const VCard = ({ type, product, style, onClick }) => {
   const [imgUrl, setImgUrl] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
