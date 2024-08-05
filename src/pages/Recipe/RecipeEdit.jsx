@@ -116,12 +116,6 @@ const RecipeEdit = ({ mode, onBackBtnClick, onComplete, setState }) => {
       setImageUrls(json.recipeImgs);
       setImageIds(json.recipeImgs);
 
-      if (mode === 'edit' && json.creatorId !== userId.userId) {
-        alert('작성자만 수정할 수 있어요!');
-        navigate('/recipe/' + recipeId);
-        return;
-      }
-
       setIsLoading(false);
     } catch (error) {
       console.error('Failed to fetch recipe info:', error);
