@@ -67,10 +67,12 @@ const NftButton = ({ recipeInfo }) => {
   };
 
   useEffect(() => {
-    setIsLoading(true);
-    fetchRecipeInfo(userData.id);
-    fetchNftPrice();
-    setIsLoading(false);
+    if (isCreated && userData) {
+      setIsLoading(true);
+      fetchRecipeInfo(userData.id);
+      fetchNftPrice();
+      setIsLoading(false);
+    }
   }, []);
 
   // NFT 생성 요청
