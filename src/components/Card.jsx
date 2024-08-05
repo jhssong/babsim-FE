@@ -189,7 +189,6 @@ export const VCard = ({ type, product, style, onClick }) => {
       setLoading(false);
     } else {
       fetchImg(product.uri);
-      setLoading(false);
     }
   }, []);
 
