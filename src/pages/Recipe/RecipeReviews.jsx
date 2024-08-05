@@ -53,7 +53,7 @@ const RecipeReviews = ({ onBackBtnClick }) => {
   const [alert, setAlert] = useState(false);
 
   const userData = useRecoilValue(userDataState);
-  const userId = userData.id; // 현재 로그인된 유저 아이디
+  const userId = userData ? userData.id : null; // 현재 로그인된 유저 아이디
 
   useEffect(() => {
     // 모든 리뷰 가져오기
@@ -68,7 +68,9 @@ const RecipeReviews = ({ onBackBtnClick }) => {
       const recipes = await getForkedRecipes({ memberId: userId, forkedRecipeId: recipeId });
       setForkedRecipes(recipes);
     };
-    fetchForkedRecipes();
+    if (userId) {
+      fetchForkedRecipes();
+    }
     setIsLoading(false);
   }, [isReviewModalOpen]);
 
