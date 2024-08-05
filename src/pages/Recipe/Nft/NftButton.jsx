@@ -19,6 +19,7 @@ import postNftPurchase from '../../../apis/NFT/postNftPurchase';
 import { useRecoilValue } from 'recoil';
 import { userDataState } from '../../../recoil/atoms';
 import getRecipeInfo from '../../../apis/Recipe/RecipeInfo/getRecipeInfo';
+import getNftPrice from '../../../apis/NFT/getNftPrice';
 
 const NftButton = ({ recipeInfo }) => {
   const userData = useRecoilValue(userDataState);
@@ -42,18 +43,35 @@ const NftButton = ({ recipeInfo }) => {
   });
   const [handleConfirm, setHandleConfirm] = useState(() => () => {}); // 버튼 클릭 핸들러
 
+  const [nftPrice, setNftPrice] = useState(0); // NFT 가격
+  const [point, setPoint] = useState(0);
+  const [available, setAvailable] = useState(false);
+
   const fetchRecipeInfo = async (userId) => {
     const json = await getRecipeInfo({ recipeId: recipe.id, memberId: userId });
     setRecipe(json);
     setIsCreated(json.nftCreateStatus);
     setIsOnSale(json.nftSaleStatus);
-    setIsLoading(false);
+  };
+
+  const fetchNftPrice = async () => {
+    try {
+      const json = await getNftPrice({ recipeId: recipe.id, memberId: userData.id });
+      console.log(json);
+      setNftPrice(json.nftPrice);
+      setPoint(json.point);
+      setAvailable(json.available);
+    } catch (error) {
+      console.error('NFT 가격 정보를 가져오는데 실패했습니다:', error);
+    }
   };
 
   useEffect(() => {
     setIsLoading(true);
     fetchRecipeInfo(userData.id);
-  }, [open]);
+    fetchNftPrice();
+    setIsLoading(false);
+  }, []);
 
   // NFT 생성 요청
   const createNft = async () => {
@@ -145,10 +163,11 @@ const NftButton = ({ recipeInfo }) => {
           Icon: ShoppingBag,
           buttonText: 'NFT 구매하기',
           modalTitle: 'NFT 구매 확인',
-          modalMessage: '정말로 NFT를 구매하시겠어요?',
+          modalMessage: `이 요리법 NFT 가격은 ${nftPrice}TC예요. 현재 가지고 있는 포인트는 ${point}TC예요. 구매하시겠어요?`,
         });
         console.log('NFT 구매하기');
-        setHandleConfirm(() => purchaseNft);
+        if (available === true) setHandleConfirm(() => purchaseNft);
+        else setHandleConfirm(() => {});
       } else {
         setButtonState({
           Icon: RemoveShoppingCart,
@@ -172,7 +191,17 @@ const NftButton = ({ recipeInfo }) => {
         setHandleConfirm(() => () => sellNft(price));
       }
     }
-  }, [isCreated, isOnSale, userData, price, recipe.nftCreateStatus, recipe.nftSaleStatus]);
+  }, [
+    isCreated,
+    isOnSale,
+    userData,
+    price,
+    recipe.nftCreateStatus,
+    recipe.nftSaleStatus,
+    nftPrice,
+    point,
+    available,
+  ]);
 
   const handlePriceChange = (e) => {
     let value = e.target.value;
@@ -231,7 +260,7 @@ const NftButton = ({ recipeInfo }) => {
           <Button onClick={handleClose} disabled={isLoading}>
             취소
           </Button>
-          <Button onClick={handleConfirm} color="primary" disabled={isLoading}>
+          <Button onClick={handleConfirm} color="primary" disabled={isLoading || !available}>
             {isLoading ? '생성 중...' : '확인'}
           </Button>
         </DialogActions>
