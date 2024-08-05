@@ -5,10 +5,7 @@ import { Rating } from '@mui/material';
 import { Box, Button, Typography } from '@mui/material';
 import Slider from 'react-slick';
 import ComingSoonModal from '../../components/ComingSoonModal';
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
-import Loading from '../../components/Loading';
-import { getProductInfo } from '../../apis/Market/getProduct';
+import { useState } from 'react';
 
 const Container = styled.div`
   display: flex;
@@ -23,7 +20,7 @@ const Container = styled.div`
 
 const Product = () => {
   const [open, setOpen] = useState(false);
-  const { productId } = useParams();
+  // const { productId } = useParams();
 
   // const [productData, setProductData] = useState([]);
   // const [loading, setLoading] = useState(true);

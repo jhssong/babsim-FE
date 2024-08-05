@@ -76,6 +76,7 @@ export default function ImageCard({
     const urls = [];
     const ids = [];
     for (const file of newFiles) {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       const { downloadUrl, id } = await useUploadImage(file);
       if (downloadUrl !== 'undefined') {
         urls.push(downloadUrl);

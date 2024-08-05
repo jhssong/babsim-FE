@@ -1,6 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import getMember from './apis/Login/getMember';
 import { getLoggedInPlatform, getLoginToken } from './apis/Login/localStorage';
 import { Suspense, lazy, useEffect } from 'react';
+
 import { ThemeProvider } from '@emotion/react';
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
@@ -8,10 +11,9 @@ import { isLoggedInState, isTryingToLoginState, userDataState } from './recoil/a
 
 import theme from './styles/theme';
 import GlobalStyle from './styles/GlobalStyle';
-import Loading from './components/Loading'; // 가정한 경로
-import Home from './pages/Home/Home';
 
 // Lazy loading components
+const Home = lazy(() => import('./pages/Home/Home'));
 const Login = lazy(() => import('./pages/Login/Login'));
 const Market = lazy(() => import('./pages/Market/Market'));
 const Recipe = lazy(() => import('./pages/Recipe/Recipe'));
@@ -24,6 +26,7 @@ const NotFound = lazy(() => import('./pages/Error/NotFound'));
 const RecipeEdit = lazy(() => import('./pages/Recipe/RecipeEdit'));
 const UserInfoSetting = lazy(() => import('./pages/Login/UserInfoSetting'));
 const UserAllergySetting = lazy(() => import('./pages/Login/UserAllergySetting'));
+const Loading = lazy(() => import('./components/Loading'));
 
 const ProtectedRoute = ({ path }) => {
   const isLoggedIn = useRecoilValue(isLoggedInState);
@@ -45,34 +48,34 @@ function App() {
   const setIsLoggedIn = useSetRecoilState(isLoggedInState);
   const isTryingToLogin = useRecoilValue(isTryingToLoginState);
 
-  async function checkLogin() {
-    if (getLoggedInPlatform() == 'google' && isTryingToLogin == false) {
-      try {
-        console.log('Trying to find google user data');
-        const userData = await getMember(getLoginToken());
-        setUserData(userData);
-        setIsLoggedIn(true);
-        navigate('/');
-      } catch (error) {
-        console.error(error);
-        navigate('/login');
-      }
-    }
-    if (getLoggedInPlatform() == 'kakao' && isTryingToLogin == false) {
-      try {
-        console.log('Trying to find kakao user data');
-        const userData = await getMember(getLoginToken());
-        setUserData(userData);
-        setIsLoggedIn(true);
-        navigate('/');
-      } catch (error) {
-        console.error(error);
-        navigate('/login');
-      }
-    }
-  }
-
   useEffect(() => {
+    async function checkLogin() {
+      if (getLoggedInPlatform() == 'google' && isTryingToLogin == false) {
+        try {
+          console.log('Tyring to find google user data');
+          const userData = await getMember(getLoginToken());
+          setUserData(userData);
+          setIsLoggedIn(true);
+          navigate('/');
+        } catch (error) {
+          console.error(error);
+          navigate('/login');
+        }
+      }
+      if (getLoggedInPlatform() == 'kakao' && isTryingToLogin == false) {
+        try {
+          console.log('Tyring to find kakao user data');
+          const userData = await getMember(getLoginToken());
+          setUserData(userData);
+          setIsLoggedIn(true);
+          navigate('/');
+        } catch (error) {
+          console.error(error);
+          navigate('/login');
+        }
+      }
+    }
+
     checkLogin();
   }, []);
 

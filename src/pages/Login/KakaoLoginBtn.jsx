@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react';
 
 import KakaoLoginPNG from '../../assets/images/kakao_login_medium_narrow.png';
