@@ -1,13 +1,25 @@
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react-swc';
+import react from '@vitejs/plugin-react';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
-  resolve: {
-    alias: {
-      // '/assets' URL을 'src/assets' 폴더로 매핑
-      '/assets': 'src/assets',
-    },
-  },
+  plugins: [
+    react(),
+    viteStaticCopy({
+      targets: [
+        {
+          src: 'src/assets/**/*',
+          dest: 'assets',
+        },
+        {
+          src: 'src/images/**/*',
+          dest: 'images',
+        },
+        {
+          src: 'src/icons/**/*',
+          dest: 'icons',
+        },
+      ],
+    }),
+  ],
 });

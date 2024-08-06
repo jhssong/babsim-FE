@@ -1,4 +1,4 @@
-import { baseURL } from '../apis/api.js';
+import { baseURL } from '../api.js';
 
 export default async function createMember(data) {
   const response = await fetch(`${baseURL}/members`, {

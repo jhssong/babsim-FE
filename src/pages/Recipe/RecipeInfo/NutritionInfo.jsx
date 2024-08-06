@@ -36,7 +36,7 @@ const NutritionInfo = ({ nutrition }) => {
     <Container>
       <Box sx={{ display: 'flex', flexDirection: 'row' }}>
         <Typography variant="h5">영양 성분 정보</Typography>
-        <img src="\src\assets\images\google-gemini-icon.svg" alt="Google Gemini" />
+        <img src="/assets/images/google-gemini-icon.svg" alt="Google Gemini" />
       </Box>
       <Wrapper>
         <Typography variant="body1" color="gray" sx={{ marginBottom: '1rem' }}>

@@ -1,5 +1,9 @@
 {
   "projects": {
-    "default": "babsim-82a16"
-  }
+    "default": "babsim-82a16",
+    "babsim": "babsim-59d06"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
 }

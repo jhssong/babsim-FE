@@ -1,14 +1,25 @@
 import { useEffect, useState } from 'react';
 import { Drawer, Box, Typography, IconButton, Button } from '@mui/material';
 import { AppBarWithTitle } from '../../components/AppBar';
-import { Timer, TimerOff, PlayArrow, Pause, Refresh, ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
+import {
+  Timer,
+  TimerOff,
+  PlayArrow,
+  Pause,
+  Refresh,
+  ArrowBackIos,
+  ArrowForwardIos,
+} from '@mui/icons-material';
 import { getImageFromStorage } from '../../apis/firebase/storage';
 import styled from '@emotion/styled';
 
-const GlobalContainer = styled.div`
-  overflow: hidden;
+const Container = styled.div`
   display: flex;
+  padding: 4rem 0rem;
   flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  height: calc(100vh - 3rem);
 `;
 
 const CardContainer = styled.div`
@@ -50,8 +61,6 @@ const TimerContainer = styled(Box)`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  margin-top: auto;
-  margin-bottom: 5rem;
   gap: 1rem;
 
   h6 {
@@ -142,47 +151,40 @@ const Cook = ({ recipe, handleBack }) => {
   }
 
   return (
-    <GlobalContainer>
-      <RecipeList
-        open={open}
-        onClose={() => setOpen(false)}
-        setIndex={setIndex}
-        index={recipe.recipeContents.length}
-        recipe={recipe}
-        images={images}
-      />
+    <>
       <AppBarWithTitle
         title="요리하기"
         rightIcon="list"
         onRightIconClick={() => setOpen(true)}
         onBackBtnClick={handleBack}
       />
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          height: '100vh',
-          paddingTop: '5rem',
-        }}>
+      <Container>
+        <RecipeList
+          open={open}
+          onClose={() => setOpen(false)}
+          setIndex={setIndex}
+          index={recipe.recipeContents.length}
+          recipe={recipe}
+          images={images}
+        />
+
         <CardContainer>
           <img src={images[index]} alt={recipe.recipeContents[index]} />
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'flex-start',
-              justifyContent: 'center',
-              width: '75%',
-              paddingTop: '3rem',
-            }}>
-            <Typography variant="h5" sx={{ marginRight: '1rem', lineHeight: '3' }}>
-              {index + 1}
-            </Typography>
-            <StyledTypography variant="h6" sx={{ width: '20rem', lineHeight: '1.6' }}>
-              {recipe.recipeContents[index]}
-            </StyledTypography>
-          </Box>
         </CardContainer>
+
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+          }}>
+          <Typography variant="h5" sx={{ marginRight: '1rem', lineHeight: '3' }}>
+            {index + 1}
+          </Typography>
+          <StyledTypography variant="h6" sx={{ width: '20rem', lineHeight: '1.6' }}>
+            {recipe.recipeContents[index]}
+          </StyledTypography>
+        </Box>
+
         <TimerContainer>
           {isCompleted ? <TimerOff color="primary" /> : <Timer color="primary" />}
           <Typography variant="h6" sx={{ marginBottom: '1rem' }}>
@@ -211,7 +213,6 @@ const Cook = ({ recipe, handleBack }) => {
           sx={{
             display: 'flex',
             gap: '2rem',
-            marginBottom: '5rem',
           }}>
           <Button
             startIcon={<ArrowBackIos />}
@@ -230,8 +231,8 @@ const Cook = ({ recipe, handleBack }) => {
             다음
           </Button>
         </Box>
-      </Box>
-    </GlobalContainer>
+      </Container>
+    </>
   );
 };
 

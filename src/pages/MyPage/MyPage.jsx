@@ -83,6 +83,8 @@ const MyPage = () => {
         <img
           style={{
             borderRadius: '50%',
+            width: '13vh',
+            aspectRatio: '1 / 1',
           }}
           src={userData.img}
         />

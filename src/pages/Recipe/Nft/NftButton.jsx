@@ -232,7 +232,7 @@ const NftButton = ({ recipeInfo }) => {
         variant="extended"
         aria-label="nft-action"
         onClick={userId === null ? () => navigate('/login') : handleClickOpen}
-        sx={{ width: '10rem' }}>
+        sx={{ width: '11rem' }}>
         {buttonState.Icon && <buttonState.Icon />}
         <Typography variant="body1" sx={{ ml: '0.5rem', mt: '0.25rem' }}>
           {buttonState.buttonText}
