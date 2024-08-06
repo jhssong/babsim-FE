@@ -7,11 +7,27 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "format": "prettier --write \"src/**/*.{js,jsx,css,scss,md}\""
   },
   "dependencies": {
+    "@mui/icons-material": "^5.16.4",
+    "@mui/material": "^5.16.4",
+    "axios": "^1.7.2",
+    "date-fns": "^3.6.0",
+    "firebase": "^10.12.4",
+    "html-react-parser": "^5.1.12",
+    "http-proxy-middleware": "^3.0.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-awesome-slider": "^4.1.0",
+    "react-beautiful-dnd": "^13.1.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.25.1",
+    "react-slick": "^0.30.2",
+    "react-swipeable": "^7.0.1",
+    "recoil": "^0.7.7",
+    "slick-carousel": "^1.8.1",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
@@ -21,6 +37,7 @@
     "eslint-plugin-react": "^7.34.3",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
+    "prettier": "^3.3.3",
     "vite": "^5.3.4"
   }
 }
