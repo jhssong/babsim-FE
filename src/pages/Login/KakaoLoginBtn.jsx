@@ -4,12 +4,13 @@ import { useEffect } from 'react';
 import KakaoLoginPNG from '../../assets/images/kakao_login_medium_narrow.png';
 import { useNavigate } from 'react-router-dom';
 import { saveLoggedInPlatform, saveLoginToken } from '../../apis/Login/localStorage';
+import { baseURL } from '../../apis/api.js';
 
 const KakaoLoginBtn = ({ onHandleLoginSuccess }) => {
   const navigate = useNavigate();
 
   async function openKakaoLogin() {
-    const response = await fetch('http://localhost:8080/api/members/kakao/redirect', {
+    const response = await fetch(`${baseURL}/members/kakao/redirect`, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -21,7 +22,7 @@ const KakaoLoginBtn = ({ onHandleLoginSuccess }) => {
   }
 
   async function loginToKakao(code) {
-    const response = await fetch('http://localhost:8080/api/members/kakao', {
+    const response = await fetch(`${baseURL}/members/kakao`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

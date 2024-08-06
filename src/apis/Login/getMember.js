@@ -1,5 +1,7 @@
+import { baseURL } from '../api.js';
+
 export default async function getMember(memberId) {
-  const response = await fetch('http://localhost:8080/api/members/' + memberId, {
+  const response = await fetch(`${baseURL}/members/` + memberId, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
